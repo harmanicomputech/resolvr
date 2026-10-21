@@ -47,7 +47,8 @@ class SecurityHeaders
     {
         $scriptSrc = ["'self'", "'nonce-{$nonce}'", "'wasm-unsafe-eval'"];
         $styleSrc = ["'self'", "'nonce-{$nonce}'"];
-        $connectSrc = ["'self'"];
+        // data: lets the PDF layout engine load its WebAssembly; a data: URL cannot send anything anywhere.
+        $connectSrc = ["'self'", 'data:'];
 
         // The Vite dev server injects styles and talks over a websocket.
         if (Vite::isRunningHot()) {

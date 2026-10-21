@@ -12,11 +12,17 @@ const soon = (title: string) => () => <ComingSoon title={title} />;
 
 const Dashboard = page(() => import('./screens/dashboard/Dashboard'));
 const Capture = page(() => import('./screens/log/Capture'));
+const IncidentList = page(() => import('./screens/incidents/IncidentList'));
+const Trash = page(() => import('./screens/incidents/Trash'));
+const IncidentDetail = lazy(() => import('./screens/incidents/IncidentDetail'));
 
-const routes: { path: string; component: ComponentType | LazyExoticComponent<ComponentType> }[] = [
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const routes: { path: string; component: ComponentType<any> | LazyExoticComponent<ComponentType<any>> }[] = [
     { path: '/', component: Dashboard },
-    { path: '/incidents', component: soon('Incident log') },
-    { path: '/incidents/:id', component: soon('Incident') },
+    { path: '/incidents', component: IncidentList },
+    { path: '/incidents/trash', component: Trash },
+    { path: '/incidents/:id/edit', component: EditRoute },
+    { path: '/incidents/:id', component: IncidentDetail },
     { path: '/log', component: LogRoute },
     { path: '/capture', component: Capture },
     { path: '/vault', component: soon('Evidence vault') },
@@ -45,8 +51,18 @@ function LogRoute() {
     const search = useSearch();
     return (
         <>
-            <ComingSoon title="Incident log" />
+            <IncidentList />
             <LogFlow key={search} />
+        </>
+    );
+}
+
+/** Editing reuses the log flow over the incident's own page. */
+function EditRoute({ params }: { params: { id: string } }) {
+    return (
+        <>
+            <IncidentDetail params={params} />
+            <LogFlow incidentId={params.id} />
         </>
     );
 }

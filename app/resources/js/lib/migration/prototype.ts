@@ -94,6 +94,13 @@ const isoDay = (value: string): string | undefined => {
     return Number.isNaN(t) ? undefined : new Date(t).toISOString().slice(0, 10);
 };
 
+/** "2 Aug 2026, 23:20 UTC": stored in the note text, so it reads the same on any device. */
+const notedAt = (value: string): string => {
+    const t = Date.parse(value);
+    if (Number.isNaN(t)) return value;
+    return `${new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'UTC' }).format(t)} UTC`;
+};
+
 export function parsePrototypeExport(json: unknown): PrototypeExport {
     return prototypeExportSchema.parse(json);
 }
@@ -160,7 +167,7 @@ export async function importPrototype(json: unknown, repos: Repositories, now = 
                 if (note.text.trim())
                     await repos.incidents.annotate(
                         created.id,
-                        `${note.text}${note.ts ? ` (originally noted ${note.ts})` : ''}`,
+                        `${note.text}${note.ts ? ` (originally noted ${notedAt(note.ts)})` : ''}`,
                         now,
                     );
             }

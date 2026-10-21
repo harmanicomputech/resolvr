@@ -177,3 +177,9 @@ export async function importSample(page: Page) {
     timeout: 15_000,
   });
 }
+
+/** After a full page load the app is locked: wait for the lock screen, then enter the PIN. */
+export async function unlock(page: Page, pin = '1357') {
+    await expect(page.getByRole('heading', { name: 'Enter your PIN' })).toBeVisible();
+    await typePin(page, pin);
+}

@@ -40,6 +40,8 @@ export interface Session {
     lockout: Lockout;
     create(pin: string, format: PinFormat): Promise<void>;
     unlock(pin: string): Promise<'ok' | 'wrong' | 'locked-out'>;
+    /** Check the passcode again before a sensitive action, without changing the session. */
+    verifyPin(pin: string): Promise<boolean>;
     unlockWithPasskey(): Promise<boolean>;
     addPasskey(pin: string): Promise<void>;
     removePasskey(): Promise<void>;
@@ -143,6 +145,19 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
         [db, open, resetLockout],
     );
 
+    const verifyPin = useCallback(
+        async (pin: string) => {
+            try {
+                (await Vault.unlock(pin, { db })).lock();
+                return true;
+            } catch (error) {
+                if (error instanceof WrongPinError) return false;
+                throw error;
+            }
+        },
+        [db],
+    );
+
     const unlockWithPasskey = useCallback(async () => {
         if (!passkeyData) return false;
         try {
@@ -221,6 +236,7 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
             lockout,
             create,
             unlock,
+            verifyPin,
             unlockWithPasskey,
             addPasskey,
             removePasskey,
@@ -243,6 +259,7 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
             lockout,
             create,
             unlock,
+            verifyPin,
             unlockWithPasskey,
             addPasskey,
             removePasskey,

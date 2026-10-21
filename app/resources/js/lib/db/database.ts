@@ -29,7 +29,17 @@ export interface BlobRow {
     ct: ArrayBuffer;
 }
 
-export const recordKinds = ['incident', 'ledger', 'person', 'file', 'profile', 'settings', 'counter', 'draft'] as const;
+export const recordKinds = [
+    'incident',
+    'ledger',
+    'person',
+    'file',
+    'profile',
+    'settings',
+    'counter',
+    'draft',
+    'view',
+] as const;
 export type RecordKind = (typeof recordKinds)[number];
 
 export class ResolvrDatabase extends Dexie {

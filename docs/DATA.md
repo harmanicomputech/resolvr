@@ -61,7 +61,7 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 | Table | Contents |
 | --- | --- |
 | `meta` | `unlockers` (wrapped data keys + KDF parameters), `schemaVersion`, and three non-sensitive flags needed before unlocking: `pinFormat` (4 digits, 6 digits or passphrase), `stealth`, `lockout` (failed-attempt counter). No personal data. |
-| `records` | `{ id: "<kind>:<id>", kind, iv, ct }`. Kinds: `incident`, `ledger`, `person`, `file`, `profile`, `settings`, `counter`, `draft`. |
+| `records` | `{ id: "<kind>:<id>", kind, iv, ct }`. Kinds: `incident`, `ledger`, `person`, `file`, `profile`, `settings`, `counter`, `draft` (unfinished incidents, saved on every change), `view` (saved list filters, which can contain names). |
 | `blobs` | `{ id, iv, ct }`: evidence file bytes as encrypted `ArrayBuffer`s, never base64 strings. |
 
 **Atomic writes.** An IndexedDB transaction closes as soon as code awaits anything else (such as Web Crypto), so the app encrypts first and then writes every row of a change in one transaction (`vault.putMany`). Read-modify-write sequences run one at a time through `vault.exclusive()`, which uses the Web Locks API so two open tabs can never interleave writes.
@@ -94,6 +94,10 @@ hash = SHA-256( prevHash + canonicalJson({ seq, body }) )
 | `caseStats(incidents, peopleById)` | Totals, serious count, days since last, most-mentioned person. |
 | `detectPatterns(incidents, peopleById)` | Same six detectors (repeat person, weekday, escalation, 30-day post-report window, multiple types, witnesses). Returns structured findings with the incident ids involved. Wording avoids legal conclusions. |
 | `legalCoverage(types, pack)` | Same idea as the prototype, driven by a versioned jurisdiction pack. Fixes: retaliation types now map to Title VII; "Pay cut" no longer triggers FLSA; triggers match whole words, so "Wage" no longer triggers the age-discrimination law. |
+
+## Exports
+
+PDFs (a single incident now, the HR and Legal dossiers in P2.11) are generated **in the browser** with `@react-pdf/renderer`, from decrypted data held in memory. Nothing is uploaded to make them. The only time incident text leaves the device is the AI drafting step (P2.10), and only the fields the person approves in a preview.
 
 ## Migration from the prototype
 

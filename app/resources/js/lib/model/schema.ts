@@ -79,6 +79,8 @@ export const incidentContentSchema = z.object({
     additionalNotes: text().default(''),
     attachmentIds: z.array(id).default([]),
     tags: z.array(text(60)).default([]),
+    /** Other incidents this one relates to (P2.6). */
+    relatedIds: z.array(id).default([]),
     jurisdiction: z.enum(jurisdictions).default('us'),
 });
 export type IncidentContent = z.infer<typeof incidentContentSchema>;

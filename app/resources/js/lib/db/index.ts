@@ -1,3 +1,4 @@
+import { SavedViewRepository } from '../incidents/views';
 import { DraftRepository } from './drafts';
 import { FileRepository } from './files';
 import { IncidentRepository } from './incidents';
@@ -23,6 +24,7 @@ export function repositories(vault: Vault) {
         people: new PeopleRepository(vault),
         files,
         drafts: new DraftRepository(vault, files),
+        views: new SavedViewRepository(vault),
         singletons: new SingletonRepository(vault),
     };
 }
