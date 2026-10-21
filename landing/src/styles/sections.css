@@ -1378,7 +1378,7 @@
         display: inline-block;
         min-width: 1.2ch;
         font-weight: 600;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.03em;
         font-size: var(--text-6xl);
         line-height: 1;
         font-variant-numeric: tabular-nums;
@@ -1453,7 +1453,7 @@
     .final-cta-title {
         font-size: var(--text-5xl);
         line-height: 1.05;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.028em;
     }
 
     .waitlist {

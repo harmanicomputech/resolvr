@@ -1,4 +1,5 @@
 Fonts are self-hosted (SIL Open Font License 1.1). Latin subsets from Fontsource:
+- Poppins (500, 600, 700) — The Poppins Project Authors
 - Inter (variable, wght) — The Inter Project Authors
 - Geist Mono — Vercel
 

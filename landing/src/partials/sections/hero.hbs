@@ -1,23 +1,30 @@
 <section class="hero" data-hero aria-labelledby="hero-title">
-    <div class="hero-bg" aria-hidden="true"></div>
+    <div class="hero-bg" aria-hidden="true">
+        <span class="orb" data-orb="1" data-speed="0.35"></span>
+        <span class="orb" data-orb="2" data-speed="-0.2"></span>
+        <span class="orb" data-orb="3" data-speed="0.5"></span>
+        <span class="hero-chip" data-chip="1" data-speed="0.6">{{{icon "shield-check" "size-5"}}}</span>
+        <span class="hero-chip" data-chip="2" data-speed="0.25">{{{icon "fingerprint" "size-5"}}}</span>
+        <span class="hero-chip" data-chip="3" data-speed="0.8">{{{icon "folder-lock" "size-5"}}}</span>
+    </div>
     <div class="hero-inner">
         <div class="hero-copy">
-            <p class="hero-eyebrow">
+            <p class="hero-eyebrow" data-hero-in>
                 <span class="pulse-dot" aria-hidden="true"></span>
                 Now in beta
             </p>
-            <h1 id="hero-title" class="hero-title display">Finally heard. <span class="hero-accent">Finally resolved.</span></h1>
-            <p class="hero-sub">
+            <h1 id="hero-title" class="hero-title display" data-hero-title><span class="w"><span data-i="0">Finally</span></span> <span class="w"><span data-i="1">heard.</span></span> <span class="hero-accent"><span class="w"><span data-i="2">Finally</span></span> <span class="w"><span data-i="3">resolved.</span></span></span></h1>
+            <p class="hero-sub" data-hero-in>
                 Document what happens at work with tamper-evident timestamps, keep your evidence private on your own device, and
                 turn it into a clear, HR-ready complaint when you are ready.
             </p>
-            <div class="hero-ctas">
+            <div class="hero-ctas" data-hero-in>
                 <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">
                     Start documenting, free {{{icon "arrow-right" "size-4"}}}
                 </a>
                 <a href="#how-it-works" class="btn" data-size="lg">See how it works</a>
             </div>
-            <ul class="hero-trust">
+            <ul class="hero-trust" data-hero-in>
                 <li>{{{icon "shield-check" "size-4"}}} Encrypted on device</li>
                 <li>{{{icon "wifi-off" "size-4"}}} Works offline</li>
                 <li>{{{icon "smartphone" "size-4"}}} Installable</li>
@@ -25,17 +32,17 @@
             </ul>
         </div>
 
-        <div class="hero-visual" aria-hidden="true">
+        <div class="hero-visual" aria-hidden="true" data-speed="-0.12">
             <div class="hero-stage" data-tilt>
                 <div class="device">
                     <div class="device-notch"></div>
                     {{> device-dashboard}}
                 </div>
-                <div class="float-card" data-float="1">
+                <div class="float-card" data-float="1" data-speed="0.3">
                     <span class="float-icon">{{{icon "lock-keyhole" "size-4"}}}</span>
                     <span><span class="mono">INC-014</span> logged · 09:42</span>
                 </div>
-                <div class="float-card" data-float="2">
+                <div class="float-card" data-float="2" data-speed="-0.25">
                     <span class="float-icon" data-tone="pattern">{{{icon "chart-spline" "size-4"}}}</span>
                     <span>Pattern found: 4 incidents, same person</span>
                 </div>

@@ -1,6 +1,7 @@
 import '../styles/main.css';
 
 import { initAlpine } from './alpine';
+import { reducedMotion } from './motion';
 import { initNav, initProgress } from './nav';
 import { initQuickExit } from './quick-exit';
 import { initReveal } from './reveal';
@@ -10,6 +11,8 @@ import { initThemeToggle } from './theme';
 import { initPageTransitions } from './transitions';
 
 document.documentElement.classList.add('js');
+const motionOK = !reducedMotion();
+document.documentElement.classList.toggle('motion', motionOK);
 
 // Safety first: quick exit must work even if anything below fails.
 initQuickExit();
@@ -30,3 +33,5 @@ if (has('[data-hero]')) void import('./sections/hero').then((m) => m.initHero())
 if (has('[data-bento]')) void import('./sections/bento').then((m) => m.initBento());
 if (has('[data-faq]')) void import('./sections/faq').then((m) => m.initFaq());
 if (has('[data-toc]')) void import('./sections/toc').then((m) => m.initToc());
+// Scroll effects (smooth scroll, parallax, reveals) only when motion is welcome.
+if (motionOK) void import('./effects').then((m) => m.initEffects());

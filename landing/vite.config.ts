@@ -30,7 +30,7 @@ function cleanUrls(): Plugin {
     };
 }
 
-/** Preload Inter (used for all text, including the LCP headline) so it is usually ready before first paint. */
+/** Preload Inter (body) and Poppins 600 (headlines, including the LCP) so they are usually ready before first paint. */
 function preloadFonts(): Plugin {
     return {
         name: 'resolvr:preload-fonts',
@@ -38,7 +38,7 @@ function preloadFonts(): Plugin {
         transformIndexHtml: {
             order: 'post',
             handler(_html, ctx) {
-                const files = Object.keys(ctx.bundle ?? {}).filter((f) => /inter-latin-wght-normal.*\.woff2$/.test(f));
+                const files = Object.keys(ctx.bundle ?? {}).filter((f) => /(inter-latin-wght-normal|poppins-latin-600-normal).*\.woff2$/.test(f));
                 return files.map((f) => ({
                     tag: 'link',
                     attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `/${f}`, crossorigin: '' },

@@ -90,12 +90,12 @@ Use `data-severity="high"` on any element to get `--sev-base / --sev-text / --se
 
 | Role | Family | Use |
 | --- | --- | --- |
-| Headlines | **Inter** 600, tracking −0.03 to −0.045em | Page and section titles, stat values, dialog titles |
-| Wordmark | **Inter** 650, tracking −0.03em | "Resolvr" |
+| Headlines | **Poppins** 600, tracking −0.025 to −0.03em | Page, section and card titles, stat values, dialog titles |
+| Wordmark | **Poppins** 600 | "Resolvr" |
 | UI | **Inter** (variable) | Everything else |
 | Mono | **Geist Mono** | Incident IDs (`INC-014`), hashes, timestamps |
 
-There is no serif. Fonts are self-hosted (latin subset, `font-display: swap`) and Inter is preloaded on the landing site. No Google Fonts requests.
+There is no serif. Fonts are self-hosted (latin subset, `font-display: swap`); Inter and Poppins 600 are preloaded on the landing site. No Google Fonts requests.
 
 Fluid scale from 12px to 96px with `clamp()`, growing between 360px and 1440px viewports:
 
@@ -156,7 +156,8 @@ Motion feels like **light moving across glass**, not things bouncing.
 1. Motion explains hierarchy or state. If it doesn't, remove it.
 2. Nothing loops forever except ambient background (aurora drift, particles), and even that pauses off-screen.
 3. In the app, nothing over 300ms blocks a task. Marketing reveals may be longer.
-4. Under `prefers-reduced-motion: reduce`, durations collapse (CSS variables drop to 0–120ms) and JS animations become a short opacity fade. Branch with `reducedMotion()` from `motion.ts`.
+4. Landing scroll effects are declared with data attributes and run by `landing/src/scripts/effects.ts` (Lenis + GSAP ScrollTrigger): `data-speed` parallax, split-word section titles, `data-stagger` card entrances, `.parallax-img`, `data-draw`, `data-count`, `data-scrub-text`, `data-scale-in`. The module is never loaded under reduced motion.
+5. Under `prefers-reduced-motion: reduce`, durations collapse (CSS variables drop to 0–120ms) and JS animations become a short opacity fade. Branch with `reducedMotion()` from `motion.ts`.
 
 > **Do** fade and rise a card 12px with out-expo when it enters.
 > **Don't** bounce, wobble, shake (except a PIN error) or use parallax that moves text.

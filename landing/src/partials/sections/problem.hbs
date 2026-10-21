@@ -3,9 +3,9 @@
         <p class="eyebrow">The problem</p>
         <h2 id="problem-title" class="section-title">When something goes wrong at work, <span class="muted">you're on your own.</span></h2>
     </div>
-    <ul class="icon-cards" data-cols="3">
+    <ul class="icon-cards" data-cols="3" data-stagger>
         {{#each problems}}
-        <li class="icon-card" data-reveal>
+        <li class="icon-card">
             <span class="icon-badge" data-tone="warn">{{{icon icon "size-5"}}}</span>
             <h3>{{title}}</h3>
             <p>{{body}}</p>

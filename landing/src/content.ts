@@ -262,3 +262,23 @@ export const features = [
         demo: 'dossier',
     },
 ];
+
+/** Trust strip under the hero. */
+export const trustStrip = [
+    { icon: 'lock-keyhole', label: 'Encrypted on your device' },
+    { icon: 'wifi-off', label: 'Works offline' },
+    { icon: 'link', label: 'Tamper-evident timestamps' },
+    { icon: 'calculator', label: 'Stealth calculator mode' },
+    { icon: 'eye-off', label: 'No ads, no trackers' },
+    { icon: 'smartphone', label: 'Installs like an app' },
+    { icon: 'file-text', label: 'HR-ready documents' },
+    { icon: 'scale', label: 'Not legal advice' },
+];
+
+/** Stats band: facts about how Resolvr works (not outcomes or user numbers). */
+export const stats = [
+    { icon: 'lock-keyhole', value: 256, suffix: '-bit', label: 'AES-GCM encryption on your device' },
+    { icon: 'eye-off', value: 0, suffix: '', label: 'Ads or third-party trackers' },
+    { icon: 'smartphone', value: 100, suffix: '%', label: 'Of your record stored on your device' },
+    { icon: 'timer', value: 60, suffix: 's', label: 'To log your first incident' },
+];

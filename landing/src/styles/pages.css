@@ -21,7 +21,7 @@
         font-size: var(--text-5xl);
         font-weight: 600;
         line-height: 1.05;
-        letter-spacing: -0.04em;
+        letter-spacing: -0.03em;
     }
 
     .page .page-hero + .section {

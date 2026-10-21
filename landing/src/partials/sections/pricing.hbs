@@ -11,9 +11,9 @@
         {{/unless}}
     </div>
 
-    <ul class="pricing-grid">
+    <ul class="pricing-grid" data-stagger>
         {{#each plans}}
-        <li class="price-card{{#if featured}} price-card-featured{{/if}}" data-reveal>
+        <li class="price-card{{#if featured}} price-card-featured{{/if}}">
             {{#if featured}}<span class="price-badge">Most chosen</span>{{/if}}
             <h3>{{name}}</h3>
             <p class="price-blurb">{{blurb}}</p>

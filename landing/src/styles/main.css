@@ -6,6 +6,7 @@
 @import './sections.css';
 @import './pages.css';
 @import './photos.css';
+@import './effects.css';
 
 @source '../pages';
 @source '../partials';

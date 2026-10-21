@@ -1,9 +1,9 @@
 <section class="section split" aria-labelledby="moments-title">
-    <div class="split-media" data-reveal>
+    <div class="split-media" data-clip-reveal>
         <div class="photo split-photo">
-            {{{photo "team-meeting" sizes="(min-width: 64rem) 34rem, 92vw"}}}
+            {{{photo "team-meeting" sizes="(min-width: 64rem) 34rem, 92vw" class="parallax-img"}}}
         </div>
-        <div class="split-badge">
+        <div class="split-badge" data-speed="0.35">
             <span class="icon-badge">{{{icon "lock-keyhole" "size-4"}}}</span>
             <span><strong>INC-001</strong> · timestamp locked</span>
         </div>
@@ -12,9 +12,9 @@
         <p class="eyebrow">Moments that matter</p>
         <h2 id="moments-title" class="section-title">It rarely happens <span class="muted">all at once.</span></h2>
         <p class="section-lead">Small moments are easy to dismiss one at a time. Written down the same day, together they tell the real story.</p>
-        <ul class="moment-list">
+        <ul class="moment-list" data-stagger>
             {{#each moments}}
-            <li data-reveal>
+            <li>
                 <span class="icon-badge">{{{icon icon "size-4"}}}</span>
                 <div>
                     <h3>{{title}}</h3>

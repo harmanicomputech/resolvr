@@ -1,13 +1,14 @@
 <section id="security" class="section security" aria-labelledby="security-title">
+    <span class="orb" data-orb="6" data-speed="-0.3" aria-hidden="true"></span>
     <div class="section-head">
         <p class="eyebrow">Security and privacy</p>
         <h2 id="security-title" class="section-title">Everything you need. <span class="muted">Nothing they can touch.</span></h2>
         <p class="section-lead">Built for people who might be watched. Here is exactly what protects your record.</p>
     </div>
 
-    <ul class="icon-cards" data-cols="3">
+    <ul class="icon-cards" data-cols="3" data-stagger>
         {{#each securityCards}}
-        <li class="icon-card" data-reveal>
+        <li class="icon-card">
             <span class="icon-badge">{{{icon icon "size-5"}}}</span>
             <h3>{{title}}</h3>
             <p>{{body}}</p>
@@ -15,7 +16,7 @@
         {{/each}}
     </ul>
 
-    <div class="see-grid" data-reveal>
+    <div class="see-grid">
         <div class="see-col">
             <h3><span class="icon-badge" data-tone="neutral">{{{icon "eye" "size-4"}}}</span> What we can see</h3>
             <ul>

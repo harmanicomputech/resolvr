@@ -96,7 +96,7 @@
 /* Scales are static values, always emitted so components.css can read them. */
 @theme static {
     /* Typography */
-    --font-display: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+    --font-display: 'Poppins', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
@@ -125,7 +125,7 @@
     --text-6xl--line-height: 1;
 
     --tracking-tight: -0.02em;
-    --tracking-display: -0.03em;
+    --tracking-display: -0.025em;
     --tracking-wide: 0.04em;
     --tracking-eyebrow: 0.14em;
 

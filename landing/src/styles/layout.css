@@ -429,7 +429,7 @@
         font-size: var(--text-4xl);
         font-weight: 600;
         line-height: 1.08;
-        letter-spacing: -0.035em;
+        letter-spacing: -0.028em;
     }
 
     .section-title .muted,
@@ -497,5 +497,19 @@
         html {
             scroll-behavior: auto;
         }
+    }
+}
+
+@layer base {
+    /* Poppins for every heading; Inter stays the reading face. */
+    h1,
+    h2,
+    h3,
+    .display {
+        font-family: var(--font-display);
+    }
+
+    h3 {
+        letter-spacing: -0.015em;
     }
 }

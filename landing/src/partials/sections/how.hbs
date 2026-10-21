@@ -3,9 +3,11 @@
         <p class="eyebrow">How it works</p>
         <h2 id="how-title" class="section-title">Four steps. <span class="muted">About a minute each.</span></h2>
     </div>
-    <ol class="steps">
+    <div class="steps-wrap">
+        <span class="steps-line" aria-hidden="true"><span data-draw></span></span>
+        <ol class="steps" data-stagger>
         {{#each steps}}
-        <li class="step" data-reveal>
+        <li class="step">
             <div class="step-top">
                 <span class="icon-badge" data-size="lg">{{{icon icon "size-5"}}}</span>
                 <span class="step-num mono" aria-hidden="true">{{pad @index}}</span>
@@ -15,4 +17,5 @@
         </li>
         {{/each}}
     </ol>
+    </div>
 </section>

@@ -1,0 +1,12 @@
+<section class="section stats" aria-label="Resolvr in numbers">
+    <span class="orb" data-orb="4" data-speed="0.4" aria-hidden="true"></span>
+    <ul class="stats-grid" data-stagger>
+        {{#each stats}}
+        <li class="stat-card">
+            <span class="icon-badge">{{{icon icon "size-5"}}}</span>
+            <p class="stat-big"><span data-count="{{value}}">{{value}}</span>{{suffix}}</p>
+            <p class="stat-text">{{label}}</p>
+        </li>
+        {{/each}}
+    </ul>
+</section>

@@ -1,6 +1,6 @@
 /** Fade-and-rise for [data-reveal] (and clip-path curtains for [data-curtain]) as they enter, staggered among siblings. */
 export function initReveal(): void {
-    const items = document.querySelectorAll<HTMLElement>('[data-reveal], [data-curtain]');
+    const items = document.querySelectorAll<HTMLElement>('[data-reveal], [data-curtain], [data-clip-reveal]');
     if (!items.length) return;
 
     const io = new IntersectionObserver(
