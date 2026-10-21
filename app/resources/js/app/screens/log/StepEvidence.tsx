@@ -9,38 +9,24 @@ import { AttachmentList, FileThumb } from '../../components/attachment-list';
 import { Recorder } from '../../components/recorder';
 import { useToast } from '../../components/toaster';
 import { useData } from '../../hooks/use-data';
+import { ingestFiles, type IngestStatus } from '../../lib/ingest';
 import { useSession } from '../../session';
 import { StepEvidenceChips, type StepProps } from './steps';
 
 export const ACCEPT = 'image/*,application/pdf,audio/*';
-const MAX_BYTES = 50 * 1024 * 1024;
 
-/** Add files to the vault and return their ids. Over-size files are skipped with a note. */
+/** Add files to the vault and return their ids. Over-size or unsupported files are skipped with a note. */
 export function useAddFiles() {
     const { repos } = useSession();
     const toast = useToast();
     return async (files: Iterable<File>): Promise<string[]> => {
         if (!repos) return [];
-        const ids: string[] = [];
-        for (const file of files) {
-            if (file.size > MAX_BYTES) {
-                toast({
-                    title: `${file.name} is too large`,
-                    description: 'Files up to 50 MB can be stored.',
-                    tone: 'warning',
-                });
-                continue;
-            }
-            ids.push(
-                (
-                    await repos.files.add(
-                        file,
-                        file.lastModified ? { capturedAt: new Date(file.lastModified).toISOString() } : {},
-                    )
-                ).id,
-            );
-        }
-        return ids;
+        let skipped: IngestStatus[] = [];
+        const added = await ingestFiles(Array.from(files), repos, {
+            onStatus: (s) => (skipped = s.filter((x) => x.state === 'skipped')),
+        });
+        for (const s of skipped) toast({ title: `${s.name} was not added`, description: s.reason, tone: 'warning' });
+        return added.map((f) => f.id);
     };
 }
 

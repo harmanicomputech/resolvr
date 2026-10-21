@@ -14,6 +14,7 @@ const Dashboard = page(() => import('./screens/dashboard/Dashboard'));
 const Capture = page(() => import('./screens/log/Capture'));
 const IncidentList = page(() => import('./screens/incidents/IncidentList'));
 const Trash = page(() => import('./screens/incidents/Trash'));
+const Vault = page(() => import('./screens/vault/Vault'));
 const IncidentDetail = lazy(() => import('./screens/incidents/IncidentDetail'));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -25,7 +26,7 @@ const routes: { path: string; component: ComponentType<any> | LazyExoticComponen
     { path: '/incidents/:id', component: IncidentDetail },
     { path: '/log', component: LogRoute },
     { path: '/capture', component: Capture },
-    { path: '/vault', component: soon('Evidence vault') },
+    { path: '/vault', component: Vault },
     { path: '/timeline', component: soon('Timeline') },
     { path: '/people', component: soon('People') },
     { path: '/people/:id', component: soon('Person') },

@@ -95,6 +95,15 @@ hash = SHA-256( prevHash + canonicalJson({ seq, body }) )
 | `detectPatterns(incidents, peopleById)` | Same six detectors (repeat person, weekday, escalation, 30-day post-report window, multiple types, witnesses). Returns structured findings with the incident ids involved. Wording avoids legal conclusions. |
 | `legalCoverage(types, pack)` | Same idea as the prototype, driven by a versioned jurisdiction pack. Fixes: retaliation types now map to Title VII; "Pay cut" no longer triggers FLSA; triggers match whole words, so "Wage" no longer triggers the age-discrimination law. |
 
+## Evidence files (P2.7)
+
+- **On the way in** each file is fingerprinted (SHA-256), its own capture date is read where possible (EXIF "date taken" for JPEG photos, otherwise the file's date), a tiny blurred preview (about 24 px) is made for images, and the bytes are encrypted into `blobs`. The preview and all metadata are encrypted with the record.
+- **Fingerprint check**: "Check it has not changed" decrypts the file, hashes it again and compares.
+- **Redaction** draws black boxes on a *copy* (`name (redacted).png`); the original and its fingerprint never change.
+- **OCR** (Tesseract.js) runs entirely on the device from files served by our own origin (`/ocr`, copied from `node_modules` by `npm run build`). The recognised text is stored encrypted in the file's metadata so search can find it.
+- **Sharing into Resolvr** (Web Share Target): the service worker cannot decrypt or encrypt (it never has the key), so shared files wait in a private browser cache until the app is next unlocked, are then encrypted into the vault's "Shared" folder, and the cache is deleted. Without the service worker the server accepts nothing and just redirects.
+- **Deleting** a file asks for the passcode; files that are evidence for an incident must be unlinked first.
+
 ## Exports
 
 PDFs (a single incident now, the HR and Legal dossiers in P2.11) are generated **in the browser** with `@react-pdf/renderer`, from decrypted data held in memory. Nothing is uploaded to make them. The only time incident text leaves the device is the AI drafting step (P2.10), and only the fields the person approves in a preview.

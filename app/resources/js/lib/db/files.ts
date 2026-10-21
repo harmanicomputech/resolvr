@@ -20,7 +20,9 @@ export class FileRepository {
     /** Fingerprint, encrypt and store a file. Nothing leaves the device. */
     async add(
         file: Blob & { name?: string; lastModified?: number },
-        meta: Partial<Pick<EvidenceFile, 'capturedAt' | 'incidentIds' | 'folder' | 'width' | 'height'>> = {},
+        meta: Partial<
+            Pick<EvidenceFile, 'capturedAt' | 'incidentIds' | 'folder' | 'width' | 'height' | 'thumb' | 'ocrText'>
+        > = {},
     ): Promise<EvidenceFile> {
         const bytes = await file.arrayBuffer();
         const record = evidenceFileSchema.parse({

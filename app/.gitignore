@@ -25,3 +25,4 @@ Thumbs.db
 /public/sw.js
 /public/sw.js.map
 /public/workbox-*.js
+/public/ocr

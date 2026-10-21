@@ -144,6 +144,8 @@ export const evidenceFileSchema = z.object({
     ocrText: z.string().optional(),
     width: z.number().int().positive().optional(),
     height: z.number().int().positive().optional(),
+    /** Tiny blurred preview (data URL) shown while the full image decrypts. */
+    thumb: z.string().max(4000).optional(),
     deletedAt: isoDateTime.optional(),
 });
 export type EvidenceFile = z.infer<typeof evidenceFileSchema>;

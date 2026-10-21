@@ -18,6 +18,13 @@ if (app()->environment('local')) {
 
 // The app: one shell for every path. Screens are routed on the device so the
 // app works offline; the server never sees which screen is open.
+// Share target fallback: normally the service worker handles this POST and
+// keeps the files on the device. Without it (first visit, unsupported
+// browser) nothing is accepted here; the person is sent to the vault.
+Route::post('/share-target', fn () => redirect('/vault?shared=unavailable', 303))
+    ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class)
+    ->name('share-target');
+
 Route::get('/{path?}', fn () => Inertia::render('app'))
     ->where('path', '^(?!api/|waitlist/|build/|icons/|storage/|up$|design$).*$')
     ->name('app');

@@ -57,3 +57,38 @@ registerRoute(
 
 // Icons and manifests rarely change; serve from cache.
 registerRoute(({ url }) => url.pathname.startsWith('/icons/'), new CacheFirst({ cacheName: 'resolvr-icons' }));
+
+/**
+ * Web Share Target: a screenshot shared from another app arrives as a POST.
+ * The vault is locked inside the worker (it never has the key), so the files
+ * wait in a private cache until the app is unlocked, which then encrypts them
+ * into the vault and deletes the cache (see app/lib/ingest.ts).
+ */
+const SHARE_INBOX = 'resolvr-share-inbox';
+registerRoute(
+    ({ url, request }) => url.pathname === '/share-target' && request.method === 'POST',
+    async ({ request }) => {
+        try {
+            const form = await request.formData();
+            const cache = await caches.open(SHARE_INBOX);
+            const files = form.getAll('files').filter((f): f is File => f instanceof File);
+            await Promise.all(
+                files.map((file, i) =>
+                    cache.put(
+                        `/share-inbox/${Date.now()}-${i}`,
+                        new Response(file, {
+                            headers: {
+                                'content-type': file.type || 'application/octet-stream',
+                                'x-file-name': encodeURIComponent(file.name),
+                            },
+                        }),
+                    ),
+                ),
+            );
+        } catch {
+            // Nothing usable was shared; open the vault anyway.
+        }
+        return Response.redirect('/vault?shared=1', 303);
+    },
+    'POST',
+);

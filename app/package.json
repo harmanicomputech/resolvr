@@ -10,7 +10,9 @@
         "format": "prettier --write resources/js resources/css",
         "format:check": "prettier --check resources/js resources/css",
         "test": "vitest run",
-        "test:watch": "vitest"
+        "test:watch": "vitest",
+        "prebuild": "node build-tools/copy-ocr.mjs",
+        "predev": "node build-tools/copy-ocr.mjs"
     },
     "devDependencies": {
         "@eslint/js": "^9.39.5",
@@ -57,6 +59,7 @@
         "@radix-ui/react-toggle-group": "^1.2.1",
         "@radix-ui/react-tooltip": "^1.4.1",
         "@react-pdf/renderer": "^4.9.0",
+        "@tesseract.js-data/eng": "^1.0.0",
         "class-variance-authority": "^0.7.1",
         "clsx": "^2.1.1",
         "dexie": "^4.4.6",
@@ -68,6 +71,7 @@
         "react": "^19.3.1",
         "react-dom": "^19.3.1",
         "tailwind-merge": "^3.7.0",
+        "tesseract.js": "^7.0.0",
         "wouter": "^3.13.0",
         "zod": "^4.6.7"
     }
