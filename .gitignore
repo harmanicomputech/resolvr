@@ -1,0 +1,29 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+
+# Node
+node_modules/
+npm-debug.log*
+
+# landing build
+landing/dist/
+
+# Laravel (app/)
+app/vendor/
+app/.env
+app/.env.backup
+app/.env.production
+app/public/build/
+app/public/hot
+app/public/storage
+app/storage/*.key
+app/.phpunit.result.cache
+
+# Tests
+playwright-report/
+test-results/
+coverage/
