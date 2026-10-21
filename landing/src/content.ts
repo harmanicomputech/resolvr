@@ -59,9 +59,10 @@ export const problems = [
 ];
 
 export const problemStat = {
-    text: 'Roughly three in four people who experience harassment at work never tell a supervisor or HR.',
-    // EEOC Select Task Force on the Study of Harassment in the Workplace (June 2016) is the usual source. Verify before launch.
-    source: '[SOURCE]',
+    figure: '3 in 4',
+    text: 'people who experience harassment at work never talk to a supervisor, manager or union representative about it.',
+    source: 'U.S. EEOC, Select Task Force on the Study of Harassment in the Workplace (2016)',
+    url: 'https://www.eeoc.gov/select-task-force-study-harassment-workplace',
 };
 
 export const steps = [

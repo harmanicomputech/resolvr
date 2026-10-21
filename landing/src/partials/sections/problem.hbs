@@ -12,5 +12,13 @@
         </li>
         {{/each}}
     </ul>
-    <p class="problem-stat">{{{icon "info" "size-4"}}} {{problemStat.text}} <cite>{{problemStat.source}}</cite></p>
+    <figure class="problem-stat" data-reveal>
+        <p class="problem-stat-figure">{{problemStat.figure}}</p>
+        <figcaption>
+            <p>{{problemStat.text}}</p>
+            <a href="{{problemStat.url}}" class="problem-stat-source" target="_blank" rel="noopener noreferrer">
+                Source: {{problemStat.source}} {{{icon "arrow-up-right" "size-3.5"}}}
+            </a>
+        </figcaption>
+    </figure>
 </section>
