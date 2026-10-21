@@ -3,11 +3,141 @@
     <head>
         {{> head}}
     </head>
-    <body class="bg-bg text-fg antialiased">
+    <body>
         {{> nav}}
-        <main id="main" class="mx-auto max-w-6xl px-4 py-24">
-            <h1 class="text-4xl">Terms of service</h1>
-            <!-- Built in Phase 1. -->
+        <main id="main" class="page">
+            <header class="page-hero">
+                <p class="eyebrow">Legal</p>
+                <h1 class="page-title display">Terms of service</h1>
+                <p class="legal-meta"><span>Effective: [EFFECTIVE DATE]</span><span>Last updated: [LAST UPDATED]</span></p>
+            </header>
+            {{> draft-banner}}
+            <div class="legal">
+                <nav class="toc" aria-label="On this page" data-toc>
+                    <p class="eyebrow">On this page</p>
+                    <ol>
+                        <li><a href="#agreement">Agreement</a></li>
+                        <li><a href="#not-legal-advice">Not legal advice</a></li>
+                        <li><a href="#eligibility">Who can use Resolvr</a></li>
+                        <li><a href="#your-content">Your content</a></li>
+                        <li><a href="#responsibility">Keeping your record safe</a></li>
+                        <li><a href="#acceptable-use">Acceptable use</a></li>
+                        <li><a href="#ai-drafts">AI drafts</a></li>
+                        <li><a href="#plans">Plans and payment</a></li>
+                        <li><a href="#beta">Beta features</a></li>
+                        <li><a href="#ending">Ending your use</a></li>
+                        <li><a href="#disclaimers">Disclaimers</a></li>
+                        <li><a href="#liability">Limitation of liability</a></li>
+                        <li><a href="#law">Governing law</a></li>
+                        <li><a href="#changes">Changes to these terms</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ol>
+                </nav>
+                <article class="prose-page">
+                    <h2 id="agreement">Agreement</h2>
+                    <p>
+                        These terms are an agreement between you and [LEGAL ENTITY NAME], a Texas limited liability company doing business
+                        as Resolvr ("Resolvr", "we", "us"). By using resolvrapp.com or the Resolvr app, you agree to them. If you do not
+                        agree, please do not use Resolvr.
+                    </p>
+
+                    <h2 id="not-legal-advice">Not legal advice</h2>
+                    <p>
+                        <strong>Resolvr is not a law firm and does not provide legal advice.</strong> It is a tool to help you keep an
+                        organised, timestamped record and to draft documents from it. Information about laws, agencies and deadlines is
+                        general information, may not apply to your situation and may be out of date. Using Resolvr does not create an
+                        attorney–client relationship. For advice about your situation, consult a qualified lawyer or the relevant agency.
+                    </p>
+                    <p>Resolvr does not predict or promise any outcome, and nothing in the app should be read as doing so.</p>
+
+                    <h2 id="eligibility">Who can use Resolvr</h2>
+                    <p>You must be at least [16] years old and able to form a binding contract where you live.</p>
+
+                    <h2 id="your-content">Your content</h2>
+                    <p>
+                        You own everything you put into Resolvr. Your record is encrypted on your device and we cannot read it. Where you
+                        choose to send content to us (for example, fields for an AI draft, or an encrypted backup), you give us permission
+                        to process it only to provide the feature you asked for.
+                    </p>
+                    <p>
+                        You are responsible for what you record and share. Record events honestly and as accurately as you can. Take care
+                        when recording other people's personal information, and follow the law and any workplace rules that apply to you
+                        when capturing evidence, including laws on recording conversations.
+                    </p>
+
+                    <h2 id="responsibility">Keeping your record safe</h2>
+                    <p>
+                        Keep your PIN and recovery phrase private. Because we do not hold your encryption key, we cannot recover your record
+                        if you lose your PIN and have no backup. Export your data regularly if it matters to you.
+                    </p>
+
+                    <h2 id="acceptable-use">Acceptable use</h2>
+                    <p>Do not use Resolvr to:</p>
+                    <ul>
+                        <li>harass, threaten, stalk or defame anyone, or create false records;</li>
+                        <li>break the law or infringe anyone's rights;</li>
+                        <li>probe, overload or attack our systems, or bypass rate limits;</li>
+                        <li>misuse AI drafting, for example to generate content unrelated to your own workplace situation.</li>
+                    </ul>
+
+                    <h2 id="ai-drafts">AI drafts</h2>
+                    <p>
+                        AI-generated drafts can contain mistakes. Read and edit every draft before you send it. You are responsible for the
+                        final text and for checking that it is accurate. Generated documents include a "Not legal advice" notice; please
+                        keep it.
+                    </p>
+
+                    <h2 id="plans">Plans and payment</h2>
+                    <p>
+                        Documenting is free. Paid plans and their prices are shown on our pricing page. [PAYMENT TERMS, BILLING CYCLE,
+                        RENEWAL, CANCELLATION AND REFUNDS TO BE CONFIRMED BEFORE PAID PLANS LAUNCH.]
+                    </p>
+
+                    <h2 id="beta">Beta features</h2>
+                    <p>
+                        Resolvr is in beta. Features may change or be removed, and may not always work as expected. We will try to give
+                        notice of significant changes and will not remove your ability to export your data.
+                    </p>
+
+                    <h2 id="ending">Ending your use</h2>
+                    <p>
+                        You can stop using Resolvr at any time and delete everything on your device from settings. We may suspend access to
+                        server features (such as AI drafting or backup) if you break these terms, and will tell you why where we can.
+                    </p>
+
+                    <h2 id="disclaimers">Disclaimers</h2>
+                    <p>
+                        Resolvr is provided "as is" and "as available". To the extent the law allows, we disclaim all warranties, including
+                        fitness for a particular purpose and that the service will be uninterrupted or error-free. Hash-chain verification
+                        shows whether a record changed after it was made; it does not prove that its contents are true, and we cannot
+                        guarantee how any employer, court or agency will treat your records.
+                    </p>
+
+                    <h2 id="liability">Limitation of liability</h2>
+                    <p>
+                        To the extent the law allows, we are not liable for indirect, incidental, special or consequential losses, or for
+                        loss of data you did not back up. Our total liability for any claim is limited to the greater of the amount you
+                        paid us in the 12 months before the claim or [US$50]. Nothing in these terms limits liability that cannot be
+                        limited by law.
+                    </p>
+
+                    <h2 id="law">Governing law</h2>
+                    <p>
+                        These terms are governed by the laws of the State of Texas, USA, without regard to conflict-of-law rules, and
+                        disputes will be heard in the courts of [COUNTY], Texas, unless the law where you live gives you the right to bring
+                        a claim locally.
+                    </p>
+
+                    <h2 id="changes">Changes to these terms</h2>
+                    <p>
+                        We may update these terms. If a change is significant, we will update the date above and, where we have your email
+                        address, let you know before it takes effect.
+                    </p>
+
+                    <h2 id="contact">Contact</h2>
+                    <p>Questions about these terms: <a href="mailto:{{site.email}}">{{site.email}}</a>.</p>
+                </article>
+            </div>
         </main>
         {{> footer}}
     </body>

@@ -30,15 +30,18 @@ export default defineConfig({
     ],
     webServer: [
         {
-            // Serves the built site; run `npm --prefix landing run build` first.
-            command: 'npm --prefix landing run preview -- --port 4174 --strictPort --host 127.0.0.1',
+            // Builds the site pointed at the test app server, then serves it.
+            command: 'npm --prefix landing run build && npm --prefix landing run preview -- --port 4174 --strictPort --host 127.0.0.1',
             url: LANDING_URL,
+            env: { VITE_APP_URL: APP_URL },
             reuseExistingServer: !process.env.CI,
+            timeout: 120_000,
         },
         {
             // Uses app/public/build; run `npm --prefix app run build` first.
             command: 'php app/artisan serve --host=127.0.0.1 --port=8001',
             url: `${APP_URL}/up`,
+            env: { CORS_ALLOWED_ORIGINS: LANDING_URL, MAIL_MAILER: 'log', QUEUE_CONNECTION: 'database' },
             reuseExistingServer: !process.env.CI,
         },
     ],

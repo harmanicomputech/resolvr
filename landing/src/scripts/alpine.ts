@@ -40,8 +40,11 @@ function setMenu(data: MenuData, open: boolean): void {
     menu.toggleAttribute('inert', !open);
     document.documentElement.toggleAttribute('data-menu-open', open);
     window.dispatchEvent(new CustomEvent('resolvr:scroll-lock', { detail: open }));
-    if (open) menu.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
-    else toggle?.focus({ preventScroll: true });
+    // Wait for Alpine to apply data-open (the menu is visibility: hidden until then).
+    void Alpine.nextTick(() => {
+        if (open) menu.querySelector<HTMLElement>('a')?.focus({ preventScroll: true });
+        else toggle?.focus({ preventScroll: true });
+    });
 }
 
 Alpine.data('pricing', () => ({
