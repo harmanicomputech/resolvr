@@ -1,47 +1,48 @@
-<section id='waitlist' class='final-cta' aria-labelledby='cta-title'>
-    <div class='final-cta-bg' aria-hidden='true'>
-        <div class='aurora-glow final-cta-aurora'></div>
-        <div class='noise'></div>
+<section id="waitlist" class="final-cta" aria-labelledby="cta-title">
+    <div class="final-cta-bg" aria-hidden="true">
+        <div class="photo final-cta-photo" data-cta-photo>{{{photo "team-briefing" sizes="100vw" decorative=true}}}</div>
+        <div class="aurora-glow final-cta-aurora"></div>
+        <div class="noise"></div>
     </div>
-    <div class='final-cta-inner'>
-        <h2 id='cta-title' class='display final-cta-title'>Start your record today.
-            <em class='text-aurora'>It takes 60 seconds.</em></h2>
-        <p class='section-lead'>Open the app and log your first incident now, or join the waitlist for launch news.</p>
-        <a href='{{site.appUrl}}' class='btn' data-variant='primary' data-size='lg' data-magnetic>Open the app
+    <div class="final-cta-inner">
+        <h2 id="cta-title" class="display final-cta-title">Start your record today.
+            <em class="text-aurora">It takes 60 seconds.</em></h2>
+        <p class="section-lead">Open the app and log your first incident now, or join the waitlist for launch news.</p>
+        <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg" data-magnetic>Open the app
             {{{icon 'arrow-right' 'size-4'}}}</a>
 
-        <form class='waitlist glass' data-waitlist novalidate>
-            <div class='waitlist-row'>
-                <label for='waitlist-email' class='sr-only'>Email address</label>
+        <form class="waitlist glass" data-waitlist novalidate>
+            <div class="waitlist-row">
+                <label for="waitlist-email" class="sr-only">Email address</label>
                 <input
-                    id='waitlist-email'
-                    name='email'
-                    type='email'
-                    class='input'
-                    placeholder='you@personal-email.com'
-                    autocomplete='email'
-                    inputmode='email'
+                    id="waitlist-email"
+                    name="email"
+                    type="email"
+                    class="input"
+                    placeholder="you@personal-email.com"
+                    autocomplete="email"
+                    inputmode="email"
                     required
-                    aria-describedby='waitlist-hint waitlist-error'
+                    aria-describedby="waitlist-hint waitlist-error"
                 />
-                <div class='waitlist-hp' aria-hidden='true'>
-                    <label for='waitlist-company'>Company</label>
-                    <input id='waitlist-company' name='company' type='text' tabindex='-1' autocomplete='off' />
+                <div class="waitlist-hp" aria-hidden="true">
+                    <label for="waitlist-company">Company</label>
+                    <input id="waitlist-company" name="company" type="text" tabindex="-1" autocomplete="off" />
                 </div>
-                <button type='submit' class='btn' data-variant='glass' data-size='lg'>Join waitlist</button>
+                <button type="submit" class="btn" data-variant="glass" data-size="lg">Join waitlist</button>
             </div>
-            <p id='waitlist-hint' class='waitlist-hint'>We suggest a personal email, not your work address. One
+            <p id="waitlist-hint" class="waitlist-hint">We suggest a personal email, not your work address. One
                 confirmation email, then launch news only.</p>
-            <p id='waitlist-error' class='field-error' role='alert' data-waitlist-error></p>
-            <div class='waitlist-success' data-waitlist-success role='status' hidden>
-                <svg viewBox='0 0 52 52' class='waitlist-check' aria-hidden='true'><circle
-                        cx='26'
-                        cy='26'
-                        r='24'
-                    /><path d='M15 27l7 7 15-15' /></svg>
+            <p id="waitlist-error" class="field-error" role="alert" data-waitlist-error></p>
+            <div class="waitlist-success" data-waitlist-success role="status" hidden>
+                <svg viewBox="0 0 52 52" class="waitlist-check" aria-hidden="true"><circle
+                        cx="26"
+                        cy="26"
+                        r="24"
+                    /><path d="M15 27l7 7 15-15" /></svg>
                 <p><strong>You're on the list.</strong> Check your inbox for a confirmation.</p>
             </div>
-            <canvas class='waitlist-confetti' data-confetti aria-hidden='true'></canvas>
+            <canvas class="waitlist-confetti" data-confetti aria-hidden="true"></canvas>
         </form>
     </div>
 </section>

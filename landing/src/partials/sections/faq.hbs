@@ -1,16 +1,16 @@
-<section id='faq' class='section faq' aria-labelledby='faq-title'>
-    <div class='section-head'>
-        <p class='eyebrow'>Questions</p>
-        <h2 id='faq-title' class='section-title'>Straight answers.</h2>
+<section id="faq" class="section faq" aria-labelledby="faq-title">
+    <div class="section-head">
+        <p class="eyebrow">Questions</p>
+        <h2 id="faq-title" class="section-title">Straight answers.</h2>
     </div>
-    <div class='faq-list' data-faq>
+    <div class="faq-list" data-faq>
         {{#each faq}}
-            <details class='faq-item'>
+            <details class="faq-item">
                 <summary>
                     <span>{{q}}</span>
-                    <span class='faq-icon' aria-hidden='true'>{{{icon 'plus' 'size-5'}}}</span>
+                    <span class="faq-icon" aria-hidden="true">{{{icon 'plus' 'size-5'}}}</span>
                 </summary>
-                <div class='faq-body'><p>{{a}}</p></div>
+                <div class="faq-body"><p>{{a}}</p></div>
             </details>
         {{/each}}
     </div>

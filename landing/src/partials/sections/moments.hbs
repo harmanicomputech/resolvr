@@ -1,0 +1,39 @@
+<section class="moments" data-moments aria-labelledby="moments-title">
+    <div class="moments-pin">
+        <div class="moments-head">
+            <p class="eyebrow">Moments that matter</p>
+            <h2 id="moments-title" class="section-title">It rarely happens <em>all at once.</em></h2>
+            <p class="moments-hint" aria-hidden="true">{{{icon "move-right" "size-4"}}} Scroll or swipe</p>
+        </div>
+        <ol class="moments-track" data-moments-track>
+            {{#each moments}}
+            <li class="moment" data-moment>
+                <figure class="moment-card" data-tilt-card>
+                    <div class="photo moment-photo" data-curtain>
+                        {{{photo this.photo sizes="(min-width: 64rem) 34rem, 82vw" class="moment-img"}}}
+                    </div>
+                    <figcaption class="moment-caption">
+                        <span class="moment-kicker mono">{{pad @index}} · {{kicker}}</span>
+                        <span class="moment-title display">{{title}}</span>
+                        <span class="moment-body">{{body}}</span>
+                    </figcaption>
+                </figure>
+            </li>
+            {{/each}}
+            <li class="moment moment-end" data-moment>
+                <figure class="moment-card moment-card-end" data-tilt-card>
+                    <div class="photo moment-photo" data-curtain>
+                        {{{photo "writing-notes" sizes="(min-width: 64rem) 26rem, 82vw" class="moment-img"}}}
+                    </div>
+                    <figcaption class="moment-caption">
+                        <span class="moment-kicker mono">05 · Today</span>
+                        <span class="moment-title display">The moment you write it down.</span>
+                        <span class="moment-body">That is where Resolvr starts.</span>
+                        <a href="{{../site.appUrl}}" class="btn moment-cta" data-variant="primary">Start your record {{{icon "arrow-right" "size-4"}}}</a>
+                    </figcaption>
+                </figure>
+            </li>
+        </ol>
+        <div class="moments-progress" aria-hidden="true"><span data-moments-progress></span></div>
+    </div>
+</section>

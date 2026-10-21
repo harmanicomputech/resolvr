@@ -211,3 +211,39 @@ export const founderQuote = {
     name: 'Ayodapo Ige',
     role: 'Founder, Resolvr',
 };
+
+/** Horizontal "moments" gallery after the hero. Photos are illustrative stock, not real users. */
+export const moments = [
+    {
+        photo: 'team-meeting',
+        kicker: 'Monday, 09:40',
+        title: 'The meeting where it was said.',
+        body: 'Write down the exact words, who was in the room and when, while it is still fresh.',
+    },
+    {
+        photo: 'desk-conversation',
+        kicker: 'Wednesday, 14:15',
+        title: 'The comment at your desk.',
+        body: 'Small moments are easy to dismiss one at a time. Logged together, they show a pattern.',
+    },
+    {
+        photo: 'panel-interview',
+        kicker: 'Two weeks later',
+        title: 'The review that suddenly changed.',
+        body: 'When treatment shifts after you speak up, dates are what make it visible.',
+    },
+    {
+        photo: 'hr-meeting',
+        kicker: 'When you are ready',
+        title: 'The conversation with HR.',
+        body: 'Walk in with a timeline, your evidence and a clear request, not just a feeling.',
+    },
+];
+
+export const velocityWords = {
+    top: ['Dates', 'Names', 'Exact words', 'Witnesses', 'Evidence', 'Patterns'],
+    bottom: ['Private', 'Calm', 'Organised', 'Encrypted', 'Yours'],
+};
+
+/** Photo behind the device for each "How it works" step. */
+export const stepPhotos = ['writing-notes', 'laptop-overhead', 'laptop-review', 'document-review'];

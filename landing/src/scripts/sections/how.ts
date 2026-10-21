@@ -10,6 +10,7 @@ export async function initHow(): Promise<void> {
 
     const steps = Array.from(section.querySelectorAll<HTMLElement>('[data-how-step]'));
     const screens = Array.from(section.querySelectorAll<HTMLElement>('[data-how-screen]'));
+    const photos = Array.from(section.querySelectorAll<HTMLElement>('[data-how-photo]'));
     const counted = new Set<number>();
 
     const activate = (index: number) => {
@@ -18,6 +19,7 @@ export async function initHow(): Promise<void> {
             step.toggleAttribute('data-done', i < index);
         });
         screens.forEach((screen, i) => screen.toggleAttribute('data-active', i === index));
+        photos.forEach((photo, i) => photo.toggleAttribute('data-active', i === index));
         if (!counted.has(index)) {
             counted.add(index);
             countIn(steps[index]?.querySelector('.how-num'), index + 1);

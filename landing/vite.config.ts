@@ -6,6 +6,7 @@ import { defineConfig, type Plugin } from 'vite';
 import handlebars from 'vite-plugin-handlebars';
 
 import { renderIcon } from './build/icons';
+import { renderPhoto } from './build/photos';
 import { jsonLd, sitemap } from './build/seo';
 import * as content from './src/content';
 import { pages, site } from './src/pages.config';
@@ -59,6 +60,8 @@ export default defineConfig({
             },
             helpers: {
                 icon: (name: string, className?: unknown) => renderIcon(name, typeof className === 'string' ? className : undefined),
+                photo: (name: string, options: { hash?: Record<string, unknown> }) =>
+                    renderPhoto(name, (options?.hash ?? {}) as Parameters<typeof renderPhoto>[1]),
                 inc: (value: number) => value + 1,
                 pad: (value: number) => String(value + 1).padStart(2, '0'),
                 eq: (a: unknown, b: unknown) => a === b,

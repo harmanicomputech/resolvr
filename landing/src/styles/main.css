@@ -5,6 +5,7 @@
 @import './hero.css';
 @import './sections.css';
 @import './pages.css';
+@import './photos.css';
 
 @source '../pages';
 @source '../partials';

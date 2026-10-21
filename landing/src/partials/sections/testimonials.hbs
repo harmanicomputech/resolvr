@@ -1,28 +1,28 @@
-<section class='section testimonials' aria-labelledby='testimonials-title'>
-    <div class='section-head'>
-        <p class='eyebrow'>From the beta</p>
-        <h2 id='testimonials-title' class='section-title'>Calmer conversations, <em>clearer records.</em></h2>
-        <p class='section-lead placeholder-note'>{{{icon 'info' 'size-4'}}}
+<section class="section testimonials" aria-labelledby="testimonials-title">
+    <div class="section-head">
+        <p class="eyebrow">From the beta</p>
+        <h2 id="testimonials-title" class="section-title">Calmer conversations, <em>clearer records.</em></h2>
+        <p class="section-lead placeholder-note">{{{icon 'info' 'size-4'}}}
             Placeholder quotes for layout only. Real, consented beta feedback will replace them.</p>
     </div>
-    <div class='marquee-controls'>
-        <button type='button' class='btn' data-variant='ghost' data-size='sm' data-marquee-toggle aria-pressed='false'>
+    <div class="marquee-controls">
+        <button type="button" class="btn" data-variant="ghost" data-size="sm" data-marquee-toggle aria-pressed="false">
             {{{icon 'pause' 'size-4'}}}
-            <span data-label>Pause</span><span class='sr-only'> scrolling quotes</span>
+            <span data-label>Pause</span><span class="sr-only"> scrolling quotes</span>
         </button>
     </div>
-    <div class='marquee' data-marquee>
-        <ul class='marquee-track'>
+    <div class="marquee" data-marquee>
+        <ul class="marquee-track">
             {{#each testimonials}}
-                <li class='glass quote-card'>
+                <li class="glass quote-card">
                     <p>“{{quote}}”</p>
                     <span>{{who}}</span>
                 </li>
             {{/each}}
         </ul>
-        <ul class='marquee-track' aria-hidden='true'>
+        <ul class="marquee-track" aria-hidden="true">
             {{#each testimonials}}
-                <li class='glass quote-card'>
+                <li class="glass quote-card">
                     <p>“{{quote}}”</p>
                     <span>{{who}}</span>
                 </li>
