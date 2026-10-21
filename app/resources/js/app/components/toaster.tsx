@@ -36,7 +36,10 @@ export function Toaster({ children }: { children: ReactNode }) {
     return (
         <ToastContext.Provider value={value}>
             {children}
-            <div className="pointer-events-none fixed inset-x-0 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-[60] flex flex-col items-center gap-2 px-4 md:right-6 md:bottom-6 md:left-auto md:items-end" aria-live="polite">
+            <div
+                className="pointer-events-none fixed inset-x-0 bottom-[calc(5.5rem+env(safe-area-inset-bottom))] z-[60] flex flex-col items-center gap-2 px-4 md:right-6 md:bottom-6 md:left-auto md:items-end"
+                aria-live="polite"
+            >
                 <AnimatePresence initial={false}>
                     {items.map((t) => (
                         <motion.div

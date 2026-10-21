@@ -30,23 +30,37 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 
 ## Encryption
 
-- **Key derivation.** The PIN is turned into a 256-bit key with **Argon2id** (19 MiB, 2 passes, 1 lane, the OWASP baseline) running in WebAssembly. If WebAssembly is unavailable, **PBKDF2-SHA256 with 600,000 iterations** is used instead. A random 16-byte salt and the parameters are stored in plaintext in `meta` so the same key can be derived again.
-- **The PIN is never stored.** An encrypted key-check value (`meta.keyCheck`) confirms a PIN is correct: if it decrypts, the key is right.
-- **The key stays in memory.** It is imported as a non-extractable `CryptoKey`, held only by the `Vault` object, and dropped by `vault.lock()`. Raw key bytes are zeroed after import.
+- **Envelope encryption.** Everything is encrypted with one random 256-bit **data key**. The data key is only ever stored *wrapped* (encrypted), once per way of unlocking, in `meta.unlockers`:
+  - `pin`: wrapped with a key derived from the passcode by **Argon2id** (19 MiB, 2 passes, 1 lane, the OWASP baseline) in WebAssembly, or **PBKDF2-SHA256 with 600,000 iterations** if WebAssembly is unavailable. The random salt and parameters are stored next to it.
+  - `passkey` (optional): wrapped with a key from the passkey's **WebAuthn PRF** output (HKDF-SHA256). The passkey never talks to our server; it only unlocks this device.
+  - `recovery` (P2.12): wrapped with a key from the backup recovery phrase.
+- **The passcode is never stored.** A wrong passcode simply fails to unwrap the data key (AES-GCM authentication fails).
+- **Changing the passcode** re-wraps the data key; the data itself is not re-encrypted. Adding a passkey asks for the passcode again, because the in-memory key cannot be read back out.
+- **The key stays in memory.** The unwrapped data key is imported as a non-extractable `CryptoKey`, held only by the `Vault` object, and dropped by `vault.lock()`. Raw key bytes are zeroed after import.
 - **AES-256-GCM** encrypts every record and every file, with a fresh random 96-bit IV each time. The record's identity (`incident:<id>`, `blob:<id>`) is bound in as additional authenticated data, so an encrypted record cannot be moved onto another one, and any change to the ciphertext makes decryption fail.
 - **What storage reveals.** IndexedDB holds ciphertext plus an id and a kind for each row (for example `incident`, `file`). Someone with the device's storage can count records, but cannot read titles, names, dates or files.
 
 ### Limits to be honest about
 
-- A **4-digit PIN** has only 10,000 combinations. Argon2id makes each guess slow, but someone who copies the device's storage could still try them all in hours. The onboarding (P2.2) should offer a longer passcode and say why.
+- A **4-digit PIN** has only 10,000 combinations. Argon2id makes each guess slow, but someone who copies the device's storage could still try them all in hours. Onboarding recommends 6 digits (the default) or a passphrase and says why; 4 digits stays available because the prototype used it.
+- The 5-attempt lockout protects the screen, not the stored data: it slows someone holding the unlocked-screen device, not someone who has copied the storage.
 - Anyone who knows the PIN and has the unlocked device can read the record.
 - If the PIN is forgotten and there is no backup, the record cannot be recovered. That is the cost of the server never holding a key.
+
+## Locking and stealth (P2.2)
+
+- **Lock** forgets the data key and drops every decrypted object held by the app (`useSession().lock()`; screens read through `useData`, which returns nothing once locked). A reload always starts locked.
+- **Auto-lock** after 1, 2 (default), 5, 10 or 30 minutes without input, or never; **lock on hide** (default on) locks as soon as the tab or app is hidden.
+- **Lockout**: 5 wrong passcodes, then a 30-second pause with a countdown ring. The counter is stored so a reload does not reset it.
+- **Stealth mode** shows a working calculator instead of the lock screen, and swaps the tab title, favicon and manifest to "Calculator". Typing the passcode then "=" unlocks; a wrong guess just behaves like a calculator. Passphrase users press and hold "=" to reach the normal lock screen. Already-installed apps keep their icon (browsers do not allow changing it), so Settings explains how to reinstall it disguised.
+- **Panic**: Escape twice, a firm shake, or (in the app shell) triple-tapping the logo locks instantly and shows the calculator, whatever the stealth setting.
+- **Passkey unlock** (optional): offered on devices whose passkeys support the PRF extension. The passkey's name in the system sheet is "Resolvr", which stealth users should know.
 
 ## Storage layout (IndexedDB via Dexie, database `resolvr`)
 
 | Table | Contents |
 | --- | --- |
-| `meta` | `kdf` parameters, `keyCheck`, `schemaVersion`. No personal data. |
+| `meta` | `unlockers` (wrapped data keys + KDF parameters), `schemaVersion`, and three non-sensitive flags needed before unlocking: `pinFormat` (4 digits, 6 digits or passphrase), `stealth`, `lockout` (failed-attempt counter). No personal data. |
 | `records` | `{ id: "<kind>:<id>", kind, iv, ct }`. Kinds: `incident`, `ledger`, `person`, `file`, `profile`, `settings`, `counter`, `draft`. |
 | `blobs` | `{ id, iv, ct }`: evidence file bytes as encrypted `ArrayBuffer`s, never base64 strings. |
 

@@ -8,11 +8,17 @@ interface BeforeInstallPromptEvent extends Event {
 const DISMISSED_KEY = 'resolvr:install-dismissed';
 
 export function isStandalone(): boolean {
-    return window.matchMedia('(display-mode: standalone)').matches || (navigator as Navigator & { standalone?: boolean }).standalone === true;
+    return (
+        window.matchMedia('(display-mode: standalone)').matches ||
+        (navigator as Navigator & { standalone?: boolean }).standalone === true
+    );
 }
 
 export function isIos(): boolean {
-    return /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    return (
+        /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+        (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
 }
 
 /**

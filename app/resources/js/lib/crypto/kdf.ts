@@ -87,3 +87,19 @@ async function argon2Available(): Promise<boolean> {
     }
     return argon2Ok;
 }
+
+/**
+ * Turn high-entropy secret bytes (a passkey's PRF output, a recovery phrase's
+ * seed) into an AES-256-GCM wrapping key with HKDF-SHA256. Unlike a PIN these
+ * need no slow hashing: they are already unguessable.
+ */
+export async function keyFromSecret(secret: BufferSource, info: string): Promise<CryptoKey> {
+    const material = await crypto.subtle.importKey('raw', secret, 'HKDF', false, ['deriveKey']);
+    return crypto.subtle.deriveKey(
+        { name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(32), info: utf8.encode(info) },
+        material,
+        { name: 'AES-GCM', length: 256 },
+        false,
+        ['encrypt', 'decrypt'],
+    );
+}

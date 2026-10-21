@@ -31,9 +31,6 @@ export function UpdateNotice() {
                     },
                 });
             });
-            wb.addEventListener('installed', (event) => {
-                if (!event.isUpdate) toast({ title: 'Ready to work offline', tone: 'success' });
-            });
             void wb.register();
         });
     }, [toast]);

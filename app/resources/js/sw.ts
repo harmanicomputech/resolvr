@@ -21,7 +21,9 @@ precacheAndRoute(self.__WB_MANIFEST);
 cleanupOutdatedCaches();
 
 self.addEventListener('install', (event) => {
-    event.waitUntil(caches.open(SHELL_CACHE).then((cache) => cache.add(new Request(SHELL_URL, { credentials: 'same-origin' }))));
+    event.waitUntil(
+        caches.open(SHELL_CACHE).then((cache) => cache.add(new Request(SHELL_URL, { credentials: 'same-origin' }))),
+    );
 });
 
 self.addEventListener('message', (event) => {

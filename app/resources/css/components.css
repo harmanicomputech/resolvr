@@ -64,6 +64,39 @@
 /* ------------------------------------------------------------------------- */
 
 @layer components {
+    /* Icon-led layouts: a Lucide icon in a soft rounded tile (same look as the landing site). */
+    .icon-badge {
+        display: inline-grid;
+        place-items: center;
+        flex-shrink: 0;
+        width: 2.25rem;
+        height: 2.25rem;
+        border-radius: var(--radius-md);
+        background: var(--accent-tint);
+        color: var(--accent-text);
+        border: 1px solid color-mix(in oklab, var(--accent) 18%, transparent);
+    }
+    .icon-badge[data-size='lg'] {
+        width: 3.5rem;
+        height: 3.5rem;
+        border-radius: var(--radius-lg);
+    }
+    .icon-badge[data-tone='warn'] {
+        background: var(--sev-high-tint);
+        border-color: var(--sev-high-border);
+        color: var(--sev-high-text);
+    }
+    .icon-badge[data-tone='danger'] {
+        background: var(--danger-tint);
+        border-color: color-mix(in oklab, var(--danger) 30%, transparent);
+        color: var(--danger-text);
+    }
+    .icon-badge[data-tone='neutral'] {
+        background: var(--raised);
+        border-color: var(--hairline);
+        color: var(--fg-muted);
+    }
+
     .wordmark {
         font-family: var(--font-display);
         font-weight: 600;

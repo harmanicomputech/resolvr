@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 
 import { FAST_KDF, freshDb, freshVault } from '@/test/fixtures';
 
+import { keyFromSecret } from '../crypto';
 import { Vault, VaultLockedError, WrongPinError } from './vault';
 
 describe('Vault', () => {
@@ -55,7 +56,7 @@ describe('Vault', () => {
         expect(await repos.files.verify(record.id)).toBe(true);
     });
 
-    it('changes the PIN by re-encrypting everything', async () => {
+    it('changes the PIN by re-wrapping the data key', async () => {
         const { db, vault, repos } = await freshVault('1111');
         await repos.singletons.saveProfile({ fullName: 'Sam Doe' });
         await vault.changePin('1111', '2222', { kdf: FAST_KDF });
@@ -68,5 +69,23 @@ describe('Vault', () => {
         const db = freshDb();
         await Vault.create('1234', { db, kdf: FAST_KDF });
         await expect(Vault.create('5678', { db, kdf: FAST_KDF })).rejects.toThrow(/already exists/);
+    });
+
+    it('unlocks with an added passkey or recovery secret, and stops once it is removed', async () => {
+        const { db, vault, repos } = await freshVault('1111');
+        await repos.singletons.saveProfile({ fullName: 'Sam Doe' });
+        const secret = crypto.getRandomValues(new Uint8Array(32));
+        const wrap = await keyFromSecret(secret, 'resolvr-passkey');
+        await expect(vault.addUnlocker('passkey', '9999', wrap)).rejects.toBeInstanceOf(WrongPinError);
+        await vault.addUnlocker('passkey', '1111', wrap, { credentialId: 'abc' });
+        expect((await Vault.unlockers(db)).passkey?.data?.credentialId).toBe('abc');
+
+        const reopened = await Vault.unlockWith('passkey', await keyFromSecret(secret, 'resolvr-passkey'), { db });
+        expect((await reopened.get<{ fullName: string }>('profile', 'me'))?.fullName).toBe('Sam Doe');
+        const wrong = await keyFromSecret(new Uint8Array(32), 'resolvr-passkey');
+        await expect(Vault.unlockWith('passkey', wrong, { db })).rejects.toBeInstanceOf(WrongPinError);
+
+        await vault.removeUnlocker('passkey');
+        await expect(Vault.unlockWith('passkey', wrap, { db })).rejects.toThrow(/No passkey/);
     });
 });

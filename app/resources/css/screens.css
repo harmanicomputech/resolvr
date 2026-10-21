@@ -1,0 +1,224 @@
+/*
+ * App screen styles that are not reusable components: the lock screen, PIN
+ * pad and stealth calculator. Colours come from tokens.css; the calculator
+ * has its own small token set because it must look like a stock calculator,
+ * not like Resolvr.
+ */
+
+/* ------------------------------------------------------------ lock screen */
+
+.lock-backdrop {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--bg);
+    z-index: 0;
+}
+.lock-backdrop::before,
+.lock-backdrop::after {
+    content: '';
+    position: absolute;
+    width: 70vmax;
+    height: 70vmax;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.32;
+}
+.lock-backdrop::before {
+    background: radial-gradient(circle, var(--aurora-1), transparent 65%);
+    top: -30vmax;
+    left: -20vmax;
+}
+.lock-backdrop::after {
+    background: radial-gradient(circle, var(--aurora-3), transparent 65%);
+    bottom: -35vmax;
+    right: -25vmax;
+    opacity: 0.22;
+}
+@media (prefers-reduced-motion: no-preference) {
+    .lock-backdrop::before {
+        animation: lock-drift 18s var(--ease-in-out-quart) infinite alternate;
+    }
+}
+@keyframes lock-drift {
+    to {
+        transform: translate(8vmax, 6vmax) scale(1.08);
+    }
+}
+
+.pin-dots {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 1rem;
+}
+.pin-dot {
+    width: 0.875rem;
+    height: 0.875rem;
+    border-radius: var(--radius-full);
+    border: 1.5px solid var(--hairline-strong);
+    transition:
+        background-color var(--dur-fast) var(--ease-standard),
+        border-color var(--dur-fast) var(--ease-standard);
+}
+.pin-dot[data-filled] {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.pin-dots[data-error] .pin-dot {
+    border-color: var(--danger);
+}
+.pin-dots[data-error] .pin-dot[data-filled] {
+    background: var(--danger);
+}
+
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 4.5rem);
+    gap: 1rem 1.5rem;
+    justify-content: center;
+}
+.keypad-key {
+    display: grid;
+    place-items: center;
+    width: 4.5rem;
+    height: 4.5rem;
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: 1.625rem;
+    font-weight: 500;
+    color: var(--fg);
+    background: var(--glass-fill);
+    border: 1px solid var(--hairline);
+    backdrop-filter: blur(var(--blur-sm));
+    transition: background-color var(--dur-instant) var(--ease-standard);
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+.keypad-key:active {
+    background: var(--accent-tint);
+}
+.keypad-key[data-quiet] {
+    background: transparent;
+    border-color: transparent;
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    color: var(--fg-muted);
+}
+.keypad-key:focus-visible {
+    outline: none;
+    box-shadow: var(--focus-ring);
+}
+
+.lockout-ring circle {
+    fill: none;
+    stroke-width: 4;
+}
+.lockout-ring .track {
+    stroke: var(--hairline);
+}
+.lockout-ring .progress {
+    stroke: var(--accent);
+    stroke-linecap: round;
+    transform: rotate(-90deg);
+    transform-origin: center;
+    transition: stroke-dashoffset 1s linear;
+}
+
+/* ------------------------------------------------------------- calculator */
+
+.calculator {
+    --calc-bg: #000;
+    --calc-fg: #fff;
+    --calc-digit: #333;
+    --calc-digit-active: #737373;
+    --calc-function: #a5a5a5;
+    --calc-function-fg: #000;
+    --calc-function-active: #d9d9d9;
+    --calc-operator: #ff9f0a;
+    --calc-operator-active: #fcc78d;
+
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: env(safe-area-inset-top) 1rem calc(1.5rem + env(safe-area-inset-bottom));
+    background: var(--calc-bg);
+    color: var(--calc-fg);
+    font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', Arial, sans-serif;
+    user-select: none;
+    -webkit-user-select: none;
+}
+.calc-display {
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto 0.75rem;
+    padding: 0 0.75rem;
+    text-align: right;
+    font-weight: 300;
+    font-size: clamp(3.5rem, 22vw, 5.75rem);
+    line-height: 1.05;
+    white-space: nowrap;
+    overflow: hidden;
+    font-variant-numeric: tabular-nums;
+}
+.calc-display[data-size='md'] {
+    font-size: clamp(2.75rem, 16vw, 4.25rem);
+}
+.calc-display[data-size='sm'] {
+    font-size: clamp(2rem, 11vw, 3rem);
+}
+.calc-keys {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.75rem;
+    width: 100%;
+    max-width: 24rem;
+    margin: 0 auto;
+}
+.calc-key {
+    aspect-ratio: 1;
+    border-radius: 9999px;
+    font-size: clamp(1.75rem, 8vw, 2.25rem);
+    font-weight: 400;
+    background: var(--calc-digit);
+    color: var(--calc-fg);
+    transition: background-color 0.35s ease-out;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+}
+.calc-key:active {
+    background: var(--calc-digit-active);
+    transition: none;
+}
+.calc-key[data-kind='function'] {
+    background: var(--calc-function);
+    color: var(--calc-function-fg);
+    font-size: clamp(1.4rem, 6.5vw, 1.85rem);
+    font-weight: 500;
+}
+.calc-key[data-kind='function']:active {
+    background: var(--calc-function-active);
+}
+.calc-key[data-kind='operator'] {
+    background: var(--calc-operator);
+    font-size: clamp(2rem, 9vw, 2.6rem);
+}
+.calc-key[data-kind='operator']:active {
+    background: var(--calc-operator-active);
+}
+.calc-key[data-kind='operator'][aria-pressed='true'] {
+    background: var(--calc-fg);
+    color: var(--calc-operator);
+}
+.calc-key[data-wide] {
+    grid-column: span 2;
+    aspect-ratio: auto;
+    text-align: left;
+    padding-left: 11%;
+}
+.calc-key:focus-visible {
+    outline: 2px solid var(--calc-operator);
+    outline-offset: 2px;
+}

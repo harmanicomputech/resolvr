@@ -35,7 +35,11 @@ export function InstallPrompt({ eligible }: { eligible: boolean }) {
     if (showIosHelp) {
         return (
             <Sheet defaultOpen onOpenChange={(open) => !open && dismiss()}>
-                <SheetContent side="bottom" title="Add Resolvr to your Home Screen" description="It opens like an app and works offline.">
+                <SheetContent
+                    side="bottom"
+                    title="Add Resolvr to your Home Screen"
+                    description="It opens like an app and works offline."
+                >
                     <ol className="space-y-4 text-sm">
                         <li className="flex items-center gap-3">
                             <span className="icon-badge" aria-hidden>

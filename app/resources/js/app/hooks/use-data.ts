@@ -11,17 +11,24 @@ type Dep = string | number | boolean | null | undefined;
  * version changes (after any write) or a dep changes, keeps showing the
  * previous result while reloading, and returns nothing once the vault locks.
  */
-export function useData<T>(load: (repos: Repositories) => Promise<T>, deps: Dep[] = []): { data: T | undefined; loading: boolean; error: Error | null } {
+export function useData<T>(
+    load: (repos: Repositories) => Promise<T>,
+    deps: Dep[] = [],
+): { data: T | undefined; loading: boolean; error: Error | null } {
     const { repos, version } = useSession();
     const key = JSON.stringify([version, ...deps]);
-    const [state, setState] = useState<{ key: string; repos: Repositories; data?: T; error: Error | null } | null>(null);
+    const [state, setState] = useState<{ key: string; repos: Repositories; data?: T; error: Error | null } | null>(
+        null,
+    );
 
     useEffect(() => {
         if (!repos) return;
         let cancelled = false;
         load(repos).then(
             (data) => !cancelled && setState({ key, repos, data, error: null }),
-            (error: unknown) => !cancelled && setState({ key, repos, error: error instanceof Error ? error : new Error(String(error)) }),
+            (error: unknown) =>
+                !cancelled &&
+                setState({ key, repos, error: error instanceof Error ? error : new Error(String(error)) }),
         );
         return () => {
             cancelled = true;
