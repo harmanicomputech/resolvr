@@ -12,6 +12,7 @@ export * from './drafts';
 export * from './files';
 export * from './incidents';
 export * from './people';
+export * from './people-merge';
 export * from './singletons';
 export * from './vault';
 

@@ -76,6 +76,7 @@ export function LockScreen({ onForgot }: { onForgot: () => void }) {
 
                 <p className="min-h-5 text-center text-xs text-fg-subtle" aria-live="polite">
                     {!lockedUntil &&
+                        !busy &&
                         session.lockout.attempts > 0 &&
                         `${attemptsLeft} ${attemptsLeft === 1 ? 'try' : 'tries'} left before a short pause`}
                 </p>
