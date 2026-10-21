@@ -1,0 +1,32 @@
+<section id="pricing" class="section pricing" x-data="pricing" aria-labelledby="pricing-title">
+    <div class="section-head">
+        <p class="eyebrow">Pricing</p>
+        <h2 id="pricing-title" class="section-title">Start free. <em>Upgrade when you need to.</em></h2>
+        <div class="segmented pricing-toggle" role="group" aria-label="Billing period">
+            <button type="button" aria-pressed="true" data-period="monthly" x-on:click="setPeriod">Monthly</button>
+            <button type="button" aria-pressed="false" data-period="yearly" x-on:click="setPeriod">Yearly <span class="pricing-save">2 months free</span></button>
+        </div>
+        {{#unless PRICES_CONFIRMED}}
+        <p class="placeholder-note">{{{icon "info" "size-4"}}} Prices are placeholders while we finish the beta.</p>
+        {{/unless}}
+    </div>
+
+    <ul class="pricing-grid">
+        {{#each plans}}
+        <li class="price-card{{#if featured}} price-card-featured{{/if}}" data-reveal>
+            {{#if featured}}<span class="price-badge">Most chosen</span>{{/if}}
+            <h3>{{name}}</h3>
+            <p class="price-blurb">{{blurb}}</p>
+            <p class="price">
+                <span class="price-currency">$</span><span class="price-amount" data-monthly="{{monthly}}" data-yearly="{{yearly}}" aria-live="polite">{{monthly}}</span>
+                <span class="price-period" data-period-label>{{#if monthly}}/ month{{else}}forever{{/if}}</span>
+            </p>
+            <a href="{{../site.appUrl}}" class="btn" data-variant="{{#if featured}}primary{{else}}glass{{/if}}" data-size="lg">{{cta}}</a>
+            <ul class="price-features">
+                {{#each features}}<li>{{{icon "check" "size-4"}}} {{this}}</li>{{/each}}
+            </ul>
+        </li>
+        {{/each}}
+    </ul>
+    <p class="pricing-foot">All plans: no ads, no trackers, export any time. Not legal advice.</p>
+</section>

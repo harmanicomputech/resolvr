@@ -1,0 +1,61 @@
+<section class='problem' data-problem aria-labelledby='problem-title'>
+    <div class='problem-pin'>
+        <div class='section-head problem-head'>
+            <p class='eyebrow'>The problem</p>
+            <h2 id='problem-title' class='section-title'>When something goes wrong at work,
+                <em>you're on your own.</em></h2>
+        </div>
+
+        <div class='problem-stage'>
+            <div class='problem-fragments' aria-hidden='true'>
+                <div class='fragment fragment-note' data-fragment='1'>
+                    <span>Tues: said it again in front of everyone??</span>
+                </div>
+                <div class='fragment fragment-note' data-fragment='2' data-tone='violet'>
+                    <span>ask HR about the rota thing</span>
+                </div>
+                <div class='fragment fragment-shot' data-fragment='3'>
+                    <span class='fragment-shot-bar'></span><span></span><span></span><span></span>
+                </div>
+                <div class='fragment fragment-cal' data-fragment='4'>
+                    <span class='fragment-cal-head'>March</span>
+                    <span class='fragment-cal-grid'><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i
+                        ></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+                </div>
+                <div class='fragment fragment-note' data-fragment='5' data-tone='amber'>
+                    <span>screenshot of the email??</span>
+                </div>
+            </div>
+
+            <ol class='problem-statements'>
+                {{#each problemStatements}}
+                    <li class='problem-statement display' data-statement='{{@index}}'>{{this}}</li>
+                {{/each}}
+            </ol>
+
+            <div class='problem-timeline card' data-problem-timeline aria-hidden='true'>
+                <p class='eyebrow'>Your record</p>
+                <ol>
+                    <li data-severity='medium'><span class='mono'>INC-001</span><span>Comment in team meeting</span><span
+                            class='sev'
+                            data-severity='medium'
+                        >Medium</span></li>
+                    <li data-severity='medium'><span class='mono'>INC-002</span><span>Excluded from planning email</span><span
+                            class='sev'
+                            data-severity='medium'
+                        >Medium</span></li>
+                    <li data-severity='high'><span class='mono'>INC-003</span><span>Shift changed after HR report</span><span
+                            class='sev'
+                            data-severity='high'
+                        >High</span></li>
+                </ol>
+                <p class='problem-timeline-foot'>{{{icon 'waypoints' 'size-4'}}} Pattern: same person, escalating</p>
+            </div>
+        </div>
+
+        <p class='problem-stat'>
+            {{problemStat.text}}
+            <cite>{{problemStat.source}}</cite>
+        </p>
+    </div>
+</section>

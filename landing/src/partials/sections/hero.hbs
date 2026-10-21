@@ -1,0 +1,58 @@
+<section class="hero" data-hero aria-labelledby="hero-title">
+    <div class="hero-bg" aria-hidden="true">
+        <div class="hero-layer" data-depth="0.4"><div class="aurora-glow hero-aurora-fallback"></div></div>
+        <canvas class="hero-aurora" data-aurora></canvas>
+        <canvas class="hero-particles" data-depth="1" data-particles></canvas>
+        <div class="noise"></div>
+        <div class="hero-vignette"></div>
+    </div>
+
+    <div class="hero-inner">
+        <div class="hero-copy">
+            <p class="hero-eyebrow glass" data-blur="sm">
+                <span class="pulse-dot" aria-hidden="true"></span>
+                Now in beta
+            </p>
+            <h1 id="hero-title" class="hero-title display" data-split>
+                Finally heard. <em class="hero-sheen">Finally resolved.</em>
+            </h1>
+            <p class="hero-sub" data-hero-fade>
+                Document what happens at work with tamper-evident timestamps, keep your evidence private on your own device,
+                and turn it into a clear, HR-ready complaint when you are ready.
+            </p>
+            <div class="hero-ctas" data-hero-fade>
+                <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg" data-magnetic>
+                    Start documenting, free {{{icon "arrow-right" "size-4"}}}
+                </a>
+                <a href="#how-it-works" class="btn" data-size="lg">See how it works</a>
+            </div>
+            <ul class="hero-trust" data-hero-fade>
+                <li>{{{icon "shield-check" "size-4"}}} Encrypted on device</li>
+                <li>{{{icon "wifi-off" "size-4"}}} Works offline</li>
+                <li>{{{icon "smartphone" "size-4"}}} Installable</li>
+                <li>{{{icon "scale" "size-4"}}} Not legal advice</li>
+            </ul>
+        </div>
+
+        <div class="hero-visual" data-hero-visual aria-hidden="true">
+            <div class="hero-stage" data-tilt>
+                <div class="device">
+                    <div class="device-notch"></div>
+                    {{> device-dashboard}}
+                </div>
+                <div class="orbit-card glass" data-blur="sm" data-depth="1.6" data-orbit="1">
+                    <span class="orbit-icon">{{{icon "lock" "size-4"}}}</span>
+                    <span><span class="mono">INC-014</span> logged · 09:42</span>
+                </div>
+                <div class="orbit-card glass" data-blur="sm" data-depth="2.2" data-orbit="2">
+                    <span class="orbit-icon" data-tone="pattern">{{{icon "waypoints" "size-4"}}}</span>
+                    <span>Pattern detected: 4 incidents, same person</span>
+                </div>
+                <div class="orbit-card glass" data-blur="sm" data-depth="1.2" data-orbit="3">
+                    <span class="orbit-icon">{{{icon "gauge" "size-4"}}}</span>
+                    <span>Evidence score <strong>78</strong></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

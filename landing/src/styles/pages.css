@@ -1,0 +1,209 @@
+/* Inner pages: story, security, pricing, privacy, terms. */
+
+@layer components {
+    .page {
+        padding-top: 7rem;
+    }
+
+    .page-tight > .section:first-of-type {
+        padding-top: 2rem;
+    }
+
+    .page-hero {
+        max-width: 52rem;
+        margin-inline: auto;
+        padding: 2rem 1.25rem 0;
+        text-align: center;
+    }
+
+    .page-title {
+        margin-top: 0.75rem;
+        font-size: var(--text-6xl);
+        line-height: 1;
+    }
+
+    .page .page-hero + .section {
+        padding-top: 4rem;
+    }
+
+    /* Long-form reading */
+    .prose-page {
+        max-width: 42rem;
+        margin-inline: auto;
+        padding: 0 1.25rem 6rem;
+        color: var(--fg-muted);
+        font-size: var(--text-base);
+        line-height: 1.75;
+    }
+
+    .prose-page > * + * {
+        margin-top: 1.25rem;
+    }
+
+    .prose-page .lead {
+        font-family: var(--font-display);
+        font-size: var(--text-3xl);
+        line-height: 1.25;
+        color: var(--fg);
+    }
+
+    .prose-page h2 {
+        margin-top: 3rem;
+        font-family: var(--font-display);
+        font-size: var(--text-3xl);
+        line-height: 1.2;
+        color: var(--fg);
+        scroll-margin-top: 7rem;
+    }
+
+    .prose-page h3 {
+        margin-top: 2rem;
+        font-size: var(--text-lg);
+        font-weight: 600;
+        color: var(--fg);
+        scroll-margin-top: 7rem;
+    }
+
+    .prose-page strong {
+        color: var(--fg);
+        font-weight: 600;
+    }
+
+    .prose-page ul,
+    .prose-page ol {
+        display: grid;
+        gap: 0.5rem;
+        padding-left: 1.25rem;
+    }
+
+    .prose-page ul {
+        list-style: disc;
+    }
+
+    .prose-page ol {
+        list-style: decimal;
+    }
+
+    .prose-page li::marker {
+        color: var(--accent-text);
+    }
+
+    .prose-page a:not(.btn) {
+        color: var(--accent-text);
+        text-decoration: underline;
+        text-underline-offset: 0.2em;
+    }
+
+    .prose-page table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: var(--text-sm);
+    }
+
+    .prose-page th,
+    .prose-page td {
+        padding: 0.625rem 0.5rem;
+        border-bottom: 1px solid var(--hairline);
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .prose-page th {
+        color: var(--fg);
+        font-weight: 600;
+    }
+
+    /* Legal pages: sticky table of contents beside the text. */
+    .legal {
+        display: grid;
+        gap: 2rem;
+        max-width: 72rem;
+        margin-inline: auto;
+        padding: 0 1.25rem 6rem;
+    }
+
+    @media (min-width: 64rem) {
+        .legal {
+            grid-template-columns: 15rem 1fr;
+            gap: 4rem;
+        }
+    }
+
+    .legal .prose-page {
+        padding: 0;
+        margin: 0;
+    }
+
+    .toc {
+        font-size: var(--text-sm);
+    }
+
+    @media (min-width: 64rem) {
+        .toc {
+            position: sticky;
+            top: 7rem;
+            align-self: start;
+            max-height: calc(100vh - 9rem);
+            overflow-y: auto;
+        }
+    }
+
+    .toc ol {
+        display: grid;
+        gap: 0.125rem;
+        margin-top: 0.75rem;
+        border-left: 1px solid var(--hairline);
+    }
+
+    .toc a {
+        display: block;
+        padding: 0.375rem 0 0.375rem 1rem;
+        margin-left: -1px;
+        border-left: 1px solid transparent;
+        color: var(--fg-muted);
+        transition:
+            color var(--dur-fast) var(--ease-standard),
+            border-color var(--dur-fast) var(--ease-standard);
+    }
+
+    .toc a:hover {
+        color: var(--fg);
+    }
+
+    .toc a[aria-current='true'] {
+        color: var(--fg);
+        border-left-color: var(--accent);
+    }
+
+    @media (max-width: 63.99rem) {
+        .toc {
+            padding: 1rem 1.25rem;
+            border: 1px solid var(--hairline);
+            border-radius: var(--radius-lg);
+            background: var(--surface);
+        }
+    }
+
+    .legal-meta {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 0.5rem 1.5rem;
+        margin-top: 1.5rem;
+        font-size: var(--text-sm);
+        color: var(--fg-muted);
+    }
+
+    .draft-banner {
+        display: flex;
+        gap: 0.75rem;
+        max-width: 72rem;
+        margin: 2rem auto;
+        padding: 1rem 1.25rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid var(--warning);
+        background: var(--warning-tint);
+        color: var(--warning-text);
+        font-size: var(--text-sm);
+    }
+}

@@ -1,0 +1,20 @@
+<section class='section founder' data-founder aria-labelledby='founder-title'>
+    <h2 id='founder-title' class='sr-only'>Why Resolvr exists</h2>
+    <div class='founder-grid'>
+        <figure class='founder-portrait' data-parallax='0.12'>
+            <div class='founder-frame'>
+                {{! Portrait placeholder. Replace with a photo of Ayodapo Ige (founder-portrait.webp). }}
+                <span class='wordmark founder-initials' aria-hidden='true'>AI</span>
+            </div>
+        </figure>
+        <figure class='founder-quote'>
+            <blockquote class='display'>
+                {{#each founderQuote.lines}}<span class='founder-line' data-line><span>{{this}}</span></span> {{/each}}
+            </blockquote>
+            <figcaption>
+                <span class='text-fg'>{{founderQuote.name}}</span>
+                <span class='text-fg-muted'>{{founderQuote.role}}</span>
+            </figcaption>
+        </figure>
+    </div>
+</section>

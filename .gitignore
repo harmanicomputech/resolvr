@@ -34,3 +34,4 @@ coverage/
 !.env.example
 vendor/
 app/.phpunit.cache/
+.shot*.mjs

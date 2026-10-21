@@ -3,11 +3,57 @@
     <head>
         {{> head}}
     </head>
-    <body class="bg-bg text-fg antialiased">
+    <body>
         {{> nav}}
-        <main id="main" class="mx-auto max-w-6xl px-4 py-24">
-            <h1 class="text-4xl">Our story</h1>
-            <!-- Built in Phase 1. -->
+        <main id="main" class="page">
+            <header class="page-hero">
+                <p class="eyebrow">Our story</p>
+                <h1 class="page-title display">Built by someone who <em>needed it.</em></h1>
+            </header>
+            {{> founder}} {{!-- DRAFT long-form story. Confirm every detail with Ayodapo Ige before launch. --}}
+            <article class="prose-page" data-reveal>
+                <p class="lead">
+                    Resolvr started with a manager who made work unbearable, and a folder that should have existed but
+                    didn't.
+                </p>
+                <p>
+                    It was rarely one big moment. It was a remark in a meeting, a change to a schedule, an email that
+                    left someone out. Each one was easy to explain away. Together they were wearing someone down. When
+                    the time came to talk to HR, there were no dates, no notes and no screenshots, only memory, and
+                    memory is easy to question.
+                </p>
+                <p>
+                    Ayodapo Ige built Resolvr so that nobody has to start from nothing. It is a private place to write
+                    down what happened, when, who was there and how it affected you, with timestamps that show the
+                    record was not rewritten later. It keeps your evidence on your own device, encrypted, and helps you
+                    see the pattern when you are too close to it.
+                </p>
+                <h2>What we believe</h2>
+                <ul>
+                    <li>
+                        <strong>Your record belongs to you.</strong> It lives on your device, and you decide if and when
+                        anyone sees it.
+                    </li>
+                    <li>
+                        <strong>Calm is a feature.</strong> No alarms, no streaks, no gamification. Just a steady,
+                        organised record.
+                    </li>
+                    <li>
+                        <strong>Honesty over hype.</strong> Resolvr does not promise outcomes. It helps you be clear and
+                        prepared.
+                    </li>
+                    <li>
+                        <strong>We are not lawyers.</strong> Resolvr is not legal advice. When you need advice, we point
+                        you to people who can give it.
+                    </li>
+                </ul>
+                <h2>Who runs Resolvr</h2>
+                <p>
+                    Resolvr is operated as a DBA of a Texas LLC. We are a small team. You can reach us at
+                    <a href="mailto:{{site.email}}" class="link">{{site.email}}</a>.
+                </p>
+                <p><a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">Start your record</a></p>
+            </article>
         </main>
         {{> footer}}
     </body>

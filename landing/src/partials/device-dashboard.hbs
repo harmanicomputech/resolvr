@@ -1,0 +1,47 @@
+{{! The real dashboard UI in miniature, built in HTML. Decorative: hidden from assistive tech by the device frame. }}
+<div class='screen screen-dashboard'>
+    <div class='screen-top'>
+        <span class='wordmark text-lg'>Resolvr</span>
+        <span class='screen-lock'>{{{icon 'lock' 'size-3.5'}}}</span>
+    </div>
+    <p class='screen-greet'>Good morning</p>
+    <p class='screen-summary'>12 incidents over 4 months, mostly involving one manager, trending more serious.</p>
+
+    <div class='screen-steps' aria-hidden='true'>
+        <span data-done>Documenting</span><span data-done>Pattern found</span><span data-active>Report ready</span><span
+        >Legal ready</span>
+    </div>
+
+    <div class='screen-grid'>
+        <div class='screen-card'>
+            <span class='screen-label'>Incidents</span>
+            <span class='screen-value'>12</span>
+        </div>
+        <div class='screen-card'>
+            <span class='screen-label'>Evidence score</span>
+            <span class='screen-value'>78</span>
+        </div>
+        <div class='screen-card screen-card-wide'>
+            <span class='screen-label'>Last 6 months</span>
+            <div class='screen-bars'>
+                <i></i><i></i><i></i><i></i><i></i><i></i>
+            </div>
+        </div>
+    </div>
+
+    <p class='screen-label mt-3'>Recent</p>
+    <ul class='screen-list'>
+        <li><span class='mono'>INC-014</span><span>Comment in stand-up</span><span
+                class='sev'
+                data-severity='high'
+            >High</span></li>
+        <li><span class='mono'>INC-013</span><span>Excluded from review</span><span
+                class='sev'
+                data-severity='medium'
+            >Med</span></li>
+        <li><span class='mono'>INC-012</span><span>Shift changed after report</span><span
+                class='sev'
+                data-severity='critical'
+            >Crit</span></li>
+    </ul>
+</div>

@@ -1,14 +1,46 @@
-<a href='#main' class='sr-only focus:not-sr-only'>Skip to content</a>
-<header class='px-4 py-4'>
-    <nav aria-label='Primary' class='mx-auto flex max-w-6xl items-center justify-between gap-6'>
-        <a href='/' class='font-display text-2xl italic'>Resolvr</a>
-        <ul class='hidden gap-6 text-sm md:flex'>
-            <li><a href='/#features'>Features</a></li>
-            <li><a href='/#how-it-works'>How it works</a></li>
-            <li><a href='/security'>Security</a></li>
-            <li><a href='/story'>Story</a></li>
-            <li><a href='/pricing'>Pricing</a></li>
+{{> chrome}}
+<div x-data="menu">
+<header class="site-nav" data-nav>
+    <nav class="site-nav-inner glass" data-blur="sm" aria-label="Primary">
+        <a href="/" class="wordmark site-nav-logo" aria-label="Resolvr home">Resolvr</a>
+        <ul class="site-nav-links">
+            <li><a href="/#features">Features</a></li>
+            <li><a href="/#how-it-works">How it works</a></li>
+            <li><a href="/security"{{#if (eq page.name "security")}} aria-current="page"{{/if}}>Security</a></li>
+            <li><a href="/story"{{#if (eq page.name "story")}} aria-current="page"{{/if}}>Story</a></li>
+            <li><a href="/pricing"{{#if (eq page.name "pricing")}} aria-current="page"{{/if}}>Pricing</a></li>
         </ul>
-        <a href='{{site.appUrl}}' class='text-sm'>Open the app</a>
+        <div class="site-nav-ctas">
+            <a href="/#waitlist" class="btn" data-variant="ghost" data-size="sm">Join waitlist</a>
+            <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="sm">Open the app</a>
+        </div>
+        <div class="site-nav-mobile">
+            <button
+                type="button"
+                class="btn menu-toggle"
+                data-variant="ghost"
+                data-size="icon"
+                aria-controls="mobile-menu"
+                x-bind:aria-expanded="expanded"
+                x-on:click="toggle"
+            >
+                <span class="sr-only">Menu</span>
+                <span class="menu-icon" aria-hidden="true"><span></span><span></span></span>
+            </button>
+        </div>
     </nav>
 </header>
+    <div id="mobile-menu" class="mobile-menu" x-bind:data-open="open" x-on:keydown.escape.stop="close" inert>
+        <ul>
+            <li><a href="/#features" x-on:click="close">Features</a></li>
+            <li><a href="/#how-it-works" x-on:click="close">How it works</a></li>
+            <li><a href="/security">Security</a></li>
+            <li><a href="/story">Story</a></li>
+            <li><a href="/pricing">Pricing</a></li>
+        </ul>
+        <div class="mobile-menu-ctas">
+            <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">Open the app</a>
+            <a href="/#waitlist" class="btn" data-size="lg" x-on:click="close">Join waitlist</a>
+        </div>
+        <p class="mobile-menu-note">Not legal advice. Press Quick exit at any time to leave.</p>
+    </div></div>

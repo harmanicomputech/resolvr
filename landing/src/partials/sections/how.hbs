@@ -1,0 +1,69 @@
+<section id='how-it-works' class='section how' data-how aria-labelledby='how-title'>
+    <div class='section-head'>
+        <p class='eyebrow'>How it works</p>
+        <h2 id='how-title' class='section-title'>Four steps. <em>About a minute each.</em></h2>
+    </div>
+
+    <div class='how-grid'>
+        <ol class='how-steps'>
+            <span class='how-progress' aria-hidden='true'><span data-how-progress></span></span>
+            {{#each steps}}
+                <li class='how-step' data-how-step='{{@index}}'>
+                    <span class='how-num mono' aria-hidden='true'>{{pad @index}}</span>
+                    <div>
+                        <h3>{{title}}</h3>
+                        <p>{{body}}</p>
+                    </div>
+                </li>
+            {{/each}}
+        </ol>
+
+        <div class='how-device-wrap' aria-hidden='true'>
+            <div class='device how-device'>
+                <div class='device-notch'></div>
+                <div class='screen screen-step' data-how-screen='0'>
+                    <p class='screen-title'>New incident</p>
+                    <span class='screen-field'><b>Title</b>Comment in stand-up</span>
+                    <span class='screen-field'><b>When</b>Today, 09:42</span>
+                    <span class='screen-field screen-field-tall'><b>What happened</b>"You people never get it right," in
+                        front of the team.</span>
+                    <span class='screen-chip-row'><span class='chip' data-selected>Verbal harassment</span><span
+                            class='chip'
+                        >Hostile environment</span></span>
+                    <span class='screen-locked mono'>{{{icon 'lock' 'size-3.5'}}} Locked · sha256 9f2c…a71e</span>
+                </div>
+                <div class='screen screen-step' data-how-screen='1'>
+                    <p class='screen-title'>Evidence vault</p>
+                    <div class='screen-vault'><i></i><i data-kind='pdf'></i><i></i><i></i><i data-kind='audio'></i><i
+                        ></i></div>
+                    <span class='screen-locked'>{{{icon 'shield-check' 'size-3.5'}}}
+                        6 files · encrypted on device</span>
+                </div>
+                <div class='screen screen-step' data-how-screen='2'>
+                    <p class='screen-title'>Timeline</p>
+                    <ul class='screen-timeline'>
+                        <li data-severity='low'><b>Mar</b>Excluded from meeting</li>
+                        <li data-severity='medium'><b>Apr</b>Comment about accent</li>
+                        <li data-severity='medium'><b>Apr</b>Reported to HR</li>
+                        <li data-severity='high'><b>May</b>Shift changed</li>
+                        <li data-severity='critical'><b>May</b>Written warning</li>
+                    </ul>
+                    <span class='screen-pattern'>{{{icon 'waypoints' 'size-3.5'}}}
+                        Possible retaliation: within 30 days of report</span>
+                </div>
+                <div class='screen screen-step' data-how-screen='3'>
+                    <p class='screen-title'>HR complaint</p>
+                    <div class='screen-letter'>
+                        <p>Dear HR team,</p>
+                        <p>I am writing to raise a formal complaint about a pattern of conduct by my line manager
+                            between March and May…</p>
+                        <span></span><span></span><span data-short></span>
+                    </div>
+                    <span class='screen-chip-row'><span class='chip' data-selected>Formal</span><span
+                            class='chip'
+                        >Investigation</span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

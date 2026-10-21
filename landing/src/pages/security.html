@@ -3,11 +3,69 @@
     <head>
         {{> head}}
     </head>
-    <body class="bg-bg text-fg antialiased">
+    <body>
         {{> nav}}
-        <main id="main" class="mx-auto max-w-6xl px-4 py-24">
-            <h1 class="text-4xl">Security and privacy</h1>
-            <!-- Built in Phase 1. -->
+        <main id="main" class="page">
+            <header class="page-hero">
+                <p class="eyebrow">Security</p>
+                <h1 class="page-title display">Private by design, <em>not by promise.</em></h1>
+                <p class="section-lead">
+                    How Resolvr protects your record, in plain language, including what it does not protect against.
+                </p>
+            </header>
+            {{> security}}
+            <article class="prose-page" data-reveal>
+                <h2>How it works</h2>
+                <h3>Encryption on your device</h3>
+                <p>
+                    When you set your PIN, Resolvr derives an encryption key from it with a slow key-derivation function
+                    and a random salt. Every incident and file is encrypted with AES-256-GCM before it is written to
+                    your browser's storage. The key is held only in memory while the app is unlocked and is discarded
+                    when it locks.
+                </p>
+                <h3>Tamper-evident timestamps</h3>
+                <p>
+                    Each incident is hashed with SHA-256 together with the hash of the entry before it, forming a chain.
+                    Edits are saved as new versions rather than overwriting the original. Exports include a verification
+                    appendix so anyone can check the chain has not been altered. This shows whether a record changed
+                    after it was made; it cannot prove that what was written is true.
+                </p>
+                <h3>Backups</h3>
+                <p>
+                    Backup is optional. When it is on, your data is encrypted on your device and only the ciphertext is
+                    uploaded. You keep a recovery phrase; we never see it, and we cannot reset it for you.
+                </p>
+                <h3>AI drafting</h3>
+                <p>
+                    Drafting a document sends only the incident fields you select, shown to you before anything is sent,
+                    to our server, which passes them to our AI provider to write the draft. Drafting is optional and
+                    never happens in the background.
+                </p>
+                <h2>Limits you should know</h2>
+                <ul>
+                    <li>
+                        If someone knows your PIN and has your unlocked device, they can see your record. Choose a PIN
+                        others can't guess.
+                    </li>
+                    <li>
+                        Work devices and networks can be monitored by your employer. Use your own phone and connection
+                        where you can.
+                    </li>
+                    <li>
+                        If you forget your PIN and have no backup, your record cannot be recovered. That is the cost of
+                        us not holding a key.
+                    </li>
+                    <li>
+                        Stealth mode disguises the app. It does not hide it from someone who inspects your device
+                        closely.
+                    </li>
+                </ul>
+                <h2>Reporting a security issue</h2>
+                <p>
+                    Email <a href="mailto:{{site.email}}" class="link">{{site.email}}</a> with "Security" in the
+                    subject. We will reply quickly.
+                </p>
+            </article>
         </main>
         {{> footer}}
     </body>

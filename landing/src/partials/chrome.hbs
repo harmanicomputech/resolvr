@@ -1,0 +1,9 @@
+{{! Fixed UI shared by every page: skip link, scroll progress, cursor glow, quick exit. }}
+<a href='#main' class='skip-link'>Skip to content</a>
+<div class='scroll-progress' aria-hidden='true'><span data-scroll-progress></span></div>
+<div class='cursor-glow' data-cursor aria-hidden='true'></div>
+<button type='button' class='quick-exit' data-quick-exit aria-describedby='quick-exit-hint'>
+    {{{icon 'log-out' 'size-4'}}}
+    <span>Quick exit</span>
+</button>
+<p id='quick-exit-hint' class='sr-only'>Leaves this site immediately for a neutral page. You can also press Escape.</p>

@@ -1,9 +1,48 @@
 @import 'tailwindcss';
 @import '../../../app/resources/css/tokens.css';
 @import '../../../app/resources/css/components.css';
+@import './layout.css';
+@import './hero.css';
+@import './sections.css';
+@import './pages.css';
 
 @source '../pages';
 @source '../partials';
 @source '../scripts';
 
 @custom-variant dark (&:where(.dark, .dark *):not(:where(.light, .light *)));
+
+/* Cross-document view transitions (Chrome/Edge/Safari 18+). Others get the Motion fallback. */
+@view-transition {
+    navigation: auto;
+}
+
+::view-transition-old(root) {
+    animation: vt-out var(--dur-base) var(--ease-in-out-quart) both;
+}
+
+::view-transition-new(root) {
+    animation: vt-in var(--dur-slow) var(--ease-out-expo) both;
+}
+
+@keyframes vt-out {
+    to {
+        opacity: 0;
+        filter: blur(6px);
+    }
+}
+
+@keyframes vt-in {
+    from {
+        opacity: 0;
+        filter: blur(6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation-duration: 120ms;
+        filter: none;
+    }
+}
