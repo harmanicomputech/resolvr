@@ -70,6 +70,8 @@ test("mobile tab bar and quick actions", async ({ page }) => {
   ).toBeVisible();
   await page.getByRole("menuitem", { name: "Log incident" }).click();
   await expect(page).toHaveURL(/\/log$/);
+  await page.getByRole("button", { name: "Close (your draft is kept)" }).click();
+  await expect(page).toHaveURL(/\/incidents$/);
   await tabs.getByRole("button", { name: "More" }).click();
   await page
     .getByRole("dialog", { name: "More" })
