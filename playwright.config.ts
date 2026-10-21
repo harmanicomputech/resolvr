@@ -26,6 +26,8 @@ export default defineConfig({
             name: 'app',
             testMatch: 'app/**/*.spec.ts',
             use: { ...devices['Pixel 7'], baseURL: APP_URL },
+            // Unlocking runs Argon2id on purpose (slow by design), which takes longer when tests run in parallel.
+            expect: { timeout: 15_000 },
         },
     ],
     webServer: [
