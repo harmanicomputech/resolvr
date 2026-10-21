@@ -1,17 +1,18 @@
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { useEffect, useState, type ReactNode } from 'react';
-import { Route, Router, Switch } from 'wouter';
+import { Router } from 'wouter';
 
 import { Toaster } from './components/toaster';
 import { InstallPrompt } from './pwa/InstallPrompt';
 import { applyDisguise } from './pwa/stealth';
 import { UpdateNotice } from './pwa/UpdateNotice';
 import { useAutoLock, usePanic } from './hooks/use-guards';
+import { Routes } from './routes';
+import { AppShell } from './shell/AppShell';
 import { Calculator } from './screens/Calculator';
 import { ForgotPasscode } from './screens/ForgotPasscode';
 import { LockScreen } from './screens/LockScreen';
 import { Onboarding } from './screens/Onboarding';
-import { Placeholder } from './screens/Placeholder';
 import { Splash } from './screens/Splash';
 import { SessionProvider, useSession } from './session';
 import { useTheme } from './theme';
@@ -112,14 +113,9 @@ function Unlocked() {
     const { data: count } = useData((repos) => repos.incidents.list().then((list) => list.length));
     return (
         <Router>
-            <Switch>
-                <Route path="/">
-                    <Placeholder title="Home" />
-                </Route>
-                <Route>
-                    <Placeholder title="Not found" />
-                </Route>
-            </Switch>
+            <AppShell>
+                <Routes />
+            </AppShell>
             <InstallPrompt eligible={(count ?? 0) > 0} />
         </Router>
     );

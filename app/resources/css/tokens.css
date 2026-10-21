@@ -199,6 +199,18 @@
     --sev-medium: #fbbf24;
     --sev-high: #fb923c;
     --sev-critical: #f43f5e;
+    /* Charts (validated with the dataviz palette checks). Severity in charts is an
+       ordinal one-hue ramp, darker = more serious; heat is a one-hue teal ramp. */
+    --chart-sev-1: #e9a37a;
+    --chart-sev-2: #d9733f;
+    --chart-sev-3: #b44f1c;
+    --chart-sev-4: #7c2d12;
+    --chart-heat-0: #ece8df;
+    --chart-heat-1: #74c2b6;
+    --chart-heat-2: #3a9f90;
+    --chart-heat-3: #1a7c6f;
+    --chart-heat-4: #0d524c;
+    --chart-grid: #e7e3da;
     --sev-low-text: #047857;
     --sev-medium-text: #92400e;
     --sev-high-text: #9a3412;
@@ -264,6 +276,16 @@
     --sev-medium-text: #fbbf24;
     --sev-high-text: #fb923c;
     --sev-critical-text: #fb7185;
+    --chart-sev-1: #9a3a17;
+    --chart-sev-2: #c9581f;
+    --chart-sev-3: #ef8a4f;
+    --chart-sev-4: #fbc39c;
+    --chart-heat-0: #161b23;
+    --chart-heat-1: #145049;
+    --chart-heat-2: #1d7d71;
+    --chart-heat-3: #2bb3a3;
+    --chart-heat-4: #86e3d6;
+    --chart-grid: #1c222b;
 
     --success-text: #34d399;
     --warning-text: #fbbf24;

@@ -225,3 +225,13 @@ Both sites run a strict CSP without `'unsafe-inline'`. Consequences for componen
 - No `<style>` injection at runtime. In the app, Radix's scroll lock gets the request nonce via `get-nonce` (`app.tsx`). Inertia's built-in progress bar is disabled for the same reason.
 - Setting `element.style` from JS (Motion, GSAP) is fine; inline `style="..."` attributes in server-rendered HTML are not.
 - Images may use `data:` and `blob:` URLs (the noise texture is a data URI).
+
+## Charts
+
+Charts are hand-built SVG (no chart library) and follow the dataviz checks: thin marks, 2px lines over a 10% wash, hairline grid, direct labels only on the endpoint, a hover/focus tooltip, and a screen-reader table or text summary for every chart.
+
+| Token | Use |
+| --- | --- |
+| `--chart-sev-1…4` | Severity in charts: an ordinal one-hue ramp, darker (light theme) or brighter (dark theme) = more serious. Validated for monotone lightness and contrast in both themes. Severity *pills* keep their status colours and always carry a text label. |
+| `--chart-heat-0…4` | Heatmap: 0 = nothing logged, 1–4 = one, two, three, four or more incidents. One teal hue. |
+| `--chart-grid` | Gridlines and empty future cells. |
