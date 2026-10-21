@@ -27,3 +27,10 @@ app/.phpunit.result.cache
 playwright-report/
 test-results/
 coverage/
+
+# Generic
+.env
+.env.*
+!.env.example
+vendor/
+app/.phpunit.cache/

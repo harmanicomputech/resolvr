@@ -1,0 +1,57 @@
+# Resolvr marketing site (resolvrapp.com) — copied into dist/ on build.
+
+Options -Indexes -MultiViews
+DirectoryIndex index.html
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Force HTTPS.
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Old prototype links: /app → the web app.
+    RewriteRule ^app(/.*)?$ https://app.resolvrapp.com$1 [L,R=301]
+
+    # /story.html → /story
+    RewriteCond %{THE_REQUEST} \s/+([^.\s?]+)\.html[\s?] [NC]
+    RewriteRule ^ /%1 [L,R=301]
+
+    # /story → story.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/$1.html -f
+    RewriteRule ^([^.]+?)/?$ $1.html [L]
+</IfModule>
+
+ErrorDocument 404 /index.html
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "DENY"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=()"
+    Header always set Cross-Origin-Opener-Policy "same-origin"
+    Header always set Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" "expr=%{HTTPS} == 'on'"
+    # Plausible is the only third party; the waitlist posts to the app API.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' https://plausible.io; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://app.resolvrapp.com https://plausible.io; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests"
+
+    # Hashed build assets never change.
+    <FilesMatch "\.(js|css|woff2|svg|png|jpg|jpeg|webp|avif|ico)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+    # HTML must revalidate so deploys show up immediately.
+    <FilesMatch "\.html$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_mime.c>
+    AddType font/woff2 .woff2
+    AddType application/manifest+json .webmanifest
+</IfModule>
