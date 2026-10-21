@@ -1,8 +1,10 @@
 @import 'tailwindcss';
 @import 'tw-animate-css';
 @import './tokens.css';
+@import './components.css';
 
 @source '../views';
 @source '../js';
 
-@custom-variant dark (&:where(.dark, .dark *));
+/* `dark:` applies inside .dark unless a nearer .light scope switches back. */
+@custom-variant dark (&:where(.dark, .dark *):not(:where(.light, .light *)));

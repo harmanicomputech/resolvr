@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 @import '../../../app/resources/css/tokens.css';
+@import '../../../app/resources/css/components.css';
 
 @source '../pages';
 @source '../partials';
 @source '../scripts';
 
-@custom-variant dark (&:where(.dark, .dark *));
+@custom-variant dark (&:where(.dark, .dark *):not(:where(.light, .light *)));

@@ -1,8 +1,13 @@
 import '../css/app.css';
 
 import { createInertiaApp } from '@inertiajs/react';
+import { setNonce } from 'get-nonce';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
+
+// Radix (via react-remove-scroll) injects a <style> tag; give it the CSP nonce.
+const nonce = document.querySelector<HTMLMetaElement>('meta[name="csp-nonce"]')?.content;
+if (nonce) setNonce(nonce);
 
 const appName = import.meta.env.VITE_APP_NAME || 'Resolvr';
 

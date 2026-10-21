@@ -5,6 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <meta name="robots" content="noindex, nofollow">
         <meta name="color-scheme" content="dark light">
+        <meta name="csp-nonce" content="{{ Vite::cspNonce() }}">
 
         <title inertia>{{ config('app.name', 'Resolvr') }}</title>
 
