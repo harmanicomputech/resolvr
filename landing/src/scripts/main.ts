@@ -34,4 +34,9 @@ if (has('[data-bento]')) void import('./sections/bento').then((m) => m.initBento
 if (has('[data-faq]')) void import('./sections/faq').then((m) => m.initFaq());
 if (has('[data-toc]')) void import('./sections/toc').then((m) => m.initToc());
 // Scroll effects (smooth scroll, parallax, reveals) only when motion is welcome.
-if (motionOK) void import('./effects').then((m) => m.initEffects());
+if (motionOK) {
+    void (async () => {
+        await (await import('./effects')).initEffects();
+        await (await import('./designed')).initDesigned();
+    })();
+}

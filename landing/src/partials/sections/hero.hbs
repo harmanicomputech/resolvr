@@ -1,4 +1,5 @@
 <section class="hero" data-hero aria-labelledby="hero-title">
+    <div class="hero-spot" aria-hidden="true" data-hero-spot></div>
     <div class="hero-bg" aria-hidden="true">
         <span class="orb" data-orb="1" data-speed="0.35"></span>
         <span class="orb" data-orb="2" data-speed="-0.2"></span>
@@ -19,7 +20,7 @@
                 turn it into a clear, HR-ready complaint when you are ready.
             </p>
             <div class="hero-ctas" data-hero-in>
-                <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">
+                <a href="{{site.appUrl}}" class="btn btn-shine" data-variant="primary" data-size="lg" data-magnetic>
                     Start documenting, free {{{icon "arrow-right" "size-4"}}}
                 </a>
                 <a href="#how-it-works" class="btn" data-size="lg">See how it works</a>
@@ -34,9 +35,10 @@
 
         <div class="hero-visual" aria-hidden="true" data-speed="-0.12">
             <div class="hero-stage" data-tilt>
-                <div class="device">
+                <div class="device" data-live-phone>
                     <div class="device-notch"></div>
                     {{> device-dashboard}}
+                    <div class="phone-toast" data-phone-toast>{{{icon "lock-keyhole" "size-3.5"}}}<span><b class="mono">INC-015</b> logged · locked</span></div>
                 </div>
                 <div class="float-card" data-float="1" data-speed="0.3">
                     <span class="float-icon">{{{icon "lock-keyhole" "size-4"}}}</span>

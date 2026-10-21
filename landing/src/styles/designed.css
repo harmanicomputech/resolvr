@@ -1,0 +1,677 @@
+/* Signature effects: live phone, pinned statement, scroll-story stepper,
+   dark vault panel, card glow, icon draw, custom cursor, footer wordmark.
+   Driven by scripts/designed.ts; everything degrades to a static layout. */
+
+@layer components {
+    /* ------------------------------------------------------------------ */
+    /* Hero: cursor spotlight, shine button, live phone                   */
+    /* ------------------------------------------------------------------ */
+
+    .hero-spot {
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+        background: radial-gradient(
+            32rem circle at calc(var(--sx, 70) * 1%) calc(var(--sy, 35) * 1%),
+            color-mix(in oklab, var(--aurora-2) 16%, transparent),
+            transparent 65%
+        );
+        transition: opacity var(--dur-slow) var(--ease-standard);
+    }
+
+    .btn-shine {
+        overflow: hidden;
+        isolation: isolate;
+    }
+
+    .btn-shine::after {
+        content: '';
+        position: absolute;
+        inset: -2px;
+        z-index: -1;
+        background: linear-gradient(110deg, transparent 30%, rgb(255 255 255 / 0.45) 48%, transparent 66%);
+        transform: translateX(-120%);
+        transition: transform 0.9s var(--ease-out-expo);
+        pointer-events: none;
+    }
+
+    .btn-shine:hover::after {
+        transform: translateX(120%);
+    }
+
+    .phone-toast {
+        position: absolute;
+        top: 2.6rem;
+        left: 50%;
+        z-index: 3;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+        padding: 0.45rem 0.7rem;
+        border-radius: var(--radius-full);
+        background: var(--fg);
+        color: var(--bg);
+        font-size: 0.625rem;
+        white-space: nowrap;
+        box-shadow: var(--elev-floating);
+        opacity: 0;
+        transform: translate(-50%, -140%) scale(0.9);
+        transition:
+            transform 0.6s var(--ease-spring),
+            opacity var(--dur-base) var(--ease-standard);
+    }
+
+    .phone-toast[data-show] {
+        opacity: 1;
+        transform: translate(-50%, 0) scale(1);
+    }
+
+    .phone-toast svg {
+        color: var(--aurora-1);
+    }
+
+    .screen-bars i {
+        transform-origin: 50% 100%;
+        transition: transform 1s var(--ease-out-expo);
+    }
+
+    .js.motion [data-live-phone]:not([data-live]) .screen-bars i {
+        transform: scaleY(0.05);
+    }
+
+    .screen-list li {
+        transition:
+            transform 0.6s var(--ease-out-expo),
+            opacity 0.4s var(--ease-standard),
+            background-color 1.2s var(--ease-standard);
+    }
+
+    .screen-list li[data-new] {
+        background: var(--accent-tint);
+        border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+    }
+
+    .screen-list li[data-enter] {
+        opacity: 0;
+        transform: translateY(-12px) scale(0.96);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Pinned statement: words light up as you scroll                    */
+    /* ------------------------------------------------------------------ */
+
+    .statement {
+        position: relative;
+    }
+
+    .statement-pin {
+        display: grid;
+        place-items: center;
+        min-height: 100svh;
+        padding: 6rem 1.25rem;
+    }
+
+    .statement-text {
+        max-width: 60rem;
+        font-family: var(--font-display);
+        font-size: clamp(2rem, 1.2rem + 3.6vw, 4.25rem);
+        font-weight: 600;
+        line-height: 1.12;
+        letter-spacing: -0.03em;
+        text-align: center;
+        color: var(--fg);
+    }
+
+    .statement-text .lw {
+        display: inline-block;
+        color: color-mix(in oklab, var(--fg) var(--lit, 100%), var(--fg-subtle));
+        transform: translateY(calc((100% - var(--lit, 100%)) * 0.15));
+        transition: color 0.15s linear;
+    }
+
+    .statement-text .lw[data-key] {
+        color: color-mix(in oklab, var(--accent-text) var(--lit, 100%), var(--fg-subtle));
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* How it works: scroll story with a sticky phone                     */
+    /* ------------------------------------------------------------------ */
+
+    .how-grid {
+        display: grid;
+        gap: 2.5rem;
+    }
+
+    @media (min-width: 64rem) {
+        .how-grid {
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+    }
+
+    .how-steps {
+        position: relative;
+        display: grid;
+        gap: 1rem;
+    }
+
+    .how-step {
+        position: relative;
+        display: flex;
+        gap: 1.25rem;
+        padding: 1.5rem;
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--hairline);
+        background: var(--surface);
+        box-shadow: var(--elev-raised);
+        transition:
+            opacity var(--dur-slow) var(--ease-standard),
+            transform var(--dur-slow) var(--ease-out-expo),
+            border-color var(--dur-slow) var(--ease-standard),
+            box-shadow var(--dur-slow) var(--ease-standard);
+    }
+
+    .how-step h3 {
+        margin-top: 0.25rem;
+        font-size: var(--text-xl);
+        font-weight: 600;
+    }
+
+    .how-step p {
+        margin-top: 0.375rem;
+        font-size: var(--text-sm);
+        color: var(--fg-muted);
+    }
+
+    .how-rail {
+        display: none;
+    }
+
+    @media (min-width: 64rem) {
+        .how-steps {
+            gap: 0;
+            padding-left: 2rem;
+        }
+
+        .how-step {
+            min-height: 62vh;
+            align-items: flex-start;
+            padding: 0;
+            border: 0;
+            background: none;
+            box-shadow: none;
+        }
+
+        /* Inactive steps dim with an AA-safe colour, never opacity. */
+        .how-step:not([data-active]) :is(h3, p, .step-num) {
+            color: var(--fg-subtle);
+        }
+
+        .how-step :is(h3, p) {
+            transition: color var(--dur-slow) var(--ease-standard);
+        }
+
+        .how-step:last-child {
+            min-height: 40vh;
+        }
+
+        .how-rail {
+            display: block;
+            position: absolute;
+            top: 0.5rem;
+            bottom: 40vh;
+            left: 0;
+            width: 2px;
+            border-radius: 2px;
+            background: var(--hairline);
+        }
+
+        .how-rail span {
+            display: block;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(to bottom, var(--aurora-1), var(--aurora-2), var(--aurora-3));
+            transform-origin: 50% 0;
+            transform: scaleY(var(--how-progress, 0));
+        }
+
+        .how-step .icon-badge {
+            transition:
+                transform var(--dur-slow) var(--ease-spring),
+                background-color var(--dur-slow) var(--ease-standard),
+                color var(--dur-slow) var(--ease-standard);
+        }
+
+        .how-step[data-active] .icon-badge {
+            transform: scale(1.12);
+            background: var(--accent);
+            color: var(--accent-fg);
+        }
+    }
+
+    .how-stage {
+        display: none;
+    }
+
+    @media (min-width: 64rem) {
+        .how-stage {
+            position: sticky;
+            top: 12vh;
+            display: grid;
+            place-items: center;
+            height: 76vh;
+        }
+    }
+
+    .how-glow {
+        position: absolute;
+        inset: 10% 15%;
+        z-index: -1;
+        border-radius: var(--radius-full);
+        background: radial-gradient(circle, color-mix(in oklab, var(--aurora-1) 26%, transparent), transparent 65%);
+        filter: blur(30px);
+    }
+
+    .how-device {
+        width: min(17rem, 70vw);
+    }
+
+    .how-device .screen-step {
+        position: absolute;
+        inset: 0.55rem;
+        height: auto;
+        opacity: 0;
+        transform: translateY(24px) scale(0.97);
+        transition:
+            opacity var(--dur-slow) var(--ease-standard),
+            transform var(--dur-slower) var(--ease-out-expo);
+    }
+
+    .how-device .screen-step[data-active] {
+        opacity: 1;
+        transform: none;
+    }
+
+    .how-device .screen-step[data-active] .screen-field,
+    .how-device .screen-step[data-active] .screen-timeline li,
+    .how-device .screen-step[data-active] .screen-vault i {
+        animation: rise-in var(--dur-slow) var(--ease-out-expo) both;
+    }
+
+    .how-device .screen-step[data-active] :is(.screen-field, .screen-timeline li, .screen-vault i):nth-child(2) {
+        animation-delay: 60ms;
+    }
+    .how-device .screen-step[data-active] :is(.screen-field, .screen-timeline li, .screen-vault i):nth-child(3) {
+        animation-delay: 120ms;
+    }
+    .how-device .screen-step[data-active] :is(.screen-field, .screen-timeline li, .screen-vault i):nth-child(4) {
+        animation-delay: 180ms;
+    }
+    .how-device .screen-step[data-active] :is(.screen-field, .screen-timeline li, .screen-vault i):nth-child(5) {
+        animation-delay: 240ms;
+    }
+    .how-device .screen-step[data-active] :is(.screen-field, .screen-timeline li, .screen-vault i):nth-child(6) {
+        animation-delay: 300ms;
+    }
+
+    .screen-title {
+        font-family: var(--font-display);
+        font-size: 1.35rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .screen-field {
+        display: grid;
+        gap: 0.15rem;
+        margin-bottom: 0.4rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: var(--radius-md);
+        border: 1px solid var(--hairline-strong);
+        background: var(--surface);
+    }
+
+    .screen-field b {
+        font-weight: 500;
+        font-size: 0.5625rem;
+        color: var(--fg-muted);
+    }
+
+    .screen-field-tall {
+        min-height: 4.5rem;
+        align-content: start;
+    }
+
+    .screen-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.25rem;
+        margin-top: 0.5rem;
+    }
+
+    .screen .chip {
+        min-height: 0;
+        padding: 0.2rem 0.5rem;
+        font-size: 0.5625rem;
+    }
+
+    .screen-locked,
+    .screen-pattern {
+        display: flex;
+        align-items: center;
+        gap: 0.375rem;
+        margin-top: 0.75rem;
+        padding: 0.45rem 0.6rem;
+        border-radius: var(--radius-md);
+        background: var(--accent-tint);
+        color: var(--accent-text);
+        font-size: 0.5625rem;
+    }
+
+    .screen-pattern {
+        background: color-mix(in oklab, var(--aurora-3) 14%, transparent);
+        color: var(--aurora-3);
+    }
+
+    .screen-vault {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.4rem;
+    }
+
+    .screen-vault i {
+        aspect-ratio: 1;
+        border-radius: var(--radius-md);
+        background:
+            radial-gradient(70% 60% at 30% 30%, color-mix(in oklab, var(--aurora-2) 40%, transparent), transparent),
+            radial-gradient(60% 60% at 80% 80%, color-mix(in oklab, var(--aurora-3) 35%, transparent), transparent),
+            var(--raised);
+        border: 1px solid var(--hairline);
+    }
+
+    .screen-vault i[data-kind] {
+        background: var(--raised);
+    }
+
+    .screen-timeline {
+        position: relative;
+        display: grid;
+        gap: 0.5rem;
+        padding-left: 0.9rem;
+    }
+
+    .screen-timeline::before {
+        content: '';
+        position: absolute;
+        top: 0.3rem;
+        bottom: 0.3rem;
+        left: 0.2rem;
+        width: 1px;
+        background: var(--hairline-strong);
+    }
+
+    .screen-timeline li {
+        position: relative;
+        display: grid;
+        gap: 0.05rem;
+        padding: 0.4rem 0.55rem;
+        border-radius: var(--radius-sm);
+        border: 1px solid var(--hairline);
+        background: var(--surface);
+    }
+
+    .screen-timeline li::before {
+        content: '';
+        position: absolute;
+        top: 0.7rem;
+        left: -0.95rem;
+        width: 0.45rem;
+        height: 0.45rem;
+        border-radius: var(--radius-full);
+        background: var(--sev-base);
+    }
+
+    .screen-timeline b {
+        font-weight: 500;
+        font-size: 0.5rem;
+        color: var(--fg-muted);
+    }
+
+    .screen-letter {
+        display: grid;
+        gap: 0.4rem;
+        padding: 0.75rem;
+        border-radius: var(--radius-md);
+        background: var(--inverse);
+        color: var(--fg-inverse);
+        font-family: var(--font-display);
+        font-size: 0.75rem;
+    }
+
+    .screen-letter span {
+        height: 0.3rem;
+        border-radius: 2px;
+        background: color-mix(in oklab, var(--fg-inverse) 22%, transparent);
+    }
+
+    .screen-letter span[data-short] {
+        width: 55%;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Security: a dark "vault" panel inside the light page               */
+    /* ------------------------------------------------------------------ */
+
+    .security-wrap {
+        padding: clamp(3rem, 8vw, 6rem) 1rem;
+    }
+
+    .security {
+        position: relative;
+        isolation: isolate;
+        overflow: clip;
+        max-width: 80rem;
+        margin-inline: auto;
+        border-radius: 2rem;
+        background:
+            radial-gradient(
+                50rem 30rem at 50% 0%,
+                color-mix(in oklab, var(--aurora-1) 16%, transparent),
+                transparent 70%
+            ),
+            var(--bg);
+        color: var(--fg);
+        box-shadow: var(--elev-overlay);
+    }
+
+    .security::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        background-image:
+            linear-gradient(var(--hairline) 1px, transparent 1px),
+            linear-gradient(90deg, var(--hairline) 1px, transparent 1px);
+        background-size: 48px 48px;
+        -webkit-mask: radial-gradient(70% 60% at 50% 0%, #000, transparent 80%);
+        mask: radial-gradient(70% 60% at 50% 0%, #000, transparent 80%);
+    }
+
+    .security-inner {
+        max-width: 72rem;
+        margin-inline: auto;
+        padding: clamp(4rem, 9vw, 7rem) 1.25rem;
+    }
+
+    .security .icon-card,
+    .security .see-col {
+        background: color-mix(in oklab, var(--surface) 80%, transparent);
+        -webkit-backdrop-filter: blur(var(--blur-sm));
+        backdrop-filter: blur(var(--blur-sm));
+    }
+
+    .orb[data-orb='7'] {
+        right: -8rem;
+        bottom: -8rem;
+        width: 28rem;
+        height: 28rem;
+        background: color-mix(in oklab, var(--aurora-3) 22%, transparent);
+    }
+
+    .orb[data-orb='6'] {
+        background: color-mix(in oklab, var(--aurora-1) 22%, transparent);
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Card glow: a soft edge light that follows the cursor               */
+    /* ------------------------------------------------------------------ */
+
+    :is(.icon-card, .stat-card, .price-card, .see-col, .founder-card, .how-step) {
+        --mx: 50%;
+        --my: 50%;
+        position: relative;
+    }
+
+    :is(.icon-card, .stat-card, .price-card, .see-col, .founder-card)::after {
+        content: '';
+        position: absolute;
+        inset: -1px;
+        padding: 1px;
+        border-radius: inherit;
+        background: radial-gradient(
+            16rem circle at var(--mx) var(--my),
+            var(--aurora-2),
+            var(--aurora-3) 35%,
+            transparent 70%
+        );
+        -webkit-mask:
+            linear-gradient(#000 0 0) content-box,
+            linear-gradient(#000 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity var(--dur-base) var(--ease-standard);
+        pointer-events: none;
+    }
+
+    :is(.icon-card, .stat-card, .price-card, .see-col, .founder-card):hover::after {
+        opacity: 1;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Icons draw themselves when they appear                             */
+    /* ------------------------------------------------------------------ */
+
+    .js.motion .icon-badge[data-draw-icon] svg :is(path, line, polyline, rect, circle, ellipse, polygon) {
+        stroke-dasharray: 1;
+        stroke-dashoffset: 1;
+    }
+
+    .js.motion .icon-badge[data-draw-icon][data-drawn] svg :is(path, line, polyline, rect, circle, ellipse, polygon) {
+        stroke-dashoffset: 0;
+        transition: stroke-dashoffset 1.2s var(--ease-out-expo);
+    }
+
+    .js.motion .icon-badge[data-draw-icon] {
+        transform: scale(0.7);
+        opacity: 0;
+        transition:
+            transform 0.7s var(--ease-spring),
+            opacity 0.3s var(--ease-standard);
+    }
+
+    .js.motion .icon-badge[data-draw-icon][data-drawn] {
+        transform: none;
+        opacity: 1;
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Custom cursor (fine pointers only)                                 */
+    /* ------------------------------------------------------------------ */
+
+    .cursor {
+        display: none;
+    }
+
+    @media (hover: hover) and (pointer: fine) {
+        .js.motion .cursor {
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 90;
+            pointer-events: none;
+        }
+
+        .cursor-dot,
+        .cursor-ring {
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: var(--radius-full);
+            will-change: transform;
+        }
+
+        .cursor-dot {
+            width: 6px;
+            height: 6px;
+            margin: -3px 0 0 -3px;
+            background: var(--accent);
+        }
+
+        .cursor-ring {
+            width: 34px;
+            height: 34px;
+            margin: -17px 0 0 -17px;
+            border: 1.5px solid color-mix(in oklab, var(--accent) 50%, transparent);
+            transition:
+                width var(--dur-base) var(--ease-out-expo),
+                height var(--dur-base) var(--ease-out-expo),
+                margin var(--dur-base) var(--ease-out-expo),
+                background-color var(--dur-base) var(--ease-standard),
+                border-color var(--dur-base) var(--ease-standard),
+                opacity var(--dur-base) var(--ease-standard);
+        }
+
+        .cursor[data-hover] .cursor-ring {
+            width: 60px;
+            height: 60px;
+            margin: -30px 0 0 -30px;
+            background: color-mix(in oklab, var(--accent) 10%, transparent);
+            border-color: color-mix(in oklab, var(--accent) 30%, transparent);
+        }
+
+        .cursor[data-hidden] {
+            opacity: 0;
+        }
+    }
+
+    /* ------------------------------------------------------------------ */
+    /* Footer wordmark                                                    */
+    /* ------------------------------------------------------------------ */
+
+    .footer-mark {
+        max-width: 72rem;
+        margin: 3rem auto 0;
+        overflow: hidden;
+        font-family: var(--font-display);
+        font-weight: 700;
+        font-size: clamp(4rem, 19vw, 16rem);
+        line-height: 0.85;
+        letter-spacing: -0.06em;
+        text-align: center;
+        background: linear-gradient(180deg, color-mix(in oklab, var(--fg) 14%, transparent), transparent 85%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        user-select: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        .how-device .screen-step,
+        .how-step,
+        .phone-toast {
+            transition: none;
+        }
+    }
+}

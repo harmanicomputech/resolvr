@@ -19,17 +19,17 @@ gsap.registerPlugin(ScrollTrigger);
  *   [data-scrub-text]    words light up as you read down
  *   [data-scale-in]      panel grows into place
  */
-export function initEffects(): void {
-    smoothScroll();
-    parallax();
-    titles();
-    staggers();
-    imageParallax();
-    drawLines();
-    counters();
-    scrubText();
-    scaleIns();
-    if (finePointer()) tilt();
+export async function initEffects(): Promise<void> {
+    const steps = [smoothScroll, parallax, titles, staggers, imageParallax, drawLines, counters, scrubText, scaleIns];
+    if (finePointer()) steps.push(tilt);
+    // One small task at a time so set-up never blocks input.
+    for (const step of steps) {
+        step();
+        await new Promise((resolve) => setTimeout(resolve, 0));
+    }
+    // Pins are created in more than one module: put them in page order.
+    ScrollTrigger.sort();
+    ScrollTrigger.refresh();
 
     // Fonts change line breaks; measure again once they are in.
     void document.fonts?.ready.then(() => ScrollTrigger.refresh());
@@ -216,8 +216,11 @@ function counters(): void {
 function scrubText(): void {
     gsap.utils.toArray<HTMLElement>('[data-scrub-text]').forEach((block) => {
         const text = block.textContent ?? '';
-        block.setAttribute('aria-label', text.trim());
         block.textContent = '';
+        const plain = document.createElement('span');
+        plain.className = 'sr-only';
+        plain.textContent = text.trim();
+        block.append(plain);
         const words = text
             .trim()
             .split(/\s+/)

@@ -263,17 +263,9 @@ export const features = [
     },
 ];
 
-/** Trust strip under the hero. */
-export const trustStrip = [
-    { icon: 'lock-keyhole', label: 'Encrypted on your device' },
-    { icon: 'wifi-off', label: 'Works offline' },
-    { icon: 'link', label: 'Tamper-evident timestamps' },
-    { icon: 'calculator', label: 'Stealth calculator mode' },
-    { icon: 'eye-off', label: 'No ads, no trackers' },
-    { icon: 'smartphone', label: 'Installs like an app' },
-    { icon: 'file-text', label: 'HR-ready documents' },
-    { icon: 'scale', label: 'Not legal advice' },
-];
+/** Pinned statement: lights up word by word as you scroll. */
+export const statement =
+    'Every incident, timestamped. Every file, encrypted. Every pattern, visible. So when you finally speak up, you are ready.';
 
 /** Stats band: facts about how Resolvr works (not outcomes or user numbers). */
 export const stats = [
