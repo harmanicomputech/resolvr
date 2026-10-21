@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "format": "prettier --write \"src/**/*.{ts,css}\" build",
     "format:check": "prettier --check \"src/**/*.{ts,css}\" build",
-    "test": "vitest run"
+    "test": "vitest run",
+    "brand": "node build/brand/render.mjs"
   },
   "private": true,
   "type": "module",

@@ -23,7 +23,10 @@ resolvr/
 │   ├── src/scripts/          TypeScript entry points
 │   ├── src/styles/main.css   Tailwind + ../app/resources/css/tokens.css
 │   ├── src/pages.config.ts   per-page title/description
-│   └── public/.htaccess      copied into dist/
+│   ├── src/content.ts        FAQ, pricing, steps, moments… (also feeds JSON-LD)
+│   ├── src/assets/photos/    responsive WebP photos ({{photo}} helper)
+│   ├── build/                icon + photo helpers, SEO/sitemap, brand renderer
+│   └── public/               .htaccess, robots.txt, og.png, icons
 ├── app/
 │   ├── app/Http/Middleware/  SecurityHeaders (CSP nonce, HSTS…), HandleInertiaRequests
 │   ├── config/cors.php       only /api/waitlist, only https://resolvrapp.com
@@ -50,7 +53,10 @@ npm run dev        # http://localhost:5174
 npm run build      # → landing/dist (upload to public_html, including .htaccess)
 npm run preview
 npm run lint && npm run typecheck && npm test
+npm run brand      # re-render og.png and icons (needs Playwright's Chromium)
 ```
+
+Copy `.env.example` to `.env` to point the waitlist form at a local app (`VITE_APP_URL`).
 
 ## app/
 
@@ -82,6 +88,10 @@ npm --prefix landing run build && npm --prefix app run build
 npx playwright install chromium   # or set PLAYWRIGHT_CHROMIUM_PATH to an existing Chromium
 npm run e2e
 ```
+
+## Deploying
+
+See [`docs/DEPLOY.md`](docs/DEPLOY.md). GitHub Actions ([`ci-deploy.yml`](.github/workflows/ci-deploy.yml)) tests every PR and deploys the landing site from `main`.
 
 ## Building with Claude
 

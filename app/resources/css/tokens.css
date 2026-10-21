@@ -96,7 +96,7 @@
 /* Scales are static values, always emitted so components.css can read them. */
 @theme static {
     /* Typography */
-    --font-display: 'Instrument Serif', ui-serif, Georgia, 'Times New Roman', serif;
+    --font-display: 'Instrument Serif', 'Instrument Serif Fallback', ui-serif, Georgia, 'Times New Roman', serif;
     --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
     --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 

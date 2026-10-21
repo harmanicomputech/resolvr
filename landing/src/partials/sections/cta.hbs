@@ -11,7 +11,7 @@
         <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg" data-magnetic>Open the app
             {{{icon 'arrow-right' 'size-4'}}}</a>
 
-        <form class="waitlist glass" data-waitlist novalidate>
+        <form class="waitlist glass" data-waitlist novalidate method="post" action="{{site.appUrl}}/api/waitlist">
             <div class="waitlist-row">
                 <label for="waitlist-email" class="sr-only">Email address</label>
                 <input

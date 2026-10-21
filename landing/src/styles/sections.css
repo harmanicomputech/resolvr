@@ -75,11 +75,11 @@
     }
 
     .fragment-note[data-tone='violet'] {
-        background: color-mix(in oklab, var(--aurora-3) 78%, var(--bg));
+        background: color-mix(in oklab, var(--aurora-3) 72%, var(--inverse));
     }
 
     .fragment-note[data-tone='amber'] {
-        background: color-mix(in oklab, var(--sev-high) 78%, var(--bg));
+        background: color-mix(in oklab, var(--sev-high) 80%, var(--inverse));
     }
 
     .fragment-shot {
@@ -1162,18 +1162,26 @@
         transform: scaleY(var(--how-progress, 0));
     }
 
+    /* Inactive steps are dimmed with colour, not opacity, so the text still passes AA. */
     .how-step {
         position: relative;
         display: flex;
         gap: 1.25rem;
         padding-block: 2rem;
-        opacity: 0.4;
-        transition: opacity var(--dur-base) var(--ease-standard);
+        --step-title: var(--fg-subtle);
+        --step-body: var(--fg-subtle);
+        --step-num: var(--fg-subtle);
     }
 
     html:not(.js) .how-step,
     .how-step[data-active] {
-        opacity: 1;
+        --step-title: var(--fg);
+        --step-body: var(--fg-muted);
+        --step-num: var(--accent-text);
+    }
+
+    .how-step :is(h3, p, .how-num) {
+        transition: color var(--dur-base) var(--ease-standard);
     }
 
     .how-step::before {
@@ -1199,11 +1207,12 @@
 
     .how-num {
         font-size: var(--text-sm);
-        color: var(--accent-text);
+        color: var(--step-num);
         padding-top: 0.6rem;
     }
 
     .how-step h3 {
+        color: var(--step-title);
         font-family: var(--font-display);
         font-size: var(--text-3xl);
         line-height: 1.15;
@@ -1212,7 +1221,7 @@
     .how-step p {
         margin-top: 0.5rem;
         max-width: 28rem;
-        color: var(--fg-muted);
+        color: var(--step-body);
     }
 
     @media (min-width: 64rem) {

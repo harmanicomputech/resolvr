@@ -54,3 +54,21 @@
         U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F,
         U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+
+/*
+ * Metric-matched fallback for the display serif, so headlines don't jump when
+ * Instrument Serif (a narrow face) swaps in. size-adjust measured against
+ * common system serifs; prevents most layout shift on first load.
+ */
+@font-face {
+    font-family: 'Instrument Serif Fallback';
+    src: local('Georgia'), local('Times New Roman'), local('Noto Serif'), local('DejaVu Serif');
+    size-adjust: 82%;
+}
+
+@font-face {
+    font-family: 'Instrument Serif Fallback';
+    font-style: italic;
+    src: local('Georgia Italic'), local('Georgia-Italic'), local('Times New Roman Italic'), local('Noto Serif Italic'), local('DejaVu Serif Italic');
+    size-adjust: 82%;
+}

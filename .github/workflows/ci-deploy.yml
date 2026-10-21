@@ -1,0 +1,183 @@
+name: CI and deploy
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      deploy_landing:
+        description: Deploy the landing site even if nothing changed
+        type: boolean
+        default: false
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      landing: ${{ steps.filter.outputs.landing }}
+      app: ${{ steps.filter.outputs.app }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            # The landing site also depends on the shared tokens, fonts and motion tokens in app/.
+            landing:
+              - 'landing/**'
+              - 'app/resources/css/tokens.css'
+              - 'app/resources/css/fonts.css'
+              - 'app/resources/css/components.css'
+              - 'app/resources/fonts/**'
+              - 'app/resources/js/lib/design/**'
+            app:
+              - 'app/**'
+
+  landing:
+    needs: changes
+    if: needs.changes.outputs.landing == 'true' || inputs.deploy_landing
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: landing
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: landing/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm test
+      - run: npm run build
+        env:
+          VITE_APP_URL: https://app.resolvrapp.com
+      - uses: actions/upload-artifact@v4
+        with:
+          name: landing-dist
+          path: landing/dist
+          include-hidden-files: true
+          retention-days: 7
+
+  app:
+    needs: changes
+    if: needs.changes.outputs.app == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: bcmath, ctype, fileinfo, mbstring, openssl, pdo_sqlite, tokenizer, xml, sodium
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: composer install --no-interaction --prefer-dist
+      - run: cp .env.example .env && php artisan key:generate
+      - run: npm ci
+      - run: composer lint:check
+      - run: composer analyse
+      - run: npm run lint && npm run typecheck && npm test
+      - run: npm run build
+      - run: php artisan test
+        env:
+          DB_CONNECTION: sqlite
+          DB_DATABASE: ':memory:'
+
+  e2e:
+    needs: [changes, landing, app]
+    if: always() && (needs.changes.outputs.landing == 'true' || needs.changes.outputs.app == 'true') && !contains(needs.*.result, 'failure')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, sodium
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm ci && npm --prefix landing ci && npm --prefix app ci
+      - name: Prepare app
+        working-directory: app
+        run: |
+          composer install --no-interaction --prefer-dist
+          cp .env.example .env
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/; s/^DB_DATABASE=.*/DB_DATABASE=/' .env
+          php artisan key:generate
+          touch database/database.sqlite
+          php artisan migrate --force
+          npm run build
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
+
+  deploy-landing:
+    needs: [landing, e2e]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.landing.result == 'success' && needs.e2e.result != 'failure'
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      # Secrets can't be used in step conditions directly; expose which transport is configured.
+      USE_SSH: ${{ secrets.SSH_HOST != '' }}
+      USE_FTP: ${{ secrets.SSH_HOST == '' && secrets.FTP_HOST != '' }}
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: landing-dist
+          path: dist
+
+      - name: Deploy over SSH (rsync)
+        if: env.USE_SSH == 'true'
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          LANDING_PATH: ${{ secrets.LANDING_PATH }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          # --delete removes stale files, but never touch Let's Encrypt or host-managed folders.
+          rsync -az --delete --delay-updates \
+            --exclude '.well-known/' --exclude 'cgi-bin/' --exclude '.user.ini' \
+            -e "ssh -i ~/.ssh/id_deploy -p $SSH_PORT" \
+            dist/ "$SSH_USER@$SSH_HOST:$LANDING_PATH/"
+
+      - name: Deploy over FTP (lftp fallback)
+        if: env.USE_FTP == 'true'
+        env:
+          FTP_HOST: ${{ secrets.FTP_HOST }}
+          FTP_USER: ${{ secrets.FTP_USER }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          LANDING_PATH: ${{ secrets.LANDING_PATH }}
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+          lftp -u "$FTP_USER","$FTP_PASSWORD" "ftps://$FTP_HOST" -e "set ssl:verify-certificate yes; \
+            mirror --reverse --delete --verbose --exclude-glob .well-known/ --exclude-glob cgi-bin/ dist/ $LANDING_PATH/; quit"
+
+      - name: Smoke test
+        run: |
+          curl -fsS -o /dev/null -w '%{http_code} /\n' https://resolvrapp.com/
+          curl -fsS -o /dev/null -w '%{http_code} /privacy\n' https://resolvrapp.com/privacy
+          curl -fsSI https://resolvrapp.com/ | grep -i '^content-security-policy'
+
+  # deploy-app: added with D1 in Phase 2 (release folders, shared .env/storage,
+  # migrate, caches, symlink swap). See docs/DEPLOY.md.

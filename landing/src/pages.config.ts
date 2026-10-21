@@ -12,6 +12,8 @@ export const site = {
     appUrl: 'https://app.resolvrapp.com',
     email: 'resolvrapp@resolvrapp.com',
     tagline: 'Your evidence, your protection.',
+    /** Cookieless, anonymous page-view counts. The only third party on the site. */
+    plausibleDomain: 'resolvrapp.com',
 };
 
 export const pages: Record<string, PageMeta> = {

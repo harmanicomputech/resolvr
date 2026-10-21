@@ -30,6 +30,25 @@ function cleanUrls(): Plugin {
     };
 }
 
+/** Preload the display serif (hero LCP text) so it is usually ready before first paint. */
+function preloadFonts(): Plugin {
+    return {
+        name: 'resolvr:preload-fonts',
+        apply: 'build',
+        transformIndexHtml: {
+            order: 'post',
+            handler(_html, ctx) {
+                const files = Object.keys(ctx.bundle ?? {}).filter((f) => /instrument-serif-latin-400-(normal|italic).*\.woff2$/.test(f));
+                return files.map((f) => ({
+                    tag: 'link',
+                    attrs: { rel: 'preload', as: 'font', type: 'font/woff2', href: `/${f}`, crossorigin: '' },
+                    injectTo: 'head-prepend' as const,
+                }));
+            },
+        },
+    };
+}
+
 /** Emit sitemap.xml from the page list. */
 function sitemapPlugin(): Plugin {
     return {
@@ -69,6 +88,7 @@ export default defineConfig({
             },
         }),
         tailwindcss(),
+        preloadFonts(),
         sitemapPlugin(),
     ],
     server: {

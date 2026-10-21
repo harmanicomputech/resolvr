@@ -1,16 +1,16 @@
-import { animate } from 'motion';
-
 import { duration, ease, reducedMotion } from './motion';
 
 /**
  * Page transitions. Browsers with cross-document View Transitions use the CSS
  * in main.css; others get a short Motion fade on leave and enter.
  */
-export function initPageTransitions(): void {
+export async function initPageTransitions(): Promise<void> {
     const crossDocument =
         typeof (globalThis as { CSSViewTransitionRule?: unknown }).CSSViewTransitionRule !== 'undefined';
     if (crossDocument || reducedMotion()) return;
 
+    // Only browsers without cross-document view transitions download Motion.
+    const { animate } = await import('motion');
     const main = document.getElementById('main');
     if (main)
         animate(

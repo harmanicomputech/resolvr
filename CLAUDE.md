@@ -12,7 +12,7 @@ resolvr/
 └── app/               Laravel 12 application → app.resolvrapp.com (Inertia + React PWA)
 ```
 
-- `landing/` is a static multi-page site: Vite + TypeScript + Tailwind CSS v4, GSAP + ScrollTrigger, Lenis, Motion (vanilla), Alpine.js for small interactions, Three.js lazy-loaded for the hero. No PHP, no React. `npm run build` → `landing/dist/`, uploaded to that domain's `public_html`.
+- `landing/` is a static multi-page site: Vite + TypeScript + Tailwind CSS v4, GSAP + ScrollTrigger, Lenis, Motion (vanilla, lazy fallback for page transitions), Alpine.js **CSP build** (`@alpinejs/csp`: register components in `src/scripts/alpine.ts`, no inline expressions) for small interactions, and a small raw-WebGL aurora shader for the hero (lighter than Three.js). No PHP, no React. Strict CSP: no inline scripts, styles or `style=""` attributes. `npm run build` → `landing/dist/`, uploaded to that domain's `public_html`. Do not run Prettier on `.hbs`/`.html` (it breaks Handlebars).
 - `app/` is Laravel 12 (PHP 8.3+, MySQL/MariaDB) with Inertia.js v2 + React + TypeScript + shadcn/ui, Dexie (IndexedDB) + Web Crypto for on-device encrypted data, vite-plugin-pwa for the PWA. It also hosts the small public API the landing page calls (`POST /api/waitlist`, CORS limited to https://resolvrapp.com).
 - Shared design tokens live in `app/resources/css/tokens.css`; `landing/` imports that file so both look identical.
 - Hosting is a DirectAdmin server (Apache/LiteSpeed, PHP-FPM, cron, SSH if available) with **no long-running Node process**. All front-end assets are built locally or in GitHub Actions and uploaded. Queues use the database driver, run by cron (`schedule:run`). No Redis, Horizon, Octane, Reverb or Inertia SSR.

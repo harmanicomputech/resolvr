@@ -5,8 +5,8 @@
 <title>{{page.title}}</title>
 <meta name="description" content="{{page.description}}" />
 <link rel="canonical" href="{{site.url}}{{page.path}}" />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 <link rel="icon" href="/favicon.ico" sizes="32x32" />
+<link rel="icon" href="/icon-192.png" type="image/png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <meta name="referrer" content="strict-origin-when-cross-origin" />
 
@@ -30,3 +30,6 @@
 {{/each}}
 
 <script type="module" src="../scripts/main.ts"></script>
+{{#if site.plausibleDomain}}
+<script defer data-domain="{{site.plausibleDomain}}" src="https://plausible.io/js/script.js"></script>
+{{/if}}

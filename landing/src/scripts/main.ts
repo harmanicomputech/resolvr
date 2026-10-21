@@ -7,6 +7,7 @@ import { initNav, initProgress } from './nav';
 import { initQuickExit } from './quick-exit';
 import { initReveal } from './reveal';
 import { initPhotos } from './sections/photos';
+import { initWaitlist } from './sections/waitlist';
 import { initPageTransitions } from './transitions';
 
 document.documentElement.classList.add('js');
@@ -18,14 +19,38 @@ initNav();
 initProgress();
 initReveal();
 initPhotos();
-initPageTransitions();
+// Eager: a fast submit must never fall through to a native form post.
+initWaitlist();
+void initPageTransitions();
 
 const motionOK = !reducedMotion();
 if (motionOK && finePointer()) initCursor();
 
 const has = (selector: string) => document.querySelector(selector) !== null;
 
-// Section behaviour loads only on pages that have the section.
+// Section behaviour loads only on pages that have the section. Modules run one
+// at a time with a yield in between, so start-up never blocks input for long.
+const yieldToMain = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+type Init = () => Promise<unknown>;
+const sections: [selector: string, load: Init][] = [
+    ['[data-hero]', () => import('./sections/hero').then((m) => m.initHero())],
+    ['[data-moments]', () => import('./sections/moments').then((m) => m.initMoments())],
+    ['[data-problem]', () => import('./sections/problem').then((m) => m.initProblem())],
+    ['[data-bento]', () => import('./sections/bento').then((m) => m.initBento())],
+    ['[data-velocity]', () => import('./sections/velocity').then((m) => m.initVelocity())],
+    ['[data-how]', () => import('./sections/how').then((m) => m.initHow())],
+    ['[data-security]', () => import('./sections/shield').then((m) => m.initShield())],
+    ['[data-founder]', () => import('./sections/founder').then((m) => m.initFounder())],
+    ['[data-marquee]', () => import('./sections/marquee').then((m) => m.initMarquee())],
+    ['[data-faq]', () => import('./sections/faq').then((m) => m.initFaq())],
+    ['[data-toc]', () => import('./sections/toc').then((m) => m.initToc())],
+    [
+        '[data-speed], [data-cta-photo], [data-how-photos]',
+        () => import('./sections/parallax').then((m) => m.initParallax()),
+    ],
+];
+
 void (async () => {
     const needsScroll =
         motionOK && has('[data-hero], [data-problem], [data-how], [data-founder], [data-moments], [data-collage]');
@@ -34,28 +59,19 @@ void (async () => {
         initSmoothScroll();
     }
 
-    const tasks: Promise<unknown>[] = [];
-    if (has('[data-moments]')) tasks.push(import('./sections/moments').then((m) => m.initMoments()));
-    if (has('[data-velocity]')) tasks.push(import('./sections/velocity').then((m) => m.initVelocity()));
-    if (has('[data-speed], [data-cta-photo], [data-how-photos]'))
-        tasks.push(import('./sections/parallax').then((m) => m.initParallax()));
-    if (has('[data-hero]')) tasks.push(import('./sections/hero').then((m) => m.initHero()));
-    if (has('[data-problem]')) tasks.push(import('./sections/problem').then((m) => m.initProblem()));
-    if (has('[data-bento]')) tasks.push(import('./sections/bento').then((m) => m.initBento()));
-    if (has('[data-how]')) tasks.push(import('./sections/how').then((m) => m.initHow()));
-    if (has('[data-security]')) tasks.push(import('./sections/shield').then((m) => m.initShield()));
-    if (has('[data-founder]')) tasks.push(import('./sections/founder').then((m) => m.initFounder()));
-    if (has('[data-marquee]')) tasks.push(import('./sections/marquee').then((m) => m.initMarquee()));
-    if (has('[data-faq]')) tasks.push(import('./sections/faq').then((m) => m.initFaq()));
-    if (has('[data-waitlist]')) tasks.push(import('./sections/waitlist').then((m) => m.initWaitlist()));
-    if (has('[data-toc]')) tasks.push(import('./sections/toc').then((m) => m.initToc()));
+    for (const [selector, load] of sections) {
+        if (!has(selector)) continue;
+        try {
+            await load();
+        } catch (error) {
+            console.warn(error);
+        }
+        await yieldToMain();
+    }
     if (has('[data-magnetic]') && motionOK && finePointer())
-        tasks.push(import('./sections/magnetic').then((m) => m.initMagnetic()));
+        await import('./sections/magnetic').then((m) => m.initMagnetic());
 
-    const results = await Promise.allSettled(tasks);
-    for (const result of results) if (result.status === 'rejected') console.warn(result.reason);
-
-    // Pins were created out of DOM order by async modules: sort, then measure again once fonts settle.
+    // Pins were created by async modules: sort them into DOM order, then measure once fonts settle.
     if (needsScroll) {
         const { ScrollTrigger } = await import('./smooth');
         ScrollTrigger.sort();

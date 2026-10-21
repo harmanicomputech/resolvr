@@ -69,9 +69,19 @@ Alpine.data('pricing', () => ({
     },
 }));
 
+/** Start Alpine when the browser is idle (or on first tap, whichever comes first). */
 export function initAlpine(): void {
     window.Alpine = Alpine;
-    Alpine.start();
+    let started = false;
+    const start = () => {
+        if (started) return;
+        started = true;
+        Alpine.start();
+    };
+    const idle = window.requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
+    idle(start, { timeout: 1500 });
+    document.addEventListener('pointerdown', start, { once: true, capture: true });
+    document.addEventListener('keydown', start, { once: true, capture: true });
 }
 
 declare global {
