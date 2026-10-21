@@ -1,0 +1,54 @@
+{
+  "id": "us",
+  "version": "2026.1",
+  "name": "United States (federal)",
+  "reviewedBy": null,
+  "disclaimer": "General information about US federal law to help you organise your record. It is not legal advice and may not apply to your situation. State and local laws may also apply.",
+  "statutes": [
+    {
+      "id": "title-vii",
+      "short": "Title VII",
+      "name": "Civil Rights Act of 1964, Title VII",
+      "triggers": [
+        "Harassment",
+        "Discrimination",
+        "Sexual",
+        "Racial",
+        "Gender",
+        "Religion",
+        "Religious",
+        "National Origin",
+        "Hostile Work",
+        "Retaliation"
+      ]
+    },
+    { "id": "ada", "short": "ADA", "name": "Americans with Disabilities Act", "triggers": ["Disability"] },
+    { "id": "adea", "short": "ADEA", "name": "Age Discrimination in Employment Act", "triggers": ["Age"] },
+    {
+      "id": "fmla",
+      "short": "FMLA",
+      "name": "Family and Medical Leave Act",
+      "triggers": ["FMLA", "Medical Leave", "Maternity", "Paternity"]
+    },
+    { "id": "flsa", "short": "FLSA", "name": "Fair Labor Standards Act", "triggers": ["Wage", "Hour"] },
+    {
+      "id": "osha",
+      "short": "OSHA",
+      "name": "Occupational Safety and Health Act",
+      "triggers": ["Unsafe", "Safety", "OSHA", "Whistleblower"]
+    },
+    {
+      "id": "epa",
+      "short": "EPA",
+      "name": "Equal Pay Act",
+      "triggers": ["Equal Pay", "Pay / Compensation", "Compensation"]
+    },
+    { "id": "gina", "short": "GINA", "name": "Genetic Information Nondiscrimination Act", "triggers": ["Genetic"] },
+    {
+      "id": "title-ix",
+      "short": "Title IX",
+      "name": "Education Amendments of 1972, Title IX",
+      "triggers": ["Education", "Title IX"]
+    }
+  ]
+}

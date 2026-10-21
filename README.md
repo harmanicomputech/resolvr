@@ -7,7 +7,7 @@ Private workplace-evidence app: log incidents with tamper-evident timestamps, st
 | [`landing/`](landing/) | Marketing site | resolvrapp.com | Vite + TypeScript multi-page, Tailwind v4, GSAP, Lenis, Motion, Alpine (static) |
 | [`app/`](app/) | Web app (PWA) + public API | app.resolvrapp.com | Laravel 12, Inertia v2 + React + TypeScript, MySQL |
 | [`e2e/`](e2e/) | Playwright tests for both | — | Playwright |
-| [`docs/`](docs/) | Build prompts, design system, deployment | — | — |
+| [`docs/`](docs/) | Build prompts, design system, data layer, deployment | — | — |
 
 Both run on a DirectAdmin server. Front-end assets are built with Vite before upload; the server runs no Node process.
 
@@ -33,7 +33,7 @@ resolvr/
 │   ├── resources/css/tokens.css   shared design tokens (owned here)
 │   ├── resources/js/
 │   │   ├── components/{ui,app}
-│   │   ├── lib/{crypto,db,scoring,patterns,laws}
+│   │   ├── lib/{model,crypto,integrity,db,scoring,patterns,laws,migration}   see docs/DATA.md
 │   │   └── pages/
 │   └── routes/{web,api}.php
 ├── e2e/{landing,app}/        Playwright specs
