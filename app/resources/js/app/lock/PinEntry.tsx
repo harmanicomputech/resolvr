@@ -33,8 +33,19 @@ const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'];
  * passphrase field. Dots fill with a small spring; a wrong entry shakes.
  */
 export function PinEntry({ format, onComplete, disabled, label, ref, className }: PinEntryProps) {
-    const [value, setValue] = useState('');
-    const [error, setError] = useState(false);
+    const [value, setValueState] = useState('');
+    const [error, setErrorState] = useState(false);
+    // Refs mirror state so fast typing never reads a stale value between renders.
+    const valueRef = useRef('');
+    const errorRef = useRef(false);
+    const setValue = useCallback((next: string | ((v: string) => string)) => {
+        valueRef.current = typeof next === 'function' ? next(valueRef.current) : next;
+        setValueState(valueRef.current);
+    }, []);
+    const setError = useCallback((next: boolean) => {
+        errorRef.current = next;
+        setErrorState(next);
+    }, []);
     const controls = useAnimationControls();
     const reduce = useReducedMotion();
     const phraseRef = useRef<HTMLInputElement>(null);
@@ -60,7 +71,7 @@ export function PinEntry({ format, onComplete, disabled, label, ref, className }
     const press = useCallback(
         (digit: string) => {
             // Typing straight after a wrong entry starts a fresh one.
-            const current = error ? '' : value;
+            const current = errorRef.current ? '' : valueRef.current;
             if (disabled || current.length >= length(format)) return;
             window.clearTimeout(resetTimer.current);
             setError(false);
@@ -69,9 +80,9 @@ export function PinEntry({ format, onComplete, disabled, label, ref, className }
             setValue(next);
             if (next.length === length(format)) window.setTimeout(() => onComplete(next), 120);
         },
-        [disabled, error, format, onComplete, value],
+        [disabled, format, onComplete, setError, setValue],
     );
-    const back = useCallback(() => !disabled && setValue((v) => v.slice(0, -1)), [disabled]);
+    const back = useCallback(() => !disabled && setValue((v) => v.slice(0, -1)), [disabled, setValue]);
 
     useEffect(() => {
         if (format === 'phrase') return;
