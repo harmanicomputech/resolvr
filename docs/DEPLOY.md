@@ -41,6 +41,14 @@ Protect the `production` environment with required reviewers if you want a manua
 4. On `main` only: `rsync -az --delete` to `public_html` (excluding `.well-known/` and `cgi-bin/`), or `lftp mirror --reverse --delete` over FTPS
 5. Smoke test: home and privacy return 200 and the CSP header is present
 
+### Previews outside the domain
+
+Internal links are written with the `{{link}}` helper. Production builds emit clean URLs (`/security`, `/#features`) that `.htaccess` rewrites. For a preview hosted anywhere else (a sub-folder, a file share, a review tool), build with relative links:
+
+```bash
+LINK_STYLE=relative npx vite build --base ./ --outDir ../preview
+```
+
 ### Deploying by hand
 
 ```bash

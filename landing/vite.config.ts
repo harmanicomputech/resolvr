@@ -14,18 +14,36 @@ import { pages, site } from './src/pages.config';
 const here = fileURLToPath(new URL('.', import.meta.url));
 const pagesDir = resolve(here, 'src/pages');
 
-/** Serve /story as /story.html in dev, matching the .htaccess rewrite in production. */
+/**
+ * Internal links. Production uses clean URLs (/security, /#features), which the
+ * .htaccess rewrites to the .html files. LINK_STYLE=relative (used for previews
+ * hosted outside the domain) emits relative .html links that work anywhere.
+ */
+const relativeLinks = process.env.LINK_STYLE === 'relative';
+
+export function link(page: string, hash?: unknown): string {
+    const anchor = typeof hash === 'string' ? `#${hash}` : '';
+    if (relativeLinks) return `${page}.html${anchor}`;
+    return page === 'index' ? `/${anchor}` : `/${page}${anchor}`;
+}
+
+/** Serve /story as /story.html in dev and preview, matching the .htaccess rewrite in production. */
 function cleanUrls(): Plugin {
+    const rewrite = (req: { url?: string }, _res: unknown, next: () => void) => {
+        const url = req.url?.split('?')[0] ?? '/';
+        const page = url.replace(/^\/|\/$/g, '');
+        if (page && !page.includes('.') && existsSync(resolve(pagesDir, `${page}.html`))) {
+            req.url = `/${page}.html${req.url?.slice(url.length) ?? ''}`;
+        }
+        next();
+    };
     return {
         name: 'resolvr:clean-urls',
         configureServer(server) {
-            server.middlewares.use((req, _res, next) => {
-                const url = req.url?.split('?')[0] ?? '/';
-                if (url !== '/' && !url.includes('.') && existsSync(resolve(pagesDir, `${url.slice(1)}.html`))) {
-                    req.url = `${url}.html`;
-                }
-                next();
-            });
+            server.middlewares.use(rewrite);
+        },
+        configurePreviewServer(server) {
+            server.middlewares.use(rewrite);
         },
     };
 }
@@ -81,6 +99,7 @@ export default defineConfig({
                 icon: (name: string, className?: unknown) => renderIcon(name, typeof className === 'string' ? className : undefined),
                 photo: (name: string, options: { hash?: Record<string, unknown> }) =>
                     renderPhoto(name, (options?.hash ?? {}) as Parameters<typeof renderPhoto>[1]),
+                link: (page: string, hash: unknown) => link(page, hash),
                 inc: (value: number) => value + 1,
                 pad: (value: number) => String(value + 1).padStart(2, '0'),
                 eq: (a: unknown, b: unknown) => a === b,

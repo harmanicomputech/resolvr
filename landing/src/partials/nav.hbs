@@ -2,17 +2,17 @@
 <div x-data="menu">
 <header class="site-nav" data-nav>
     <nav class="site-nav-inner" aria-label="Primary">
-        <a href="/" class="wordmark site-nav-logo" aria-label="Resolvr home">Resolvr</a>
+        <a href="{{link "index"}}" class="wordmark site-nav-logo" aria-label="Resolvr home">Resolvr</a>
         <ul class="site-nav-links">
-            <li><a href="/#features">Features</a></li>
-            <li><a href="/#how-it-works">How it works</a></li>
-            <li><a href="/security"{{#if (eq page.name "security")}} aria-current="page"{{/if}}>Security</a></li>
-            <li><a href="/story"{{#if (eq page.name "story")}} aria-current="page"{{/if}}>Story</a></li>
-            <li><a href="/pricing"{{#if (eq page.name "pricing")}} aria-current="page"{{/if}}>Pricing</a></li>
+            <li><a href="{{link "index" "features"}}">Features</a></li>
+            <li><a href="{{link "index" "how-it-works"}}">How it works</a></li>
+            <li><a href="{{link "security"}}"{{#if (eq page.name "security")}} aria-current="page"{{/if}}>Security</a></li>
+            <li><a href="{{link "story"}}"{{#if (eq page.name "story")}} aria-current="page"{{/if}}>Story</a></li>
+            <li><a href="{{link "pricing"}}"{{#if (eq page.name "pricing")}} aria-current="page"{{/if}}>Pricing</a></li>
         </ul>
         <div class="site-nav-ctas">
             {{> theme-toggle}}
-            <a href="/#waitlist" class="btn" data-variant="ghost" data-size="sm">Join waitlist</a>
+            <a href="{{link "index" "waitlist"}}" class="btn" data-variant="ghost" data-size="sm">Join waitlist</a>
             <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="sm">Open the app</a>
         </div>
         <div class="site-nav-mobile">
@@ -34,15 +34,15 @@
 </header>
     <div id="mobile-menu" class="mobile-menu" x-bind:data-open="open" x-on:keydown.escape.stop="close" inert>
         <ul>
-            <li><a href="/#features" x-on:click="close">Features</a></li>
-            <li><a href="/#how-it-works" x-on:click="close">How it works</a></li>
-            <li><a href="/security">Security</a></li>
-            <li><a href="/story">Story</a></li>
-            <li><a href="/pricing">Pricing</a></li>
+            <li><a href="{{link "index" "features"}}" x-on:click="close">Features</a></li>
+            <li><a href="{{link "index" "how-it-works"}}" x-on:click="close">How it works</a></li>
+            <li><a href="{{link "security"}}">Security</a></li>
+            <li><a href="{{link "story"}}">Story</a></li>
+            <li><a href="{{link "pricing"}}">Pricing</a></li>
         </ul>
         <div class="mobile-menu-ctas">
             <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">Open the app</a>
-            <a href="/#waitlist" class="btn" data-size="lg" x-on:click="close">Join waitlist</a>
+            <a href="{{link "index" "waitlist"}}" class="btn" data-size="lg" x-on:click="close">Join waitlist</a>
         </div>
         <p class="mobile-menu-note">Not legal advice. Press Quick exit at any time to leave.</p>
     </div></div>
