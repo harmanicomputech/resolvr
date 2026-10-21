@@ -79,7 +79,6 @@ If you change the CSP, re-run the CSP check (see *Verifying* below): the site in
 - [ ] `https://resolvrapp.com/app` redirects to `https://app.resolvrapp.com`
 - [ ] Waitlist form shows "You're on the list" and the confirmation email arrives (needs the app deployed and mail configured)
 - [ ] `/sitemap.xml` and `/robots.txt` load; the Open Graph preview (e.g. a link in a chat app) shows the branded card
-- [ ] Quick exit (button and Esc) leaves for a neutral page
 
 ### Rollback
 

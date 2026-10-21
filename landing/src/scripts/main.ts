@@ -3,7 +3,6 @@ import '../styles/main.css';
 import { initAlpine } from './alpine';
 import { reducedMotion } from './motion';
 import { initNav, initProgress } from './nav';
-import { initQuickExit } from './quick-exit';
 import { initReveal } from './reveal';
 import { initPhotos } from './sections/photos';
 import { initWaitlist } from './sections/waitlist';
@@ -14,8 +13,6 @@ document.documentElement.classList.add('js');
 const motionOK = !reducedMotion();
 document.documentElement.classList.toggle('motion', motionOK);
 
-// Safety first: quick exit must work even if anything below fails.
-initQuickExit();
 initThemeToggle();
 initAlpine();
 initNav();
