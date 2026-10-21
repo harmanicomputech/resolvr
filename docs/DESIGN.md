@@ -235,3 +235,5 @@ Charts are hand-built SVG (no chart library) and follow the dataviz checks: thin
 | `--chart-sev-1…4` | Severity in charts: an ordinal one-hue ramp, darker (light theme) or brighter (dark theme) = more serious. Validated for monotone lightness and contrast in both themes. Severity *pills* keep their status colours and always carry a text label. |
 | `--chart-heat-0…4` | Heatmap: 0 = nothing logged, 1–4 = one, two, three, four or more incidents. One teal hue. |
 | `--chart-grid` | Gridlines and empty future cells. |
+| `--chart-cat-1…3`, `--chart-cat-other` | Timeline: harassment, discrimination, retaliation; everything else folds into a neutral “other” (a scatter can only carry three colours that stay distinguishable for everyone). Size carries severity. |
+| `--chart-window` | The 30 days after a report, shaded on the timeline. |

@@ -211,6 +211,12 @@
     --chart-heat-3: #1a7c6f;
     --chart-heat-4: #0d524c;
     --chart-grid: #e7e3da;
+    /* Timeline categories: three validated slots (all-pairs), the rest fold into "other". */
+    --chart-cat-1: #2a78d6;
+    --chart-cat-2: #eb6834;
+    --chart-cat-3: #1baf7a;
+    --chart-cat-other: #a8a29e;
+    --chart-window: color-mix(in oklab, #eda100 16%, transparent);
     --sev-low-text: #047857;
     --sev-medium-text: #92400e;
     --sev-high-text: #9a3412;
@@ -286,6 +292,11 @@
     --chart-heat-3: #2bb3a3;
     --chart-heat-4: #86e3d6;
     --chart-grid: #1c222b;
+    --chart-cat-1: #3987e5;
+    --chart-cat-2: #d95926;
+    --chart-cat-3: #199e70;
+    --chart-cat-other: #6b7280;
+    --chart-window: color-mix(in oklab, #c98500 20%, transparent);
 
     --success-text: #34d399;
     --warning-text: #fbbf24;
