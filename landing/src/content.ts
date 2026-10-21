@@ -40,7 +40,23 @@ export const faq: Faq[] = [
     },
 ];
 
-export const problemStatements = ['No organised record.', 'HR protects the company first.', 'Patterns get missed.'];
+export const problems = [
+    {
+        icon: 'file-x',
+        title: 'No organised record.',
+        body: 'Dates blur, messages get deleted and memory is easy to question when it is your word against theirs.',
+    },
+    {
+        icon: 'building-2',
+        title: 'HR protects the company first.',
+        body: 'HR teams work for the employer. Clear, specific records are what get taken seriously.',
+    },
+    {
+        icon: 'scan-search',
+        title: 'Patterns get missed.',
+        body: 'One remark is easy to dismiss. Ten, from the same person, getting worse after you reported it, are not.',
+    },
+];
 
 export const problemStat = {
     text: 'Roughly three in four people who experience harassment at work never tell a supervisor or HR.',
@@ -50,18 +66,22 @@ export const problemStat = {
 
 export const steps = [
     {
+        icon: 'pen-line',
         title: 'Log the incident',
         body: 'Write down what happened while it is fresh. The time is recorded automatically and each entry gets a fingerprint that shows if it is ever changed.',
     },
     {
+        icon: 'paperclip',
         title: 'Add your evidence',
         body: 'Attach screenshots, photos, PDFs and voice notes. Files are encrypted on your device and linked to the incident they support.',
     },
     {
+        icon: 'chart-spline',
         title: 'Watch the pattern',
         body: 'Resolvr points out what is easy to miss: the same person again, incidents getting more serious, or treatment changing after you reported something.',
     },
     {
+        icon: 'file-text',
         title: 'Generate your complaint',
         body: 'Choose the incidents, the tone and the outcome you want. Resolvr drafts a clear, formal letter you can edit and export as a PDF.',
     },
@@ -177,73 +197,68 @@ export const plans: Plan[] = [
     },
 ];
 
-/** Layout placeholders only. Replace with real, consented beta feedback. */
-export const testimonials = [
-    { quote: 'For the first time I could show HR dates, not just feelings.', who: 'Placeholder · Beta tester, retail' },
-    {
-        quote: 'Writing it down the same day made the meeting so much calmer.',
-        who: 'Placeholder · Beta tester, healthcare',
-    },
-    {
-        quote: 'The timeline showed a pattern I had been talking myself out of.',
-        who: 'Placeholder · Beta tester, tech',
-    },
-    {
-        quote: 'I liked that nothing left my phone unless I chose to share it.',
-        who: 'Placeholder · Beta tester, education',
-    },
-    {
-        quote: 'My lawyer said it was the most organised record she had seen.',
-        who: 'Placeholder · Beta tester, finance',
-    },
-    { quote: 'The calculator mode meant I could use it on my break.', who: 'Placeholder · Beta tester, hospitality' },
-];
-
 export const founderQuote = {
     // DRAFT wording based on the founder story. Confirm with Ayodapo Ige before launch.
-    lines: [
-        'A manager made work unbearable,',
-        'week after week, in ways that were',
-        'hard to explain afterwards.',
-        'When I finally spoke up, I had nothing written down.',
-        'I built Resolvr so no one has to start from nothing.',
-    ],
+    text: 'A manager made work unbearable, week after week, in ways that were hard to explain afterwards. When I finally spoke up, I had nothing written down. I built Resolvr so no one has to start from nothing.',
     name: 'Ayodapo Ige',
     role: 'Founder, Resolvr',
 };
 
-/** Horizontal "moments" gallery after the hero. Photos are illustrative stock, not real users. */
+/** "It rarely happens all at once": the moments worth writing down. */
 export const moments = [
     {
-        photo: 'team-meeting',
-        kicker: 'Monday, 09:40',
-        title: 'The meeting where it was said.',
-        body: 'Write down the exact words, who was in the room and when, while it is still fresh.',
+        icon: 'message-square-warning',
+        title: 'The comment in the meeting',
+        body: 'Exact words, who was there, the time.',
     },
     {
-        photo: 'desk-conversation',
-        kicker: 'Wednesday, 14:15',
-        title: 'The comment at your desk.',
-        body: 'Small moments are easy to dismiss one at a time. Logged together, they show a pattern.',
+        icon: 'user-x',
+        title: 'Being left out',
+        body: 'The email you were not copied on, the meeting you were not invited to.',
     },
+    { icon: 'calendar-x', title: 'The sudden change', body: 'A new rota, a worse review, right after you spoke up.' },
     {
-        photo: 'panel-interview',
-        kicker: 'Two weeks later',
-        title: 'The review that suddenly changed.',
-        body: 'When treatment shifts after you speak up, dates are what make it visible.',
-    },
-    {
-        photo: 'hr-meeting',
-        kicker: 'When you are ready',
-        title: 'The conversation with HR.',
-        body: 'Walk in with a timeline, your evidence and a clear request, not just a feeling.',
+        icon: 'messages-square',
+        title: 'The talk with HR',
+        body: 'What you said, what they promised, what happened next.',
     },
 ];
 
-export const velocityWords = {
-    top: ['Dates', 'Names', 'Exact words', 'Witnesses', 'Evidence', 'Patterns'],
-    bottom: ['Private', 'Calm', 'Organised', 'Encrypted', 'Yours'],
-};
-
-/** Photo behind the device for each "How it works" step. */
-export const stepPhotos = ['writing-notes', 'laptop-overhead', 'laptop-review', 'document-review'];
+export const features = [
+    {
+        icon: 'notebook-pen',
+        title: 'Incident log',
+        body: 'Write it down while it is fresh. The time locks and a fingerprint shows if it is ever changed.',
+        demo: 'log',
+    },
+    {
+        icon: 'folder-lock',
+        title: 'Evidence vault',
+        body: 'Screenshots, photos, PDFs and voice notes, encrypted and linked to each incident.',
+        demo: 'vault',
+    },
+    {
+        icon: 'chart-spline',
+        title: 'Timeline and patterns',
+        body: 'See repeats, escalation and changes after you reported something, laid out in order.',
+        demo: 'timeline',
+    },
+    {
+        icon: 'file-pen-line',
+        title: 'Complaint letters',
+        body: 'Pick incidents, tone and outcome. A formal draft appears for you to edit and export.',
+        demo: 'letter',
+    },
+    {
+        icon: 'calculator',
+        title: 'Stealth mode',
+        body: 'The app can look like a working calculator. Your PIN and equals open it.',
+        demo: 'stealth',
+    },
+    {
+        icon: 'files',
+        title: 'Case dossier',
+        body: 'An HR or legal package: summary, pattern analysis, full records and an evidence index.',
+        demo: 'dossier',
+    },
+];

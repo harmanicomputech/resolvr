@@ -12,7 +12,7 @@ resolvr/
 └── app/               Laravel 12 application → app.resolvrapp.com (Inertia + React PWA)
 ```
 
-- `landing/` is a static multi-page site: Vite + TypeScript + Tailwind CSS v4, GSAP + ScrollTrigger, Lenis, Motion (vanilla, lazy fallback for page transitions), Alpine.js **CSP build** (`@alpinejs/csp`: register components in `src/scripts/alpine.ts`, no inline expressions) for small interactions, and a small raw-WebGL aurora shader for the hero (lighter than Three.js). No PHP, no React. Strict CSP: no inline scripts, styles or `style=""` attributes. `npm run build` → `landing/dist/`, uploaded to that domain's `public_html`. Do not run Prettier on `.hbs`/`.html` (it breaks Handlebars).
+- `landing/` is a static multi-page site: Vite + TypeScript + Tailwind CSS v4, GSAP + ScrollTrigger, Lenis, Motion (vanilla, lazy fallback for page transitions) and Alpine.js **CSP build** (`@alpinejs/csp`: register components in `src/scripts/alpine.ts`, no inline expressions) for small interactions. The founder asked for a calm, light, icon-led site: no GSAP/Lenis/WebGL, light theme by default with a dark-mode toggle (`public/theme-init.js` applies the saved choice before paint), Inter for all type, few photos. No PHP, no React. Strict CSP: no inline scripts, styles or `style=""` attributes. `npm run build` → `landing/dist/`, uploaded to that domain's `public_html`. Do not run Prettier on `.hbs`/`.html` (it breaks Handlebars).
 - `app/` is Laravel 12 (PHP 8.3+, MySQL/MariaDB) with Inertia.js v2 + React + TypeScript + shadcn/ui, Dexie (IndexedDB) + Web Crypto for on-device encrypted data, vite-plugin-pwa for the PWA. It also hosts the small public API the landing page calls (`POST /api/waitlist`, CORS limited to https://resolvrapp.com).
 - Shared design tokens live in `app/resources/css/tokens.css`; `landing/` imports that file so both look identical.
 - Hosting is a DirectAdmin server (Apache/LiteSpeed, PHP-FPM, cron, SSH if available) with **no long-running Node process**. All front-end assets are built locally or in GitHub Actions and uploaded. Queues use the database driver, run by cron (`schedule:run`). No Redis, Horizon, Octane, Reverb or Inertia SSR.
@@ -54,7 +54,7 @@ The original prototype is in `docs/reference/prototype-v2.html`.
 
 ## Design direction: "Quiet Armour"
 
-Deep ink backgrounds (dark is the hero theme), warm paper surfaces in light mode, one luminous teal → aurora accent (#14B8A6, #22D3EE, #A78BFA) used sparingly, editorial serif headlines (italic for the wordmark and key phrases), Inter/Geist for UI, Geist Mono for IDs and hashes. Motion feels like light moving across glass, not things bouncing. Lucide/Phosphor icons, no emoji in the UI. Full spec: `docs/DESIGN.md` (created by prompt P0).
+Warm paper surfaces are the default (light theme), with a deep-ink dark theme the user can switch to. One teal accent (#0F766E on light, #14B8A6/#2DD4BF on dark; the aurora gradient only as a rare highlight). Inter for everything, including headlines (semibold, tight tracking) and the wordmark; Geist Mono for IDs and hashes. No serif. Icon-led layouts (Lucide in rounded "icon badges"), calm motion, photos used sparingly. No emoji in the UI. Full spec: `docs/DESIGN.md`.
 
 ## Non-negotiables
 

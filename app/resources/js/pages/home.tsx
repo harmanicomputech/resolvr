@@ -7,7 +7,7 @@ export default function Home() {
             <Head title="Home" />
             <main className="grid min-h-dvh place-items-center bg-bg p-6 text-fg">
                 <div className="text-center">
-                    <p className="font-display text-4xl italic">Resolvr</p>
+                    <p className="wordmark text-4xl">Resolvr</p>
                     <p className="mt-2 text-sm text-fg-muted">Your evidence, your protection.</p>
                 </div>
             </main>

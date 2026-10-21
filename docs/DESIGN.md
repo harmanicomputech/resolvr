@@ -1,6 +1,6 @@
 # Resolvr design system: "Quiet Armour"
 
-Calm, protective, premium. Linear's precision, Apple's restraint, a little of Arc and Raycast's glow, with editorial warmth. People open Resolvr when they are stressed, sometimes somewhere they can't be seen doing it. Every decision below follows from that: **trustworthy before flashy**.
+Calm, protective, premium, and light by default. Linear's precision, Apple's restraint, warm paper surfaces, one teal accent and lots of clear icons. People open Resolvr when they are stressed, sometimes somewhere they can't be seen doing it. Every decision below follows from that: **trustworthy before flashy**.
 
 | File | What |
 | --- | --- |
@@ -25,7 +25,7 @@ Import order in a stylesheet:
 
 ## 1. Colour
 
-Dark ("Ink") is the hero theme and the default. Light ("Paper") is warm, never pure grey. Themes switch with a class: `.dark` or `.light` on any element, nestable.
+Light ("Paper") is the default: warm, never pure grey. Dark ("Ink") is opt-in through a toggle (landing: `[data-theme-toggle]` + `public/theme-init.js`, stored as `resolvr-theme` in localStorage). Themes switch with a class: `.dark` or `.light` on any element, nestable.
 
 Tailwind's default palette is **removed** (`--color-*: initial`), so `bg-teal-500` does not exist. Only tokens can be used.
 
@@ -57,8 +57,8 @@ Tailwind's default palette is **removed** (`--color-*: initial`), so `bg-teal-50
 
 The aurora is **light, not paint**. Use it for at most one primary CTA per view, focus rings, ambient glows behind hero content, and one gradient phrase per screen.
 
-> **Do** put one aurora-glow primary button in the hero.
-> **Don't** use gradient backgrounds on cards, gradient body text or more than one gradient phrase per view.
+> **Do** lead with icons: a Lucide icon in an `.icon-badge` beside each card title or list item.
+> **Don't** use gradient backgrounds on cards, gradient text, or full-bleed animated effects. Keep it calm.
 
 ### Severity
 
@@ -90,11 +90,12 @@ Use `data-severity="high"` on any element to get `--sev-base / --sev-text / --se
 
 | Role | Family | Use |
 | --- | --- | --- |
-| Display | **Instrument Serif** (regular + italic) | Headlines, stat values, dialog titles. Italic for the wordmark and one key phrase |
+| Headlines | **Inter** 600, tracking −0.03 to −0.045em | Page and section titles, stat values, dialog titles |
+| Wordmark | **Inter** 650, tracking −0.03em | "Resolvr" |
 | UI | **Inter** (variable) | Everything else |
 | Mono | **Geist Mono** | Incident IDs (`INC-014`), hashes, timestamps |
 
-Fonts are self-hosted (latin subset, `font-display: swap`). No Google Fonts requests.
+There is no serif. Fonts are self-hosted (latin subset, `font-display: swap`) and Inter is preloaded on the landing site. No Google Fonts requests.
 
 Fluid scale from 12px to 96px with `clamp()`, growing between 360px and 1440px viewports:
 
@@ -104,15 +105,17 @@ Fluid scale from 12px to 96px with `clamp()`, growing between 360px and 1440px v
 | `text-xs` | 13px | Hints, metadata |
 | `text-sm` | 14 → 15px | Secondary UI text, buttons |
 | `text-base` | 16 → 17px | Body, inputs (never below 16px on inputs: iOS zooms) |
-| `text-lg` / `xl` | 18 → 24px | Lead paragraphs |
-| `text-2xl` / `3xl` | 24 → 40px | Section titles (serif) |
-| `text-4xl` / `5xl` | 36 → 72px | Page titles, stat values |
-| `text-6xl` | 52 → 96px | Hero headline only |
+| `text-lg` / `xl` | 18 → 24px | Lead paragraphs, card titles |
+| `text-2xl` / `3xl` | 24 → 40px | Sub-headings |
+| `text-4xl` / `5xl` | 36 → 72px | Section and page titles, stat values |
+| `text-6xl` | 52 → 96px | Rarely; the hero uses its own clamp |
+
+To de-emphasise part of a headline, wrap it in `.muted` (colour, not italics).
 
 Helpers: `.wordmark`, `.display`, `.eyebrow`, `.mono`, `.text-aurora`.
 
 > **Do** write "Resolvr" as `<span class="wordmark">Resolvr</span>`.
-> **Don't** set long paragraphs in the serif, or use the serif below `text-xl`.
+> **Don't** use italics or gradient text for emphasis in headlines; use `.muted` or the accent colour.
 
 ---
 

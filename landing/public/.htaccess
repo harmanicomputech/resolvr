@@ -41,6 +41,10 @@ ErrorDocument 404 /index.html
     <FilesMatch "\.(js|css|woff2|svg|png|jpg|jpeg|webp|avif|ico)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
+    # Unhashed files must revalidate so deploys show up immediately.
+    <FilesMatch "^theme-init\.js$">
+        Header set Cache-Control "no-cache"
+    </FilesMatch>
     # HTML must revalidate so deploys show up immediately.
     <FilesMatch "\.html$">
         Header set Cache-Control "no-cache"

@@ -1,5 +1,4 @@
 Fonts are self-hosted (SIL Open Font License 1.1). Latin subsets from Fontsource:
-- Instrument Serif — The Instrument Serif Project Authors
 - Inter (variable, wght) — The Inter Project Authors
 - Geist Mono — Vercel
 

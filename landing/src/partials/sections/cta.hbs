@@ -1,17 +1,12 @@
 <section id="waitlist" class="final-cta" aria-labelledby="cta-title">
-    <div class="final-cta-bg" aria-hidden="true">
-        <div class="photo final-cta-photo" data-cta-photo>{{{photo "team-briefing" sizes="100vw" decorative=true}}}</div>
-        <div class="aurora-glow final-cta-aurora"></div>
-        <div class="noise"></div>
-    </div>
     <div class="final-cta-inner">
-        <h2 id="cta-title" class="display final-cta-title">Start your record today.
-            <em class="text-aurora">It takes 60 seconds.</em></h2>
+        <span class="icon-badge" data-size="lg">{{{icon "notebook-pen" "size-5"}}}</span>
+        <h2 id="cta-title" class="display final-cta-title">Start your record today. <span class="hero-accent">It takes 60 seconds.</span></h2>
         <p class="section-lead">Open the app and log your first incident now, or join the waitlist for launch news.</p>
-        <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg" data-magnetic>Open the app
+        <a href="{{site.appUrl}}" class="btn" data-variant="primary" data-size="lg">Open the app
             {{{icon 'arrow-right' 'size-4'}}}</a>
 
-        <form class="waitlist glass" data-waitlist novalidate method="post" action="{{site.appUrl}}/api/waitlist">
+        <form class="waitlist" data-waitlist novalidate method="post" action="{{site.appUrl}}/api/waitlist">
             <div class="waitlist-row">
                 <label for="waitlist-email" class="sr-only">Email address</label>
                 <input

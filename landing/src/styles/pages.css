@@ -18,8 +18,10 @@
 
     .page-title {
         margin-top: 0.75rem;
-        font-size: var(--text-6xl);
-        line-height: 1;
+        font-size: var(--text-5xl);
+        font-weight: 600;
+        line-height: 1.05;
+        letter-spacing: -0.04em;
     }
 
     .page .page-hero + .section {
@@ -41,16 +43,18 @@
     }
 
     .prose-page .lead {
-        font-family: var(--font-display);
-        font-size: var(--text-3xl);
-        line-height: 1.25;
+        font-size: var(--text-2xl);
+        font-weight: 500;
+        letter-spacing: -0.02em;
+        line-height: 1.35;
         color: var(--fg);
     }
 
     .prose-page h2 {
         margin-top: 3rem;
-        font-family: var(--font-display);
-        font-size: var(--text-3xl);
+        font-size: var(--text-2xl);
+        font-weight: 600;
+        letter-spacing: -0.025em;
         line-height: 1.2;
         color: var(--fg);
         scroll-margin-top: 7rem;

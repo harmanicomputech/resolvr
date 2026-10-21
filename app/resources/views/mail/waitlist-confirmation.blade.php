@@ -14,7 +14,7 @@
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:520px;background:#ffffff;border:1px solid rgba(26,24,20,0.1);border-radius:16px;">
                     <tr>
                         <td style="padding:36px 32px 8px;">
-                            <p style="margin:0;font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:28px;">Resolvr</p>
+                            <p style="margin:0;font-weight:700;letter-spacing:-0.03em;font-size:24px;">Resolvr</p>
                         </td>
                     </tr>
                     <tr>

@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en">
     <head>
         {{> head}}
     </head>
@@ -8,13 +8,10 @@
         <main id="main" class="page">
             <header class="page-hero">
                 <p class="eyebrow">Our story</p>
-                <h1 class="page-title display">Built by someone who <em>needed it.</em></h1>
+                <h1 class="page-title display">Built by someone who <span class="muted">needed it.</span></h1>
             </header>
-            <div class="collage" data-collage aria-hidden="true">
-                <div class="photo collage-item" data-curtain data-collage-item="1" data-speed="0.15">{{{photo "desk-conversation" sizes="(min-width: 64rem) 40vw, 70vw" decorative=true}}}</div>
-                <div class="photo collage-item" data-curtain data-collage-item="2" data-speed="-0.1">{{{photo "writing-notes" sizes="(min-width: 64rem) 22vw, 45vw" decorative=true eager=true}}}</div>
-                <div class="photo collage-item" data-curtain data-collage-item="3" data-speed="0.3">{{{photo "hr-meeting" sizes="(min-width: 64rem) 30vw, 55vw" decorative=true}}}</div>
-                <p class="collage-note glass" data-blur="sm" data-collage-item="4" data-speed="0.45">{{{icon "lock" "size-4"}}} <span class="mono">INC-001</span> · the first entry</p>
+            <div class="story-photo" data-reveal>
+                <div class="photo">{{{photo "writing-notes" sizes="(min-width: 64rem) 40rem, 92vw" eager=true}}}</div>
             </div>
             {{> founder}}
             {{!-- DRAFT long-form story. Confirm every detail with Ayodapo Ige before launch. --}}

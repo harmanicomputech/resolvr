@@ -11,14 +11,7 @@ interface Photo {
 
 export const photos: Record<string, Photo> = {
     'team-meeting': { alt: 'Four colleagues in a tense discussion around a meeting table' },
-    'desk-conversation': { alt: 'Two coworkers talking across a desk, one with his back to the camera' },
-    'panel-interview': { alt: 'A man sitting across a table from two colleagues in a bright office' },
-    'hr-meeting': { alt: 'An employee talking with an HR representative across a desk' },
     'writing-notes': { alt: 'A woman at her desk writing notes on a clipboard', portrait: true },
-    'laptop-overhead': { alt: 'Three colleagues seen from above, looking at a laptop together' },
-    'laptop-review': { alt: 'Two people reviewing something on a laptop in a quiet room' },
-    'document-review': { alt: 'Two colleagues going through papers in a folder', portrait: true },
-    'team-briefing': { alt: 'A team listening as a colleague presents a document' },
 };
 
 const widths = (p: Photo) => (p.portrait ? [480, 960, 1280] : [640, 1280, 1920]);

@@ -1,39 +1,27 @@
-<section class="moments" data-moments aria-labelledby="moments-title">
-    <div class="moments-pin">
-        <div class="moments-head">
-            <p class="eyebrow">Moments that matter</p>
-            <h2 id="moments-title" class="section-title">It rarely happens <em>all at once.</em></h2>
-            <p class="moments-hint" aria-hidden="true">{{{icon "move-right" "size-4"}}} Scroll or swipe</p>
+<section class="section split" aria-labelledby="moments-title">
+    <div class="split-media" data-reveal>
+        <div class="photo split-photo">
+            {{{photo "team-meeting" sizes="(min-width: 64rem) 34rem, 92vw"}}}
         </div>
-        <ol class="moments-track" data-moments-track>
+        <div class="split-badge">
+            <span class="icon-badge">{{{icon "lock-keyhole" "size-4"}}}</span>
+            <span><strong>INC-001</strong> · timestamp locked</span>
+        </div>
+    </div>
+    <div class="split-copy">
+        <p class="eyebrow">Moments that matter</p>
+        <h2 id="moments-title" class="section-title">It rarely happens <span class="muted">all at once.</span></h2>
+        <p class="section-lead">Small moments are easy to dismiss one at a time. Written down the same day, together they tell the real story.</p>
+        <ul class="moment-list">
             {{#each moments}}
-            <li class="moment" data-moment>
-                <figure class="moment-card" data-tilt-card>
-                    <div class="photo moment-photo" data-curtain>
-                        {{{photo this.photo sizes="(min-width: 64rem) 34rem, 82vw" class="moment-img"}}}
-                    </div>
-                    <figcaption class="moment-caption">
-                        <span class="moment-kicker mono">{{pad @index}} · {{kicker}}</span>
-                        <span class="moment-title display">{{title}}</span>
-                        <span class="moment-body">{{body}}</span>
-                    </figcaption>
-                </figure>
+            <li data-reveal>
+                <span class="icon-badge">{{{icon icon "size-4"}}}</span>
+                <div>
+                    <h3>{{title}}</h3>
+                    <p>{{body}}</p>
+                </div>
             </li>
             {{/each}}
-            <li class="moment moment-end" data-moment>
-                <figure class="moment-card moment-card-end" data-tilt-card>
-                    <div class="photo moment-photo" data-curtain>
-                        {{{photo "writing-notes" sizes="(min-width: 64rem) 26rem, 82vw" class="moment-img"}}}
-                    </div>
-                    <figcaption class="moment-caption">
-                        <span class="moment-kicker mono">05 · Today</span>
-                        <span class="moment-title display">The moment you write it down.</span>
-                        <span class="moment-body">That is where Resolvr starts.</span>
-                        <a href="{{../site.appUrl}}" class="btn moment-cta" data-variant="primary">Start your record {{{icon "arrow-right" "size-4"}}}</a>
-                    </figcaption>
-                </figure>
-            </li>
-        </ol>
-        <div class="moments-progress" aria-hidden="true"><span data-moments-progress></span></div>
+        </ul>
     </div>
 </section>

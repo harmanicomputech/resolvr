@@ -1,4 +1,4 @@
-/* Page chrome: nav, footer, quick exit, progress, cursor, section scaffolding. */
+/* Page chrome: nav, footer, quick exit, progress, section scaffolding. */
 
 @layer components {
     html {
@@ -80,47 +80,6 @@
     }
 
     /* ------------------------------------------------------------------ */
-    /* Cursor glow (desktop, fine pointers only)                          */
-    /* ------------------------------------------------------------------ */
-
-    .cursor-glow {
-        position: fixed;
-        top: 0;
-        left: 0;
-        z-index: 70;
-        width: 2rem;
-        height: 2rem;
-        margin: -1rem 0 0 -1rem;
-        border-radius: var(--radius-full);
-        background: radial-gradient(circle, color-mix(in oklab, var(--aurora-2) 35%, transparent), transparent 70%);
-        mix-blend-mode: screen;
-        pointer-events: none;
-        opacity: 0;
-        transition:
-            opacity var(--dur-base) var(--ease-standard),
-            width var(--dur-base) var(--ease-out-expo),
-            height var(--dur-base) var(--ease-out-expo),
-            margin var(--dur-base) var(--ease-out-expo);
-        will-change: transform;
-    }
-
-    .cursor-glow[data-active] {
-        opacity: 1;
-    }
-
-    .cursor-glow[data-hover] {
-        width: 4.5rem;
-        height: 4.5rem;
-        margin: -2.25rem 0 0 -2.25rem;
-    }
-
-    @media (hover: none), (pointer: coarse) {
-        .cursor-glow {
-            display: none;
-        }
-    }
-
-    /* ------------------------------------------------------------------ */
     /* Quick exit                                                         */
     /* ------------------------------------------------------------------ */
 
@@ -179,33 +138,28 @@
         gap: 1rem;
         max-width: 72rem;
         margin-inline: auto;
-        padding: 0.625rem 0.625rem 0.625rem 1.25rem;
+        padding: 0.5rem 0.5rem 0.5rem 1.25rem;
         border-radius: var(--radius-full);
+        border: 1px solid transparent;
         transition:
-            padding var(--dur-base) var(--ease-out-expo),
-            max-width var(--dur-base) var(--ease-out-expo),
             background-color var(--dur-base) var(--ease-standard),
-            backdrop-filter var(--dur-base) var(--ease-standard);
+            border-color var(--dur-base) var(--ease-standard),
+            box-shadow var(--dur-base) var(--ease-standard),
+            max-width var(--dur-base) var(--ease-out-expo);
     }
 
-    /* Before scrolling, the nav sits lightly on the hero. */
-    .site-nav:not([data-scrolled]) .site-nav-inner {
-        background: color-mix(in oklab, var(--bg) 20%, transparent);
-        -webkit-backdrop-filter: blur(4px);
-        backdrop-filter: blur(4px);
-        box-shadow: none;
-    }
-
+    /* After scrolling, the nav becomes a solid, softly blurred bar. */
     .site-nav[data-scrolled] .site-nav-inner {
-        max-width: 60rem;
-        padding-block: 0.375rem;
+        max-width: 64rem;
+        background: color-mix(in oklab, var(--surface) 86%, transparent);
+        border-color: var(--hairline);
+        box-shadow: var(--elev-floating);
         -webkit-backdrop-filter: blur(var(--blur-md)) saturate(160%);
         backdrop-filter: blur(var(--blur-md)) saturate(160%);
     }
 
     .site-nav-logo {
-        font-size: 1.625rem;
-        padding-bottom: 0.1em;
+        font-size: 1.375rem;
     }
 
     .site-nav-links {
@@ -233,11 +187,37 @@
 
     .site-nav-ctas {
         display: none;
-        gap: 0.5rem;
+        align-items: center;
+        gap: 0.375rem;
     }
 
     .site-nav-mobile {
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
         margin-left: auto;
+    }
+
+    /* Theme toggle: shows the sun in light mode, the moon in dark mode. */
+    .theme-icon {
+        display: grid;
+        place-items: center;
+        transition:
+            transform var(--dur-base) var(--ease-out-expo),
+            opacity var(--dur-fast) var(--ease-standard);
+    }
+
+    .theme-icon-moon,
+    .dark .theme-icon-sun {
+        display: none;
+    }
+
+    .dark .theme-icon-moon {
+        display: grid;
+    }
+
+    .theme-toggle:active .theme-icon {
+        transform: rotate(-30deg) scale(0.9);
     }
 
     @media (min-width: 64rem) {
@@ -320,9 +300,10 @@
     .mobile-menu li a {
         display: block;
         padding: 0.5rem 0;
-        font-family: var(--font-display);
-        font-size: var(--text-4xl);
-        line-height: 1.1;
+        font-size: var(--text-3xl);
+        font-weight: 600;
+        letter-spacing: -0.03em;
+        line-height: 1.15;
     }
 
     .mobile-menu li,
@@ -445,15 +426,15 @@
     .section-title {
         margin-top: 0.75rem;
         font-family: var(--font-display);
-        font-size: var(--text-5xl);
-        line-height: 1.05;
-        letter-spacing: var(--tracking-display);
+        font-size: var(--text-4xl);
+        font-weight: 600;
+        line-height: 1.08;
+        letter-spacing: -0.035em;
     }
 
-    .section-title em,
-    .page-title em {
-        font-style: italic;
-        color: var(--fg-muted);
+    .section-title .muted,
+    .page-title .muted {
+        color: var(--fg-subtle);
     }
 
     .section-lead {
@@ -492,6 +473,29 @@
     @media (prefers-reduced-motion: reduce) {
         .js [data-reveal] {
             transform: none;
+        }
+    }
+}
+
+@layer base {
+    /* Smooth colour change while switching theme (added for 400ms by scripts/theme.ts). */
+    .theme-transition,
+    .theme-transition *,
+    .theme-transition *::before,
+    .theme-transition *::after {
+        transition:
+            background-color var(--dur-base) var(--ease-standard),
+            border-color var(--dur-base) var(--ease-standard),
+            color var(--dur-base) var(--ease-standard) !important;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+        html {
+            scroll-behavior: auto;
         }
     }
 }
