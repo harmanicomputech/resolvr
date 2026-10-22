@@ -1,4 +1,5 @@
 import { SavedViewRepository } from '../incidents/views';
+import { DocumentRepository } from './documents';
 import { DraftRepository } from './drafts';
 import { FileRepository } from './files';
 import { IncidentRepository } from './incidents';
@@ -8,6 +9,7 @@ import type { Vault } from './vault';
 
 export * from './commit-form';
 export * from './database';
+export * from './documents';
 export * from './drafts';
 export * from './files';
 export * from './incidents';
@@ -26,6 +28,7 @@ export function repositories(vault: Vault) {
         files,
         drafts: new DraftRepository(vault, files),
         views: new SavedViewRepository(vault),
+        documents: new DocumentRepository(vault),
         singletons: new SingletonRepository(vault),
     };
 }

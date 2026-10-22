@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AiDocumentController;
 use App\Http\Controllers\WaitlistController;
+use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -16,15 +18,21 @@ if (app()->environment('local')) {
     Route::get('/design', fn () => Inertia::render('design'))->name('design');
 }
 
-// The app: one shell for every path. Screens are routed on the device so the
-// app works offline; the server never sees which screen is open.
+// AI drafting: only the fields the person chose to send, streamed back as
+// server-sent events. Rate limited per address; nothing is stored or logged.
+Route::post('/ai/complaint', AiDocumentController::class)
+    ->middleware('throttle:ai')
+    ->name('ai.complaint');
+
 // Share target fallback: normally the service worker handles this POST and
 // keeps the files on the device. Without it (first visit, unsupported
 // browser) nothing is accepted here; the person is sent to the vault.
 Route::post('/share-target', fn () => redirect('/vault?shared=unavailable', 303))
-    ->withoutMiddleware(\Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class)
+    ->withoutMiddleware(ValidateCsrfToken::class)
     ->name('share-target');
 
+// The app: one shell for every path. Screens are routed on the device so the
+// app works offline; the server never sees which screen is open.
 Route::get('/{path?}', fn () => Inertia::render('app'))
-    ->where('path', '^(?!api/|waitlist/|build/|icons/|storage/|up$|design$).*$')
+    ->where('path', '^(?!api/|ai/|waitlist/|build/|icons/|ocr/|storage/|up$|design$).*$')
     ->name('app');

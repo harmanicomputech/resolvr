@@ -312,3 +312,40 @@
 .severity-range:focus-visible::-moz-range-thumb {
     box-shadow: var(--focus-ring);
 }
+
+/* ------------------------------------------------------- document editor */
+
+/* Tiptap's own CSS is not injected (CSP); these are the essentials it needs. */
+.tiptap-doc {
+    outline: none;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    min-height: 50vh;
+    max-width: 44rem;
+    margin: 0 auto;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--fg);
+}
+.tiptap-doc p {
+    margin: 0 0 1em;
+}
+.tiptap-doc h2,
+.tiptap-doc h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    margin: 1.4em 0 0.5em;
+}
+.tiptap-doc ul,
+.tiptap-doc ol {
+    margin: 0 0 1em;
+    padding-left: 1.4em;
+    list-style: disc;
+}
+.tiptap-doc[contenteditable='false'] {
+    color: var(--fg-muted);
+}
+.ProseMirror-gapcursor,
+.ProseMirror .ProseMirror-separator {
+    display: none;
+}

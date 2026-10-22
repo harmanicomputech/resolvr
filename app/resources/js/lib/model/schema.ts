@@ -183,3 +183,29 @@ export const settingsSchema = z.object({
     notLegalAdviceAcknowledgedAt: isoDateTime.optional(),
 });
 export type Settings = z.infer<typeof settingsSchema>;
+
+export const documentTypes = [
+    'hr-complaint',
+    'witness-request',
+    'follow-up-email',
+    'agency-intake',
+    'lawyer-briefing',
+] as const;
+export type DocumentType = (typeof documentTypes)[number];
+
+/** A drafted document (P2.10), edited in the studio and stored encrypted like everything else. */
+export const draftDocumentSchema = z.object({
+    id,
+    type: z.enum(documentTypes),
+    title: text(200),
+    /** Editor content as simple HTML (paragraphs, headings, lists, bold, italic). */
+    html: z.string().max(400_000),
+    createdAt: isoDateTime,
+    updatedAt: isoDateTime,
+    tone: z.enum(['formal', 'firm', 'urgent']).default('formal'),
+    outcome: z.enum(['investigation', 'mediation', 'discipline', 'transfer', 'cessation']).optional(),
+    incidentIds: z.array(id).default([]),
+    fields: z.array(z.string()).default([]),
+    context: text(2000).default(''),
+});
+export type DraftDocument = z.infer<typeof draftDocumentSchema>;

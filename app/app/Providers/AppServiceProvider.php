@@ -27,5 +27,12 @@ class AppServiceProvider extends ServiceProvider
             Limit::perMinute(5)->by('waitlist-min:'.$request->ip()),
             Limit::perDay(50)->by('waitlist-day:'.$request->ip()),
         ]);
+
+        // AI drafting costs money per call and has no accounts behind it, so it is
+        // limited per address: a few drafts an hour is plenty for real use.
+        RateLimiter::for('ai', fn (Request $request) => [
+            Limit::perHour(12)->by('ai-hour:'.$request->ip()),
+            Limit::perDay(40)->by('ai-day:'.$request->ip()),
+        ]);
     }
 }

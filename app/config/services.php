@@ -35,4 +35,11 @@ return [
         ],
     ],
 
+    // AI drafting (P2.10). The key stays on the server; browsers never see it.
+    'anthropic' => [
+        'key' => env('ANTHROPIC_API_KEY'),
+        'model' => env('ANTHROPIC_MODEL', 'claude-opus-5-5'),
+        'url' => env('ANTHROPIC_BASE_URL', 'https://api.anthropic.com'),
+    ],
+
 ];

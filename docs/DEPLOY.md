@@ -116,6 +116,8 @@ Minimum the waitlist needs in the meantime:
    MAIL_PASSWORD=...
    MAIL_FROM_ADDRESS=resolvrapp@resolvrapp.com
    CORS_ALLOWED_ORIGINS=https://resolvrapp.com
+   # AI drafting (optional: without it the studio says drafting is not set up)
+   ANTHROPIC_API_KEY=...
    ```
 
 4. `php artisan migrate --force`, then `config:cache` and `route:cache`.

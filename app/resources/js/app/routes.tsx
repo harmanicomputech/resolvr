@@ -18,6 +18,8 @@ const Vault = page(() => import('./screens/vault/Vault'));
 const Timeline = page(() => import('./screens/timeline/Timeline'));
 const People = page(() => import('./screens/people/People'));
 const PersonDetail = lazy(() => import('./screens/people/PersonDetail'));
+const Documents = page(() => import('./screens/documents/Documents'));
+const Studio = lazy(() => import('./screens/documents/Studio'));
 const IncidentDetail = lazy(() => import('./screens/incidents/IncidentDetail'));
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -33,7 +35,9 @@ const routes: { path: string; component: ComponentType<any> | LazyExoticComponen
     { path: '/timeline', component: Timeline },
     { path: '/people', component: People },
     { path: '/people/:id', component: PersonDetail },
-    { path: '/documents', component: soon('Documents') },
+    { path: '/documents', component: Documents },
+    { path: '/documents/dossier', component: soon('Case file') },
+    { path: '/documents/:id', component: Studio },
     { path: '/settings', component: soon('Settings') },
 ];
 

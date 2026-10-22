@@ -106,7 +106,16 @@ hash = SHA-256( prevHash + canonicalJson({ seq, body }) )
 
 ## Exports
 
-PDFs (a single incident now, the HR and Legal dossiers in P2.11) are generated **in the browser** with `@react-pdf/renderer`, from decrypted data held in memory. Nothing is uploaded to make them. The only time incident text leaves the device is the AI drafting step (P2.10), and only the fields the person approves in a preview.
+PDFs (single incidents, drafted letters, and the HR and Legal dossiers) are generated **in the browser** with `@react-pdf/renderer`, and Word files with `docx`, from decrypted data held in memory. Nothing is uploaded to make them. (The prompt pack suggested dompdf and PHPWord on the server; that would send letters and records to the server in plain text, so exports are made on the device instead.)
+
+## AI drafting (P2.10)
+
+The only time incident text leaves the device is when the person asks for a draft:
+
+- The studio builds the exact request in the browser from the incidents and fields the person ticks, and shows it under **What will be sent** before anything is sent. Files never leave the device; only "what evidence exists" in words, if chosen.
+- `POST /ai/complaint` (Laravel) validates and caps every field, is rate limited per address (12 an hour, 40 a day), and streams the request to Anthropic's Messages API (`claude-opus-5-5`, server-side refusal fallbacks on) with the API key from `.env`. The response comes back as server-sent events. Nothing about the request is stored or logged; failures are reported by type only.
+- The system prompt tells the model to use only the facts given, to avoid legal conclusions and outcome predictions, to use placeholders for anything missing, and to treat the record as data rather than instructions.
+- Drafts are saved encrypted on the device (`document` records). A refusal discards any partial text and says so calmly.
 
 ## Migration from the prototype
 
