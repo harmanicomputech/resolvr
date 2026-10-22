@@ -1,5 +1,4 @@
 import {
-    ArrowLeft,
     ArrowRight,
     ChartLine,
     Clock,
@@ -13,22 +12,22 @@ import {
     Smartphone,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
-import { SegmentedControl } from '@/components/ui/segmented-control';
-import { jurisdictions, type Jurisdiction } from '@/lib/model/catalog';
+import type { Jurisdiction } from '@/lib/model/catalog';
 import { cn } from '@/lib/utils';
 
+import { JurisdictionPicker } from '../components/jurisdiction-picker';
 import { Wordmark } from '../components/wordmark';
+import { Footer, Hero, Passcode, Row } from './onboarding-parts';
+import { Restore } from './Restore';
 import { haptic } from '../lib/haptics';
-import { jurisdictionInfo } from '../lib/jurisdictions';
 import { passkeySupported } from '../lock/passkey';
-import { PinEntry, type PinEntryHandle } from '../lock/PinEntry';
-import { useSession, type PinFormat } from '../session';
+import { useSession } from '../session';
 import { useToast } from '../components/toaster';
 
-type Step = 'welcome' | 'privacy' | 'passcode' | 'finish';
+type Step = 'welcome' | 'privacy' | 'passcode' | 'finish' | 'restore';
 const STEPS: Step[] = ['welcome', 'privacy', 'passcode', 'finish'];
 
 /**
@@ -41,10 +40,11 @@ export function Onboarding({ startAt = 'welcome' }: { startAt?: Step }) {
     const [direction, setDirection] = useState(1);
     const reduce = useReducedMotion();
     const pinRef = useRef<string | null>(null);
-    const index = STEPS.indexOf(step);
+    const index = Math.max(0, STEPS.indexOf(step));
 
     const go = (next: Step) => {
-        setDirection(STEPS.indexOf(next) > index ? 1 : -1);
+        const order = (s: Step) => (s === 'restore' ? 1 : STEPS.indexOf(s));
+        setDirection(order(next) > order(step) ? 1 : -1);
         setStep(next);
     };
     const swipeable = step === 'welcome' || step === 'privacy';
@@ -55,7 +55,10 @@ export function Onboarding({ startAt = 'welcome' }: { startAt?: Step }) {
             <div className="relative z-10 mx-auto flex min-h-dvh max-w-md flex-col px-6 pt-[max(2rem,env(safe-area-inset-top))] pb-[max(1.5rem,env(safe-area-inset-bottom))]">
                 <header className="flex items-center justify-between">
                     <Wordmark className="text-lg" />
-                    <ol className="flex gap-1.5" aria-label={`Step ${index + 1} of ${STEPS.length}`}>
+                    <ol
+                        className={cn('flex gap-1.5', step === 'restore' && 'invisible')}
+                        aria-label={`Step ${index + 1} of ${STEPS.length}`}
+                    >
                         {STEPS.map((s, i) => (
                             <li
                                 key={s}
@@ -90,7 +93,8 @@ export function Onboarding({ startAt = 'welcome' }: { startAt?: Step }) {
                         className="flex flex-1 flex-col"
                         aria-labelledby={`onb-${step}`}
                     >
-                        {step === 'welcome' && <Welcome onNext={() => go('privacy')} />}
+                        {step === 'welcome' && <Welcome onNext={() => go('privacy')} onRestore={() => go('restore')} />}
+                        {step === 'restore' && <Restore onBack={() => go('welcome')} />}
                         {step === 'privacy' && <Privacy onBack={() => go('welcome')} onNext={() => go('passcode')} />}
                         {step === 'passcode' && (
                             <Passcode
@@ -106,49 +110,7 @@ export function Onboarding({ startAt = 'welcome' }: { startAt?: Step }) {
     );
 }
 
-/** The large icon tile that leads each step; shares a layout id so it glides between steps. */
-function Hero({ icon, title, id, children }: { icon: ReactNode; title: string; id: string; children?: ReactNode }) {
-    return (
-        <div className="mt-10 mb-8">
-            <motion.span layoutId="onb-icon" className="icon-badge" data-size="lg" aria-hidden>
-                {icon}
-            </motion.span>
-            <h1 id={id} className="mt-6 font-display text-3xl font-semibold tracking-tight text-fg">
-                {title}
-            </h1>
-            {children && <div className="mt-3 text-fg-muted">{children}</div>}
-        </div>
-    );
-}
-
-function Row({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
-    return (
-        <li className="flex gap-3">
-            <span className="icon-badge" aria-hidden>
-                {icon}
-            </span>
-            <div className="text-sm">
-                <p className="font-medium text-fg">{title}</p>
-                <p className="text-fg-muted">{children}</p>
-            </div>
-        </li>
-    );
-}
-
-function Footer({ onBack, children }: { onBack?: () => void; children: ReactNode }) {
-    return (
-        <div className="mt-auto flex items-center gap-3 pt-8">
-            {onBack && (
-                <Button variant="ghost" size="icon" onClick={onBack} aria-label="Back">
-                    <ArrowLeft aria-hidden />
-                </Button>
-            )}
-            <div className="flex-1">{children}</div>
-        </div>
-    );
-}
-
-function Welcome({ onNext }: { onNext: () => void }) {
+function Welcome({ onNext, onRestore }: { onNext: () => void; onRestore: () => void }) {
     return (
         <>
             <Hero id="onb-welcome" icon={<ShieldCheck className="size-6" />} title="Your evidence, your protection.">
@@ -171,6 +133,9 @@ function Welcome({ onNext }: { onNext: () => void }) {
             <Footer>
                 <Button variant="primary" className="w-full" onClick={onNext}>
                     Get started <ArrowRight aria-hidden />
+                </Button>
+                <Button variant="ghost" className="mt-2 w-full" onClick={onRestore}>
+                    I have a backup
                 </Button>
             </Footer>
         </>
@@ -199,83 +164,6 @@ function Privacy({ onBack, onNext }: { onBack: () => void; onNext: () => void })
                     Choose a passcode <ArrowRight aria-hidden />
                 </Button>
             </Footer>
-        </>
-    );
-}
-
-const formatOptions = [
-    { value: 'pin6', label: '6 digits' },
-    { value: 'phrase', label: 'Passphrase' },
-    { value: 'pin4', label: '4 digits' },
-] as const;
-
-const formatHint: Record<PinFormat, string> = {
-    pin6: 'Recommended. Quick to type, and a million combinations.',
-    phrase: 'Strongest. At least 8 characters; works best for desktop use.',
-    pin4: 'Fastest, but easier to guess if someone copies your device. Stealth unlock works with any PIN.',
-};
-
-function Passcode({ onBack, onCreated }: { onBack: () => void; onCreated: (pin: string) => void }) {
-    const session = useSession();
-    const [format, setFormat] = useState<PinFormat>('pin6');
-    const [first, setFirst] = useState<string | null>(null);
-    const [busy, setBusy] = useState(false);
-    const [mismatch, setMismatch] = useState(false);
-    const entry = useRef<PinEntryHandle>(null);
-
-    const complete = async (pin: string) => {
-        if (!first) {
-            setFirst(pin);
-            setMismatch(false);
-            entry.current?.clear();
-            return;
-        }
-        if (pin !== first) {
-            setMismatch(true);
-            setFirst(null);
-            entry.current?.reject();
-            return;
-        }
-        setBusy(true);
-        await session.create(pin, format);
-        haptic('success');
-        onCreated(pin);
-    };
-
-    return (
-        <>
-            <Hero
-                id="onb-passcode"
-                icon={<KeyRound className="size-6" />}
-                title={first ? 'Enter it once more' : 'Choose a passcode'}
-            >
-                {first ? 'Just to be sure it is the one you meant.' : 'You will use it every time you open Resolvr.'}
-            </Hero>
-            {!first && (
-                <div className="mb-8">
-                    <SegmentedControl
-                        label="Passcode type"
-                        value={format}
-                        onValueChange={setFormat}
-                        options={formatOptions}
-                        className="w-full"
-                    />
-                    <p className="mt-2 text-xs text-fg-muted">{formatHint[format]}</p>
-                </div>
-            )}
-            <PinEntry
-                key={`${format}-${first ? 2 : 1}`}
-                ref={entry}
-                format={format}
-                onComplete={(pin) => void complete(pin)}
-                disabled={busy}
-                label={first ? 'Confirm passcode' : 'New passcode'}
-            />
-            <p className="mt-6 min-h-5 text-center text-sm text-danger-text" aria-live="assertive">
-                {mismatch && 'Those did not match. Please choose it again.'}
-                {busy && <span className="text-fg-muted">Securing your vault…</span>}
-            </p>
-            <Footer onBack={first ? () => setFirst(null) : onBack}>{null}</Footer>
         </>
     );
 }
@@ -324,33 +212,9 @@ function Finish({ pinRef }: { pinRef: React.RefObject<string | null> }) {
             <fieldset>
                 <legend className="text-sm font-medium text-fg">Where do you work?</legend>
                 <p className="text-xs text-fg-muted">Used to show which laws may apply. You can change it later.</p>
-                <div className="mt-3 grid grid-cols-2 gap-2">
-                    {jurisdictions.map((j) => (
-                        <label
-                            key={j}
-                            className={cn(
-                                'card flex cursor-pointer items-center gap-2 p-3 text-sm has-[:checked]:border-accent has-[:checked]:bg-accent-tint has-[:focus-visible]:shadow-[var(--focus-ring)]',
-                            )}
-                        >
-                            <input
-                                type="radio"
-                                name="jurisdiction"
-                                value={j}
-                                checked={jurisdiction === j}
-                                onChange={() => setJurisdiction(j)}
-                                className="sr-only"
-                            />
-                            <span className="mono text-xs text-fg-muted">{jurisdictionInfo[j].short}</span>
-                            <span className="text-fg">{jurisdictionInfo[j].name}</span>
-                        </label>
-                    ))}
+                <div className="mt-3">
+                    <JurisdictionPicker value={jurisdiction} onChange={setJurisdiction} />
                 </div>
-                {!jurisdictionInfo[jurisdiction].ready && (
-                    <p className="mt-2 text-xs text-fg-muted">
-                        Detailed guidance for {jurisdictionInfo[jurisdiction].name} is on its way. Logging and evidence
-                        work fully today.
-                    </p>
-                )}
             </fieldset>
 
             {canPasskey && (

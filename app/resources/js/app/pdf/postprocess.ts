@@ -9,7 +9,10 @@ import { PDFArray, PDFDict, PDFDocument, PDFName, PDFRef, PDFString, PDFHexStrin
  */
 
 /** Map each named destination (element id) to its 1-based page number. */
-export async function destinationPages(bytes: ArrayBuffer | Uint8Array, ids: readonly string[]): Promise<Record<string, number>> {
+export async function destinationPages(
+    bytes: ArrayBuffer | Uint8Array,
+    ids: readonly string[],
+): Promise<Record<string, number>> {
     const doc = await PDFDocument.load(bytes);
     const pages = doc.getPages();
     const pageOf = (ref: unknown) => pages.findIndex((p) => ref instanceof PDFRef && p.ref === ref) + 1;
@@ -39,7 +42,10 @@ export async function destinationPages(bytes: ArrayBuffer | Uint8Array, ids: rea
 }
 
 /** Stamp "Page n of N" at the bottom right of every page (optionally skipping the cover). */
-export async function stampPageNumbers(bytes: ArrayBuffer | Uint8Array, options: { skipFirst?: boolean; grey?: number } = {}): Promise<Uint8Array> {
+export async function stampPageNumbers(
+    bytes: ArrayBuffer | Uint8Array,
+    options: { skipFirst?: boolean; grey?: number } = {},
+): Promise<Uint8Array> {
     const doc = await PDFDocument.load(bytes);
     const font = await doc.embedFont(StandardFonts.Helvetica);
     const pages = doc.getPages();
@@ -49,7 +55,13 @@ export async function stampPageNumbers(bytes: ArrayBuffer | Uint8Array, options:
         const text = `Page ${i + 1} of ${pages.length}`;
         const size = 7.5;
         const { width } = page.getSize();
-        page.drawText(text, { x: width - 52 - font.widthOfTextAtSize(text, size), y: 28 - size + 2, size, font, color: rgb(shade, shade, shade) });
+        page.drawText(text, {
+            x: width - 52 - font.widthOfTextAtSize(text, size),
+            y: 28 - size + 2,
+            size,
+            font,
+            color: rgb(shade, shade, shade),
+        });
     });
     return doc.save();
 }

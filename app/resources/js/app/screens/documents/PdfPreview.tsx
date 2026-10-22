@@ -66,7 +66,7 @@ export function PdfPreview({ blob }: { blob: Blob }) {
 
     if (failed && !pages.length)
         return (
-            <p className="mx-auto max-w-md rounded-(--radius-md) bg-surface p-6 ring-1 ring-hairline text-center text-sm text-fg-muted">
+            <p className="mx-auto max-w-md rounded-(--radius-md) bg-surface p-6 text-center text-sm text-fg-muted ring-1 ring-hairline">
                 The preview could not be shown on this device. You can still download the file and open it.
             </p>
         );

@@ -33,7 +33,7 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 - **Envelope encryption.** Everything is encrypted with one random 256-bit **data key**. The data key is only ever stored *wrapped* (encrypted), once per way of unlocking, in `meta.unlockers`:
   - `pin`: wrapped with a key derived from the passcode by **Argon2id** (19 MiB, 2 passes, 1 lane, the OWASP baseline) in WebAssembly, or **PBKDF2-SHA256 with 600,000 iterations** if WebAssembly is unavailable. The random salt and parameters are stored next to it.
   - `passkey` (optional): wrapped with a key from the passkey's **WebAuthn PRF** output (HKDF-SHA256). The passkey never talks to our server; it only unlocks this device.
-  - `recovery` (P2.12): wrapped with a key from the backup recovery phrase.
+  - `recovery` (P2.12): wrapped with a key from the 12-word recovery phrase (BIP39 English list, 128 bits; HKDF-SHA256). It restores backups on a new device and can set a new passcode on this one ("Forgot your passcode?").
 - **The passcode is never stored.** A wrong passcode simply fails to unwrap the data key (AES-GCM authentication fails).
 - **Changing the passcode** re-wraps the data key; the data itself is not re-encrypted. Adding a passkey asks for the passcode again, because the in-memory key cannot be read back out.
 - **The key stays in memory.** The unwrapped data key is imported as a non-extractable `CryptoKey`, held only by the `Vault` object, and dropped by `vault.lock()`. Raw key bytes are zeroed after import.
@@ -55,6 +55,30 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 - **Stealth mode** shows a working calculator instead of the lock screen, and swaps the tab title, favicon and manifest to "Calculator". Typing the passcode then "=" unlocks; a wrong guess just behaves like a calculator. Passphrase users press and hold "=" to reach the normal lock screen. Already-installed apps keep their icon (browsers do not allow changing it), so Settings explains how to reinstall it disguised.
 - **Panic**: Escape twice, a firm shake, or (in the app shell) triple-tapping the logo locks instantly and shows the calculator, whatever the stealth setting.
 - **Passkey unlock** (optional): offered on devices whose passkeys support the PRF extension. The passkey's name in the system sheet is "Resolvr", which stealth users should know.
+
+## Decoy passcode (P2.12)
+
+- A second passcode opens a **separate vault** in its own database (`resolvr-decoy`), created empty with onboarding already done, so it looks like an ordinary new record. Nothing in it refers to the real one.
+- When a decoy exists, every unlock tries **both** vaults, so the time taken does not show which passcode was entered. Wrong guesses count towards the same lockout.
+- While the decoy is open, Settings hides the decoy and passkey rows, and "Delete" removes only the decoy.
+- Limit: someone who copies the device's storage can see that a second database exists. The decoy protects against being made to unlock the app in person, not against forensic analysis.
+
+## Backup and restore (P2.12)
+
+- **The backup file** (`.resolvr`, `lib/backup/format.ts`) is a copy of the IndexedDB rows **as they are stored**: already encrypted with the data key, so making one never decrypts anything. It carries the `recovery` unlocker and **never the `pin` one**, because a short PIN could be guessed offline by whoever holds the file; a 128-bit phrase cannot.
+- A **manifest** sealed with the data key holds the record and file counts and a SHA-256 over every frame's hash. Restore refuses a file that was cut short, re-ordered or mixed with another backup, and deletes anything it wrote.
+- **From the phrase** the device derives (HKDF-SHA256): the wrapping key, a 128-bit **backup id**, and a 256-bit **access token**. The server stores the id, a SHA-256 of the token, the ciphertext, its size and hash, and the upload time. It never sees the phrase, a key, or plaintext.
+- **Upload** (`/api/backups/{id}`): the file goes up in 4 MB chunks and replaces the stored copy only once every chunk has arrived and the whole file matches the announced size and SHA-256. Storage is `storage/app/backups`, outside the web root. Limits: 250 MB per backup and a total cap (both configurable), 120 requests a minute per IP.
+- **Daily backup** (optional) runs quietly after unlock when the last one is more than a day old. The same file can be downloaded as an **encrypted export** and kept anywhere.
+- **Restore on a new device**: "I have a backup" on the welcome screen, enter the phrase (online copy or a `.resolvr` file), then choose a new passcode. The phrase is checked against the backup before anything is written.
+- **What the server can infer**: that a backup exists, its size and when it changed. Not what is in it, nor who made it (there are no accounts; requests are rate-limited by IP but IPs are not stored).
+- **Readable export** (Settings → Your data): an unencrypted JSON copy of incidents, people, documents and the ledger, after re-entering the passcode. Evidence files are listed by hash, not included.
+
+## Reminders (P2.12)
+
+- Web push with **no payload**. The server stores the push address, time zone, chosen time and days, and a hash of a random token the device made. Each due reminder is an empty POST to the push service signed with VAPID (ES256, `app/Push/Vapid.php`), sent by `reminders:send` from cron.
+- The **service worker** words the notification: "A quiet moment to note anything from today…" or, when disguised (a setting, or always in stealth mode), "Reminder: Time to jot down today’s notes" with the calculator icon. It reads one plaintext flag, `meta.reminderStyle`, because it runs while the vault is locked. Nothing about incidents is ever sent or shown.
+- Push services (Google, Apple, Mozilla) see that this site sent a push, not its contents. Expired subscriptions (404/410) are deleted; ten failures in a row also remove one.
 
 ## Storage layout (IndexedDB via Dexie, database `resolvr`)
 

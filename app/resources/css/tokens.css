@@ -404,3 +404,25 @@
         --dur-slower: 120ms;
     }
 }
+
+/* Reduced motion chosen in Settings, whatever the device says. */
+:root[data-motion='reduce'] {
+    --dur-instant: 0ms;
+    --dur-fast: 0ms;
+    --dur-base: 120ms;
+    --dur-slow: 120ms;
+    --dur-slower: 120ms;
+}
+:root[data-motion='reduce'] *,
+:root[data-motion='reduce'] *::before,
+:root[data-motion='reduce'] *::after {
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+}
+:root[data-motion='reduce'] .lock-backdrop::before,
+:root[data-motion='reduce'] .skeleton {
+    animation: none;
+}
+:root[data-motion='reduce'] .view-root {
+    view-transition-name: none;
+}

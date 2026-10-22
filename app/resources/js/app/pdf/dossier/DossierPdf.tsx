@@ -42,13 +42,7 @@ export type SectionId = (typeof SECTIONS)[number][0];
  * The case file. Rendered twice: the first pass is read for the page each
  * section starts on (`pages`), the second prints those numbers in the contents.
  */
-export function DossierPdf({
-    data,
-    pages,
-}: {
-    data: DossierData;
-    pages: Partial<Record<SectionId, number>>;
-}) {
+export function DossierPdf({ data, pages }: { data: DossierData; pages: Partial<Record<SectionId, number>> }) {
     const c: PdfPalette = data.options.pkg === 'hr' ? pdfColors.color : pdfColors.mono;
     const s = makeStyles(c);
     const fill = chartFill[data.options.pkg];

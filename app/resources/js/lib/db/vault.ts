@@ -125,6 +125,67 @@ export class Vault {
         }
     }
 
+    /**
+     * Restore onto an empty database from a backup's recovery unlocker: unwrap
+     * the data key with the recovery phrase and wrap it again for a new PIN.
+     * The caller then writes the backup's encrypted rows as they are.
+     */
+    static async fromRecovery(
+        recovery: SecretUnlocker,
+        wrappingKey: CryptoKey,
+        newPin: string,
+        options: VaultOptions = {},
+    ): Promise<Vault> {
+        const db = options.db ?? new ResolvrDatabase();
+        if (await Vault.exists(db)) throw new Error('A vault already exists on this device');
+        return Vault.#rewrapPin(db, recovery, wrappingKey, newPin, options);
+    }
+
+    /** Forgot the PIN but kept the recovery phrase: set a new PIN on this device. */
+    static async resetPinWithRecovery(
+        wrappingKey: CryptoKey,
+        newPin: string,
+        options: VaultOptions = {},
+    ): Promise<Vault> {
+        const db = options.db ?? new ResolvrDatabase();
+        const { recovery } = await Vault.unlockers(db);
+        if (!recovery) throw new Error('No recovery phrase is set up on this device');
+        return Vault.#rewrapPin(db, recovery, wrappingKey, newPin, options);
+    }
+
+    static async #rewrapPin(
+        db: ResolvrDatabase,
+        recovery: SecretUnlocker,
+        wrappingKey: CryptoKey,
+        newPin: string,
+        options: VaultOptions,
+    ): Promise<Vault> {
+        let raw: Uint8Array<ArrayBuffer>;
+        try {
+            raw = new Uint8Array(await openBytes(wrappingKey, recovery.dek, wrapContext('recovery')));
+        } catch {
+            throw new WrongPinError();
+        }
+        const kdf = await newKdfParams(options.kdf?.prefer, options.kdf);
+        const pin: PinUnlocker = { kdf, dek: await seal(await deriveKey(newPin, kdf), raw, wrapContext('pin')) };
+        const existing = (await db.meta.get('unlockers'))?.value as Unlockers | undefined;
+        await db.transaction('rw', db.meta, async () => {
+            await db.meta.put({ key: 'unlockers', value: { ...existing, pin, recovery } satisfies Unlockers });
+            if (!existing) await db.meta.put({ key: 'schemaVersion', value: 2 });
+        });
+        return new Vault(db, await importDataKey(raw));
+    }
+
+    /** Does this wrapping key open a recovery unlocker? (Checks a phrase before asking for a new PIN.) */
+    static async opensRecovery(recovery: SecretUnlocker, wrappingKey: CryptoKey): Promise<boolean> {
+        try {
+            new Uint8Array(await openBytes(wrappingKey, recovery.dek, wrapContext('recovery'))).fill(0);
+            return true;
+        } catch {
+            return false;
+        }
+    }
+
     static async unlockers(db = new ResolvrDatabase()): Promise<Unlockers> {
         const value = (await db.meta.get('unlockers'))?.value as Unlockers | undefined;
         if (!value) throw new Error('No vault on this device');
@@ -205,6 +266,15 @@ export class Vault {
 
     async count(kind: RecordKind): Promise<number> {
         return this.db.records.where('kind').equals(kind).count();
+    }
+
+    /** Seal arbitrary bytes with the data key (used for backup manifests). */
+    sealBytes(bytes: BufferSource, context: string): Promise<Sealed> {
+        return seal(this.#k, bytes, context);
+    }
+
+    openBytes(sealed: Sealed, context: string): Promise<ArrayBuffer> {
+        return openBytes(this.#k, sealed, context);
     }
 
     // ------------------------------------------------------------------ blobs

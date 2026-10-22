@@ -12,7 +12,8 @@ interface PinConfirmProps {
     title: string;
     description: ReactNode;
     confirmLabel: string;
-    onConfirm: () => Promise<void> | void;
+    /** Receives the checked passcode, for actions that need it (e.g. re-wrapping the key). */
+    onConfirm: (pin: string) => Promise<void> | void;
     tone?: 'danger' | 'primary';
 }
 
@@ -41,7 +42,7 @@ export function PinConfirm({
             setError('That passcode is not right.');
             return;
         }
-        await onConfirm();
+        await onConfirm(pin);
         setBusy(false);
         setPin('');
         onOpenChange(false);

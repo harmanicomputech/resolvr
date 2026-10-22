@@ -181,6 +181,34 @@ export const settingsSchema = z.object({
     textScale: z.number().min(0.85).max(1.4).default(1),
     jurisdiction: z.enum(jurisdictions).default('us'),
     notLegalAdviceAcknowledgedAt: isoDateTime.optional(),
+    /** Web push reminders. `id`/`token` identify the schedule on the server; no content is sent. */
+    reminders: z
+        .object({
+            enabled: z.boolean().default(false),
+            time: z
+                .string()
+                .regex(/^([01]\d|2[0-3]):[0-5]\d$/)
+                .default('19:00'),
+            /** Seven 0/1 flags, Monday first. */
+            days: z
+                .string()
+                .regex(/^[01]{7}$/)
+                .default('1111100'),
+            disguised: z.boolean().default(false),
+            id: z.string().optional(),
+            token: z.string().optional(),
+        })
+        .default({ enabled: false, time: '19:00', days: '1111100', disguised: false }),
+    /** Encrypted cloud backup. The id and token come from the recovery phrase. */
+    backup: z
+        .object({
+            auto: z.boolean().default(false),
+            backupId: z.string().optional(),
+            token: z.string().optional(),
+            lastBackupAt: isoDateTime.optional(),
+            lastSize: z.number().optional(),
+        })
+        .default({ auto: false }),
 });
 export type Settings = z.infer<typeof settingsSchema>;
 

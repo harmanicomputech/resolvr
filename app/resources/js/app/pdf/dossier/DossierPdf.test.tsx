@@ -34,10 +34,14 @@ test('renders both packages from a realistic record', async () => {
         const doc = (pages: Record<string, number>) => (
             <DossierPdf data={{ ...data, options: { ...data.options, pkg } }} pages={pages} />
         );
-        const pages = await destinationPages(await renderToBuffer(doc({})), SECTIONS.map(([id]) => id));
+        const pages = await destinationPages(
+            await renderToBuffer(doc({})),
+            SECTIONS.map(([id]) => id),
+        );
         const buf = Buffer.from(await stampPageNumbers(await renderToBuffer(doc(pages)), { skipFirst: true }));
         expect(buf.subarray(0, 4).toString()).toBe('%PDF');
-        if (process.env.DOSSIER_OUT) (await import('node:fs')).writeFileSync(`${process.env.DOSSIER_OUT}-${pkg}.pdf`, buf);
+        if (process.env.DOSSIER_OUT)
+            (await import('node:fs')).writeFileSync(`${process.env.DOSSIER_OUT}-${pkg}.pdf`, buf);
         expect(pages.summary).toBeGreaterThan(2);
         expect(pages.verification).toBeGreaterThan(pages.records!);
     }

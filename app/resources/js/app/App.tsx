@@ -1,5 +1,5 @@
-import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useState, type ReactNode } from 'react';
+import { AnimatePresence, MotionConfig, motion, useReducedMotion } from 'motion/react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Router } from 'wouter';
 
 import { Toaster } from './components/toaster';
@@ -15,8 +15,10 @@ import { LockScreen } from './screens/LockScreen';
 import { Onboarding } from './screens/Onboarding';
 import { Splash } from './screens/Splash';
 import { SessionProvider, useSession } from './session';
-import { useTheme } from './theme';
+import { useDisplay, useTheme } from './theme';
 import { useData } from './hooks/use-data';
+import { useOnline } from './hooks/use-online';
+import { autoBackupDue, runCloudBackup } from './lib/backup-run';
 
 /**
  * The client app. Laravel serves one Inertia page for every app URL and the
@@ -41,6 +43,7 @@ function Gate() {
     const [revealed, setRevealed] = useState(false);
     const [forgot, setForgot] = useState(false);
     useTheme(session.settings?.theme);
+    const display = useDisplay(session.settings);
     useEffect(() => applyDisguise(session.disguised), [session.disguised]);
     useAutoLock(session.status === 'unlocked' ? session.settings : null, session.lock);
     usePanic(session.status === 'unlocked' && (session.settings?.panicGesture ?? false), session.panic);
@@ -65,7 +68,7 @@ function Gate() {
                 : 'app';
 
     return (
-        <>
+        <MotionConfig reducedMotion={display.reducedMotion === 'reduce' ? 'always' : 'user'}>
             {/* Screens stack in one grid cell so the old one can fade out over the new (popLayout would inject a <style>, which the CSP blocks). */}
             <div className="grid">
                 <AnimatePresence initial={false}>
@@ -81,7 +84,7 @@ function Gate() {
                 </AnimatePresence>
             </div>
             <ForgotPasscode open={forgot} onOpenChange={setForgot} />
-        </>
+        </MotionConfig>
     );
 }
 
@@ -109,7 +112,20 @@ function Transition({ kind, children }: { kind: Screen; children: ReactNode }) {
     );
 }
 
+/** Once per unlock: if daily backup is on and due, back up quietly in the background. */
+function useAutoBackup() {
+    const session = useSession();
+    const online = useOnline();
+    const started = useRef(false);
+    useEffect(() => {
+        if (started.current || !online || session.isDecoy || !autoBackupDue(session.settings)) return;
+        started.current = true;
+        void runCloudBackup(session).catch(() => undefined); // tried again next time Resolvr is opened
+    }, [online, session]);
+}
+
 function Unlocked() {
+    useAutoBackup();
     const { data: count } = useData((repos) => repos.incidents.list().then((list) => list.length));
     return (
         <Router>

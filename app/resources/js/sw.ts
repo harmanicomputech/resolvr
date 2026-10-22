@@ -10,7 +10,7 @@ import { CacheFirst } from 'workbox-strategies';
  * - Every page is the same app shell (client-side routing), so navigations
  *   try the network and fall back to the cached shell when offline.
  * - Never caches API responses: AI drafts and backups are always live.
- * - Share target and push handlers are added by later features.
+ * - Share target (evidence shared from other apps) and reminder pushes.
  */
 declare const self: ServiceWorkerGlobalScope & { __WB_MANIFEST: Array<{ url: string; revision: string | null }> };
 
@@ -92,3 +92,61 @@ registerRoute(
     },
     'POST',
 );
+
+/**
+ * Reminders. Pushes arrive empty (the server knows nothing to say), so the
+ * words are chosen here from a plaintext preference in IndexedDB `meta`:
+ * plain, or disguised as a generic note when the user asked for that or
+ * stealth mode is on. Nothing about incidents is ever shown.
+ */
+function readMeta(key: string): Promise<unknown> {
+    return new Promise((resolve) => {
+        const open = indexedDB.open('resolvr');
+        open.onerror = () => resolve(undefined);
+        // No database yet: do not create an empty one here.
+        open.onupgradeneeded = () => open.transaction?.abort();
+        open.onsuccess = () => {
+            const db = open.result;
+            try {
+                const get = db.transaction('meta', 'readonly').objectStore('meta').get(key);
+                get.onsuccess = () => resolve((get.result as { value?: unknown } | undefined)?.value);
+                get.onerror = () => resolve(undefined);
+            } catch {
+                resolve(undefined); // no vault on this device yet
+            } finally {
+                db.close();
+            }
+        };
+    });
+}
+
+self.addEventListener('push', (event) => {
+    event.waitUntil(
+        (async () => {
+            const [style, stealth] = await Promise.all([readMeta('reminderStyle'), readMeta('stealth')]);
+            const disguised = style === 'disguised' || stealth === true;
+            const icon = disguised ? '/icons/calculator-192.png' : '/icons/resolvr-192.png';
+            await self.registration.showNotification(disguised ? 'Reminder' : 'Resolvr', {
+                body: disguised
+                    ? 'Time to jot down today’s notes.'
+                    : 'A quiet moment to note anything from today, while it is fresh.',
+                icon,
+                badge: icon,
+                tag: 'resolvr-reminder',
+                silent: false,
+            });
+        })(),
+    );
+});
+
+self.addEventListener('notificationclick', (event) => {
+    event.notification.close();
+    event.waitUntil(
+        (async () => {
+            const windows = await self.clients.matchAll({ type: 'window', includeUncontrolled: true });
+            const open = windows.find((w) => new URL(w.url).origin === self.location.origin);
+            if (open) await open.focus();
+            else await self.clients.openWindow('/');
+        })(),
+    );
+});

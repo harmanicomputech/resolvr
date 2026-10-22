@@ -183,3 +183,10 @@ export async function unlock(page: Page, pin = '1357') {
     await expect(page.getByRole('heading', { name: 'Enter your PIN' })).toBeVisible();
     await typePin(page, pin);
 }
+
+/** Navigate inside the app through the command palette (a reload would lock it). */
+export async function go(page: Page, screen: 'Home' | 'Log' | 'Settings' | 'Documents' | 'Vault' | 'Timeline' | 'People') {
+    await page.keyboard.press('Control+k');
+    await page.getByRole('option', { name: new RegExp(`^${screen}`) }).first().click();
+    await expect(page.getByRole('heading', { name: screen, level: 1 })).toBeVisible();
+}

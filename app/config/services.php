@@ -42,4 +42,20 @@ return [
         'url' => env('ANTHROPIC_BASE_URL', 'https://api.anthropic.com'),
     ],
 
+    // End-to-end encrypted backups (P2.12). Files are ciphertext, kept outside
+    // the web root. Chunks stay well under typical shared-hosting upload limits.
+    'backups' => [
+        'path' => env('BACKUP_PATH', storage_path('app/backups')),
+        'max_bytes' => (int) env('BACKUP_MAX_BYTES', 250 * 1024 * 1024),
+        'total_bytes' => (int) env('BACKUP_TOTAL_BYTES', 20 * 1024 * 1024 * 1024),
+        'chunk_bytes' => (int) env('BACKUP_CHUNK_BYTES', 4 * 1024 * 1024),
+    ],
+
+    // Web push reminders (P2.12). Generate keys with `php artisan resolvr:vapid-keys`.
+    'webpush' => [
+        'public_key' => env('VAPID_PUBLIC_KEY'),
+        'private_key' => env('VAPID_PRIVATE_KEY'),
+        'subject' => env('VAPID_SUBJECT', 'mailto:resolvrapp@resolvrapp.com'),
+    ],
+
 ];

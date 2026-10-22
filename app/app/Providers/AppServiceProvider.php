@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Backups\BackupStore;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
@@ -14,7 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(BackupStore::class, fn () => BackupStore::fromConfig());
     }
 
     /**
@@ -34,5 +35,14 @@ class AppServiceProvider extends ServiceProvider
             Limit::perHour(12)->by('ai-hour:'.$request->ip()),
             Limit::perDay(40)->by('ai-day:'.$request->ip()),
         ]);
+
+        // Backups move in 4 MB chunks, so allow a steady stream per address
+        // while keeping guessing at ids and tokens pointless.
+        RateLimiter::for('backups', fn (Request $request) => [
+            Limit::perMinute(120)->by('backups-min:'.$request->ip()),
+            Limit::perDay(3000)->by('backups-day:'.$request->ip()),
+        ]);
+
+        RateLimiter::for('reminders', fn (Request $request) => Limit::perMinute(10)->by('reminders:'.$request->ip()));
     }
 }

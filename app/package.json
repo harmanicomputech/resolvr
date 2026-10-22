@@ -59,6 +59,7 @@
         "@radix-ui/react-toggle-group": "^1.2.1",
         "@radix-ui/react-tooltip": "^1.4.1",
         "@react-pdf/renderer": "^4.9.0",
+        "@scure/bip39": "^2.4.0",
         "@tesseract.js-data/eng": "^1.0.0",
         "@tiptap/pm": "^3.32.0",
         "@tiptap/react": "^3.32.0",

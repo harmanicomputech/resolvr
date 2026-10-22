@@ -145,6 +145,57 @@
         box-shadow: var(--elev-raised), var(--elev-highlight);
     }
 
+    /* On/off switch: a real checkbox stretched over a drawn track. */
+    .toggle {
+        position: relative;
+        display: inline-flex;
+        width: 2.75rem;
+        height: 1.625rem;
+        flex-shrink: 0;
+    }
+    .toggle > input {
+        position: absolute;
+        inset: -0.5rem;
+        z-index: 1;
+        margin: 0;
+        cursor: pointer;
+        opacity: 0;
+    }
+    .toggle > input:disabled {
+        cursor: not-allowed;
+    }
+    .toggle > span {
+        position: relative;
+        width: 100%;
+        border-radius: 999px;
+        background: var(--hairline-strong);
+        transition: background-color var(--dur-fast) var(--ease-standard);
+    }
+    .toggle > span::after {
+        content: '';
+        position: absolute;
+        top: 0.1875rem;
+        left: 0.1875rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        border-radius: 999px;
+        background: var(--surface);
+        box-shadow: var(--elev-raised);
+        transition: transform var(--dur-base) var(--ease-spring, var(--ease-standard));
+    }
+    .toggle > input:checked + span {
+        background: var(--accent);
+    }
+    .toggle > input:checked + span::after {
+        transform: translateX(1.125rem);
+    }
+    .toggle > input:focus-visible + span {
+        box-shadow: var(--focus-ring);
+    }
+    .toggle > input:disabled + span {
+        opacity: 0.5;
+    }
+
     .card[data-interactive] {
         transition:
             border-color var(--dur-fast) var(--ease-standard),
