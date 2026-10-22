@@ -7,11 +7,13 @@ import {
     Briefcase,
     type LucideIcon,
 } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
 
 import { EmptyState } from '@/components/ui/empty-state';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { DocumentType } from '@/lib/model/schema';
 
+import { MotionItem } from '../../components/motion-item';
 import { useData } from '../../hooks/use-data';
 import { NavLink } from '../../shell/NavLink';
 import { documentTypeInfo } from './payload';
@@ -85,25 +87,27 @@ export default function Documents() {
                     <Skeleton className="h-24" />
                 ) : data?.length ? (
                     <ul className="card divide-y divide-hairline">
-                        {data.map((d) => (
-                            <li key={d.id}>
-                                <NavLink
-                                    href={`/documents/${d.id}`}
-                                    className="flex items-center gap-3 p-4 hover:bg-raised"
-                                >
-                                    <span className="min-w-0 flex-1">
-                                        <span className="block truncate text-fg">{d.title}</span>
-                                        <span className="text-xs text-fg-subtle">
-                                            {documentTypeInfo[d.type].title} · edited{' '}
-                                            {new Date(d.updatedAt).toLocaleString(undefined, {
-                                                dateStyle: 'medium',
-                                                timeStyle: 'short',
-                                            })}
+                        <AnimatePresence initial={false}>
+                            {data.map((d) => (
+                                <MotionItem key={d.id}>
+                                    <NavLink
+                                        href={`/documents/${d.id}`}
+                                        className="flex items-center gap-3 p-4 hover:bg-raised"
+                                    >
+                                        <span className="min-w-0 flex-1">
+                                            <span className="block truncate text-fg">{d.title}</span>
+                                            <span className="text-xs text-fg-subtle">
+                                                {documentTypeInfo[d.type].title} · edited{' '}
+                                                {new Date(d.updatedAt).toLocaleString(undefined, {
+                                                    dateStyle: 'medium',
+                                                    timeStyle: 'short',
+                                                })}
+                                            </span>
                                         </span>
-                                    </span>
-                                </NavLink>
-                            </li>
-                        ))}
+                                    </NavLink>
+                                </MotionItem>
+                            ))}
+                        </AnimatePresence>
                     </ul>
                 ) : (
                     <EmptyState icon={<FileText className="size-6" />} title="No drafts yet">

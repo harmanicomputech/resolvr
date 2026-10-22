@@ -68,7 +68,7 @@ export function TrendChart({ months }: { months: MonthCount[] }) {
                         fillOpacity={0.1}
                         initial={reduce ? false : { opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        transition={{ duration: 0.6, delay: 0.3 }}
+                        transition={{ duration: 0.2, delay: 0.1 }}
                     />
                     <motion.path
                         d={line}
@@ -79,7 +79,7 @@ export function TrendChart({ months }: { months: MonthCount[] }) {
                         strokeLinecap="round"
                         initial={reduce ? false : { pathLength: 0 }}
                         animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     />
                     {hover !== null && (
                         <line

@@ -40,7 +40,7 @@ export function FirstRun({ name }: { name: string }) {
                         style={{ left: ['8%', '56%', '30%'][i], top: ['14%', '22%', '58%'][i] }}
                         initial={reduce ? false : { opacity: 0, scale: 0.6, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
-                        transition={{ type: 'spring', stiffness: 300, damping: 20, delay: reduce ? 0 : 0.1 + i * 0.12 }}
+                        transition={{ type: 'spring', stiffness: 300, damping: 20, delay: reduce ? 0 : i * 0.04 }}
                     >
                         <Icon className="size-6" />
                     </motion.span>

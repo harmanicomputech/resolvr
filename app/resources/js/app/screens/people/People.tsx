@@ -1,4 +1,5 @@
 import { Combine, Search, Users } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { duplicateSuggestions, involvement, mergePeople } from '@/lib/db';
 import type { Person } from '@/lib/model/schema';
 
+import { MotionItem } from '../../components/motion-item';
 import { useToast } from '../../components/toaster';
 import { useData } from '../../hooks/use-data';
 import { NavLink } from '../../shell/NavLink';
@@ -93,36 +95,38 @@ export default function People() {
             </div>
 
             <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-                {rows.map(({ person, responsible, witnessed, last }) => (
-                    <li key={person.id}>
-                        <NavLink
-                            href={`/people/${person.id}`}
-                            className="card flex h-full items-start gap-3 p-4 transition-colors hover:bg-raised focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
-                        >
-                            <span
-                                className="grid size-10 shrink-0 place-items-center rounded-full bg-accent-tint font-display text-sm font-semibold text-accent-text"
-                                aria-hidden
+                <AnimatePresence initial={false}>
+                    {rows.map(({ person, responsible, witnessed, last }) => (
+                        <MotionItem key={person.id}>
+                            <NavLink
+                                href={`/people/${person.id}`}
+                                className="card flex h-full items-start gap-3 p-4 transition-colors hover:bg-raised focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
                             >
-                                {initials(person.name)}
-                            </span>
-                            <div className="min-w-0 flex-1">
-                                <p className="truncate font-medium text-fg">{person.name}</p>
-                                <p className="truncate text-xs text-fg-muted">
-                                    {[person.relationship && relationshipLabels[person.relationship], person.role]
-                                        .filter(Boolean)
-                                        .join(' · ') || 'Role not added'}
-                                </p>
-                                <p className="mt-2 text-xs text-fg-subtle">
-                                    {responsible.length > 0 && `Responsible in ${responsible.length}`}
-                                    {responsible.length > 0 && witnessed.length > 0 && ' · '}
-                                    {witnessed.length > 0 && `Witness to ${witnessed.length}`}
-                                    {last &&
-                                        ` · last ${new Date(last).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`}
-                                </p>
-                            </div>
-                        </NavLink>
-                    </li>
-                ))}
+                                <span
+                                    className="grid size-10 shrink-0 place-items-center rounded-full bg-accent-tint font-display text-sm font-semibold text-accent-text"
+                                    aria-hidden
+                                >
+                                    {initials(person.name)}
+                                </span>
+                                <div className="min-w-0 flex-1">
+                                    <p className="truncate font-medium text-fg">{person.name}</p>
+                                    <p className="truncate text-xs text-fg-muted">
+                                        {[person.relationship && relationshipLabels[person.relationship], person.role]
+                                            .filter(Boolean)
+                                            .join(' · ') || 'Role not added'}
+                                    </p>
+                                    <p className="mt-2 text-xs text-fg-subtle">
+                                        {responsible.length > 0 && `Responsible in ${responsible.length}`}
+                                        {responsible.length > 0 && witnessed.length > 0 && ' · '}
+                                        {witnessed.length > 0 && `Witness to ${witnessed.length}`}
+                                        {last &&
+                                            ` · last ${new Date(last).toLocaleDateString(undefined, { day: 'numeric', month: 'short' })}`}
+                                    </p>
+                                </div>
+                            </NavLink>
+                        </MotionItem>
+                    ))}
+                </AnimatePresence>
             </ul>
 
             <MergeDialog

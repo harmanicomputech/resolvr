@@ -757,6 +757,22 @@
         --toast-dot: var(--success);
     }
 
+    .toast[data-icon]::before {
+        display: none;
+    }
+
+    .toast-icon {
+        display: grid;
+        flex-shrink: 0;
+        place-items: center;
+        width: 1.25rem;
+        height: 1.25rem;
+        margin-top: 0.05rem;
+        border-radius: var(--radius-full);
+        background: var(--toast-dot, var(--accent));
+        color: var(--accent-fg);
+    }
+
     .toast[data-tone='warning'] {
         --toast-dot: var(--warning);
     }

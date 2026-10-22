@@ -17,7 +17,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { CalendarDays, ChartArea, ChartPie, Gauge, ListChecks, Plus, Scale, Sparkles } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -25,6 +25,8 @@ import { greeting } from '@/lib/scoring/series';
 import { cn } from '@/lib/utils';
 
 import { useNavigate } from '../../hooks/use-navigate';
+import { useTilt } from '../../hooks/use-tilt';
+import { useSession } from '../../session';
 import { CoverageChips, PatternList, RecentList, StatTiles } from './Cards';
 import { DashCard, type DragHandleProps } from './DashCard';
 import { FirstRun } from './FirstRun';
@@ -75,7 +77,7 @@ export default function Dashboard() {
             <motion.section
                 initial={reduce ? false : { opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
                 className="flex flex-col gap-4 pt-2 pb-2 md:flex-row md:items-end"
             >
                 <div className="flex-1">
@@ -104,6 +106,8 @@ export default function Dashboard() {
 
 function Bento({ data }: { data: CaseData }) {
     const [order, setOrder] = useState<CardId[]>(loadOrder);
+    const grid = useRef<HTMLDivElement>(null);
+    useTilt(useSession().settings?.tilt ?? false, grid);
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
         useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -182,7 +186,7 @@ function Bento({ data }: { data: CaseData }) {
             }}
         >
             <SortableContext items={order} strategy={rectSortingStrategy}>
-                <div className="grid grid-flow-dense grid-cols-1 gap-4 lg:grid-cols-6">
+                <div ref={grid} className="tilt-scope grid grid-flow-dense grid-cols-1 gap-4 lg:grid-cols-6">
                     {order.map((id, i) => (
                         <SortableCard key={id} id={id} index={i} className={span[id]}>
                             {(handle) => render(id, handle)}
@@ -214,7 +218,7 @@ function SortableCard({
             style={{ transform: CSS.Translate.toString(transform), transition }}
             initial={reduce ? false : { opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : 0.1 + index * 0.05 }}
+            transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1], delay: reduce ? 0 : Math.min(index * 0.03, 0.12) }}
         >
             {children({
                 attributes: attributes as unknown as Record<string, unknown>,

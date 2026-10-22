@@ -252,7 +252,7 @@ export function HorizontalTimeline({ incidents, peopleById, ppd, onPpd, highligh
                                     strokeLinejoin="round"
                                     initial={reduce ? false : { pathLength: 0 }}
                                     animate={{ pathLength: 1 }}
-                                    transition={{ duration: 0.8 }}
+                                    transition={{ duration: 0.3 }}
                                 />
                             )}
                             {incidents.map((i, idx) => {

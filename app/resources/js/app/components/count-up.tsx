@@ -30,7 +30,7 @@ export function CountUp({
         }
         node.textContent = format(start);
         const controls = animate(start, value, {
-            duration: 0.6,
+            duration: 0.3,
             ease: [0.16, 1, 0.3, 1],
             onUpdate: (n) => (node.textContent = format(n)),
         });

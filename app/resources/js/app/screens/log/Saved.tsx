@@ -1,5 +1,7 @@
 import { ArrowRight, Check, Plus } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
+
+import { CheckDraw } from '../../components/check-draw';
 import { useEffect, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -57,23 +59,7 @@ export function Saved({
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ type: 'spring', stiffness: 380, damping: 18 }}
             >
-                <svg
-                    viewBox="0 0 24 24"
-                    className="size-8"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth={2.5}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    aria-hidden
-                >
-                    <motion.path
-                        d="M5 12.5l4.5 4.5L19 7.5"
-                        initial={reduce ? false : { pathLength: 0 }}
-                        animate={{ pathLength: 1 }}
-                        transition={{ duration: 0.35, delay: 0.15 }}
-                    />
-                </svg>
+                <CheckDraw className="size-8" />
             </motion.span>
             <h2 className="mt-5 font-display text-2xl font-semibold text-fg" tabIndex={-1} data-autofocus>
                 Saved and sealed

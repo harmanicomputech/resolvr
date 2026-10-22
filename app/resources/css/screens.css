@@ -349,3 +349,28 @@
 .ProseMirror .ProseMirror-separator {
     display: none;
 }
+
+/* ------------------------------------------------------- app motion budget */
+
+/*
+ * The app keeps every transition at 300ms or less so motion never delays a
+ * task. (The marketing site shares tokens.css and keeps its slower values.)
+ */
+:root:not([data-motion='reduce']) {
+    --dur-base: 240ms;
+    --dur-slow: 280ms;
+    --dur-slower: 300ms;
+}
+@media (prefers-reduced-motion: reduce) {
+    :root:not([data-motion='reduce']) {
+        --dur-base: 120ms;
+        --dur-slow: 120ms;
+        --dur-slower: 120ms;
+    }
+}
+
+/* Opt-in dashboard parallax (Settings → Appearance → Tilt effect). */
+.tilt-scope > * > section {
+    translate: calc(var(--tilt-x, 0) * 5px) calc(var(--tilt-y, 0) * 5px);
+    transition: translate var(--dur-fast) var(--ease-standard);
+}

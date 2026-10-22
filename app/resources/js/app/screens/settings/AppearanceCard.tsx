@@ -5,7 +5,8 @@ import type { Settings } from '@/lib/model/schema';
 
 import { JurisdictionPicker } from '../../components/jurisdiction-picker';
 import { useSession } from '../../session';
-import { SettingRow, SettingsCard } from './parts';
+import { requestTiltPermission } from '../../hooks/use-tilt';
+import { SettingRow, SettingsCard, Toggle } from './parts';
 
 const themeOptions = [
     { value: 'light', label: 'Light' },
@@ -72,6 +73,17 @@ export function AppearanceCard({ settings }: { settings: Settings }) {
                         A
                     </span>
                 </span>
+            </SettingRow>
+            <SettingRow title="Tilt effect" description="Dashboard cards shift slightly as you tilt your phone.">
+                <Toggle
+                    label="Tilt effect"
+                    checked={settings.tilt}
+                    disabled={settings.reducedMotion === 'reduce'}
+                    onChange={async (tilt) => {
+                        if (tilt && !(await requestTiltPermission())) return;
+                        await session.saveSettings({ tilt });
+                    }}
+                />
             </SettingRow>
         </SettingsCard>
     );

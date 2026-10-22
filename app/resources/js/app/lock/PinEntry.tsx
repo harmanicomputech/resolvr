@@ -55,7 +55,7 @@ export function PinEntry({ format, onComplete, disabled, label, ref, className }
         reject() {
             haptic('error');
             setError(true);
-            if (!reduce) void controls.start({ x: [0, -12, 10, -8, 6, -3, 0], transition: { duration: 0.42 } });
+            if (!reduce) void controls.start({ x: [0, -12, 10, -8, 6, -3, 0], transition: { duration: 0.28 } });
             resetTimer.current = window.setTimeout(() => {
                 setValue('');
                 setError(false);

@@ -179,6 +179,8 @@ export const settingsSchema = z.object({
     panicGesture: z.boolean().default(true),
     reducedMotion: z.enum(['system', 'reduce', 'full']).default('system'),
     textScale: z.number().min(0.85).max(1.4).default(1),
+    /** Dashboard cards shift slightly as the phone tilts. Off by default. */
+    tilt: z.boolean().default(false),
     jurisdiction: z.enum(jurisdictions).default('us'),
     notLegalAdviceAcknowledgedAt: isoDateTime.optional(),
     /** Web push reminders. `id`/`token` identify the schedule on the server; no content is sent. */

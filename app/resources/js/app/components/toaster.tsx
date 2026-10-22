@@ -3,6 +3,9 @@ import { createContext, useCallback, useContext, useMemo, useState, type ReactNo
 
 import { Toast, type ToastTone } from '@/components/ui/toast';
 
+import { haptic } from '../lib/haptics';
+import { CheckDraw } from './check-draw';
+
 interface ToastItem {
     id: number;
     title: string;
@@ -26,6 +29,8 @@ export function Toaster({ children }: { children: ReactNode }) {
     const push = useCallback(
         ({ duration = 4000, ...toast }: Omit<ToastItem, 'id'> & { duration?: number }) => {
             const id = Date.now() + Math.random();
+            if (toast.tone === 'success') haptic('success');
+            else if (toast.tone === 'warning' || toast.tone === 'danger') haptic('error');
             setItems((list) => [...list.slice(-2), { ...toast, id }]);
             if (duration > 0) window.setTimeout(() => dismiss(id), duration);
         },
@@ -47,15 +52,19 @@ export function Toaster({ children }: { children: ReactNode }) {
                             layout
                             initial={{ opacity: 0, y: 16, scale: 0.98 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, x: 80 }}
-                            transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                            exit={{ opacity: 0, x: 80, transition: { duration: 0.18 } }}
+                            transition={{ type: 'spring', stiffness: 500, damping: 36 }}
                             drag="x"
                             dragConstraints={{ left: 0, right: 0 }}
+                            dragElastic={0.6}
                             onDragEnd={(_, info) => Math.abs(info.offset.x) > 80 && dismiss(t.id)}
                             className="pointer-events-auto"
                         >
                             <Toast
                                 tone={t.tone}
+                                icon={
+                                    t.tone === 'success' ? <CheckDraw className="size-3" strokeWidth={3} /> : undefined
+                                }
                                 title={t.title}
                                 description={t.description}
                                 action={

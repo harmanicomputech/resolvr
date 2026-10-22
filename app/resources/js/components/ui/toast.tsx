@@ -9,13 +9,21 @@ interface ToastProps {
     description?: ReactNode;
     tone?: ToastTone;
     action?: ReactNode;
+    /** Replaces the tone dot, e.g. a drawn check for success. */
+    icon?: ReactNode;
     className?: string;
 }
 
-/** Presentational toast. The stack, timing and swipe-to-dismiss arrive with P2.13. */
-export function Toast({ title, description, tone = 'neutral', action, className }: ToastProps) {
+/** Presentational toast. The stack, timing, haptics and swipe-to-dismiss live in the app's Toaster. */
+export function Toast({ title, description, tone = 'neutral', action, icon, className }: ToastProps) {
     return (
-        <div className={cn('toast', className)} data-tone={tone === 'neutral' ? undefined : tone} role="status">
+        <div
+            className={cn('toast', className)}
+            data-tone={tone === 'neutral' ? undefined : tone}
+            data-icon={icon ? '' : undefined}
+            role="status"
+        >
+            {icon && <span className="toast-icon">{icon}</span>}
             <div className="min-w-0 flex-1">
                 <p className="font-medium text-fg">{title}</p>
                 {description && <p className="mt-0.5 text-fg-muted">{description}</p>}

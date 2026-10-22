@@ -53,7 +53,7 @@ export function ScoreGauge({ score }: { score: ScoreParts }) {
                         strokeDasharray={`${ARC} 999`}
                         initial={reduce ? false : { strokeDashoffset: ARC }}
                         animate={{ strokeDashoffset: ARC * (1 - fraction) }}
-                        transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+                        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                     />
                 </svg>
                 <div className="absolute inset-0 grid place-items-center text-center">
@@ -103,7 +103,7 @@ export function ScoreGauge({ score }: { score: ScoreParts }) {
                                             className="h-full rounded-full bg-accent"
                                             initial={reduce ? false : { width: 0 }}
                                             animate={{ width: `${(value / cap) * 100}%` }}
-                                            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
                                         />
                                     </div>
                                     <p className="mt-1.5 flex items-start gap-1.5 text-xs text-fg-muted">

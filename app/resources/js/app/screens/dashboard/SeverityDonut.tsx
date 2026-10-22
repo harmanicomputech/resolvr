@@ -55,7 +55,7 @@ export function SeverityDonut({ counts }: { counts: Record<Severity, number> }) 
                                 strokeDashoffset={-o}
                                 initial={reduce ? false : { opacity: 0 }}
                                 animate={{ opacity: active && active !== s ? 0.35 : 1 }}
-                                transition={{ duration: 0.3, delay: reduce ? 0 : i * 0.08 }}
+                                transition={{ duration: 0.25, delay: reduce ? 0 : i * 0.02 }}
                                 onMouseEnter={() => setActive(s)}
                                 onMouseLeave={() => setActive(null)}
                                 className="transition-[stroke-width] duration-(--dur-fast)"

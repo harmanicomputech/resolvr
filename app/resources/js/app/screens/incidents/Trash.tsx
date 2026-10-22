@@ -1,10 +1,12 @@
 import { ArchiveRestore, ArrowLeft, Trash2 } from 'lucide-react';
+import { AnimatePresence } from 'motion/react';
 import { useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { EmptyState } from '@/components/ui/empty-state';
 import { SeverityPill } from '@/components/ui/severity-pill';
 
+import { MotionItem } from '../../components/motion-item';
 import { useToast } from '../../components/toaster';
 import { useData } from '../../hooks/use-data';
 import { NavLink } from '../../shell/NavLink';
@@ -41,34 +43,38 @@ export default function Trash() {
                 <EmptyState icon={<Trash2 className="size-6" />} title="Trash is empty" />
             ) : (
                 <ul className="space-y-2">
-                    {data.map((i) => {
-                        const { daysLeft } = i;
-                        return (
-                            <li key={i.id} className="card flex flex-wrap items-center gap-3 p-4">
-                                <SeverityPill severity={i.content.severity} />
-                                <div className="min-w-0 flex-1">
-                                    <p className="truncate font-medium text-fg">{i.content.title}</p>
-                                    <p className="text-xs text-fg-subtle">
-                                        <span className="mono">{i.incId}</span> ·{' '}
-                                        {daysLeft ? `${daysLeft} days left to restore` : 'Kept until you restore it'}
-                                    </p>
-                                </div>
-                                <Button
-                                    size="sm"
-                                    disabled={busy === i.id}
-                                    onClick={async () => {
-                                        setBusy(i.id);
-                                        await session.repos?.incidents.restore(i.id);
-                                        session.refresh();
-                                        setBusy(null);
-                                        toast({ title: `${i.incId} restored`, tone: 'success' });
-                                    }}
-                                >
-                                    <ArchiveRestore aria-hidden /> Restore
-                                </Button>
-                            </li>
-                        );
-                    })}
+                    <AnimatePresence initial={false}>
+                        {data.map((i) => {
+                            const { daysLeft } = i;
+                            return (
+                                <MotionItem key={i.id} className="card flex flex-wrap items-center gap-3 p-4">
+                                    <SeverityPill severity={i.content.severity} />
+                                    <div className="min-w-0 flex-1">
+                                        <p className="truncate font-medium text-fg">{i.content.title}</p>
+                                        <p className="text-xs text-fg-subtle">
+                                            <span className="mono">{i.incId}</span> ·{' '}
+                                            {daysLeft
+                                                ? `${daysLeft} days left to restore`
+                                                : 'Kept until you restore it'}
+                                        </p>
+                                    </div>
+                                    <Button
+                                        size="sm"
+                                        disabled={busy === i.id}
+                                        onClick={async () => {
+                                            setBusy(i.id);
+                                            await session.repos?.incidents.restore(i.id);
+                                            session.refresh();
+                                            setBusy(null);
+                                            toast({ title: `${i.incId} restored`, tone: 'success' });
+                                        }}
+                                    >
+                                        <ArchiveRestore aria-hidden /> Restore
+                                    </Button>
+                                </MotionItem>
+                            );
+                        })}
+                    </AnimatePresence>
                 </ul>
             )}
         </div>
