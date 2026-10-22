@@ -4,6 +4,7 @@ import type { Repositories } from '@/lib/db';
 import { exportFingerprint, verificationUrl } from '@/lib/integrity';
 import { lawPackFor, legalCoverage, type Coverage } from '@/lib/laws/coverage';
 import { filingDeadlines, type DeadlineSummary } from '@/lib/laws/deadlines';
+import { listCheckIns, summarise, type WellbeingSummary } from '@/lib/wellbeing/checkins';
 import { detectPatterns, type Pattern } from '@/lib/patterns/detect';
 import { caseReadiness, type Readiness } from '@/lib/scoring/readiness';
 import { scoreLabel, scoreParts, type ScoreParts } from '@/lib/scoring/score';
@@ -20,6 +21,8 @@ export interface DossierOptions {
     from?: string;
     to?: string;
     includeImpact: boolean;
+    /** Daily check-in trends in the impact section (P3.3). Off unless chosen. */
+    includeWellbeing?: boolean;
     includeThumbnails: boolean;
 }
 
@@ -39,6 +42,7 @@ export interface DossierData {
     patterns: Pattern[];
     coverage: Coverage;
     deadlines: DeadlineSummary;
+    wellbeing: (WellbeingSummary & { from: string; to: string }) | null;
     months: MonthCount[];
     severity: Record<Severity, number>;
     byPerson: { name: string; count: number }[];
@@ -157,6 +161,7 @@ export async function gatherDossier(
         patterns: detectPatterns(incidents, people, { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
         coverage: legalCoverage([...new Set(incidents.flatMap((i) => i.content.types))], pack),
         deadlines: filingDeadlines(incidents, pack, now),
+        wellbeing: await wellbeingFor(repos, options),
         months: monthlyCounts(incidents, span, now),
         severity: severityCounts(incidents),
         byPerson: [...counts]
@@ -170,4 +175,14 @@ export async function gatherDossier(
         qr,
         generatedAt: now.toISOString(),
     };
+}
+
+async function wellbeingFor(repos: Repositories, options: DossierOptions) {
+    if (!options.includeImpact || !options.includeWellbeing) return null;
+    const all = await listCheckIns(repos);
+    const inRange = all.filter(
+        (c) => (!options.from || c.date >= options.from) && (!options.to || c.date <= options.to),
+    );
+    if (!inRange.length) return null;
+    return { ...summarise(inRange), from: inRange[0]!.date, to: inRange[inRange.length - 1]!.date };
 }

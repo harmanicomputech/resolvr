@@ -41,6 +41,7 @@ export const recordKinds = [
     'view',
     'document',
     'share',
+    'checkin',
 ] as const;
 export type RecordKind = (typeof recordKinds)[number];
 

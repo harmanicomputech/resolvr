@@ -1,4 +1,14 @@
-import { FileText, FolderLock, House, NotebookPen, Settings, Users, Waypoints, type LucideIcon } from 'lucide-react';
+import {
+    FileText,
+    FolderLock,
+    HeartHandshake,
+    House,
+    NotebookPen,
+    Settings,
+    Users,
+    Waypoints,
+    type LucideIcon,
+} from 'lucide-react';
 
 export interface NavItem {
     href: string;
@@ -15,6 +25,7 @@ export const navItems: NavItem[] = [
     { href: '/timeline', label: 'Timeline', icon: Waypoints },
     { href: '/people', label: 'People', icon: Users },
     { href: '/documents', label: 'Documents', icon: FileText },
+    { href: '/wellbeing', label: 'Wellbeing', icon: HeartHandshake },
     { href: '/settings', label: 'Settings', icon: Settings },
 ];
 

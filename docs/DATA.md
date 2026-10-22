@@ -96,6 +96,12 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 - **On the device**, each share (id, owner token, key, what was included, expiry) is stored encrypted as a `share` record, so the link can be copied again or turned off later.
 - Limits: anyone who has the full link can read it until it expires or is turned off; the reader could save a copy while it is open.
 
+## Wellbeing check-ins (P3.3)
+
+- Optional and off by default (`settings.wellbeing.checkIn`). One check-in per local day (`checkin:<YYYY-MM-DD>`, encrypted like every record): a 1–5 mood ("Very low" to "Very good", words not faces) and one optional line. It can be updated during the day.
+- Shown back gently: a quiet 30-day line with a text summary, recent notes, and support resources from the jurisdiction pack. No streaks, badges, scores or reminders about missed days. A run of low days brings a calm note pointing to support.
+- Included in a case file only when the person ticks "Include wellbeing check-ins": monthly averages and the count of low days in the impact section. Notes are never exported there.
+
 ## Storage layout (IndexedDB via Dexie, database `resolvr`)
 
 | Table | Contents |

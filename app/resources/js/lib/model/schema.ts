@@ -201,6 +201,8 @@ export const settingsSchema = z.object({
             token: z.string().optional(),
         })
         .default({ enabled: false, time: '19:00', days: '1111100', disguised: false }),
+    /** Optional private daily check-in (P3.3). Off until the person turns it on. */
+    wellbeing: z.object({ checkIn: z.boolean().default(false) }).default({ checkIn: false }),
     /** Encrypted cloud backup. The id and token come from the recovery phrase. */
     backup: z
         .object({
@@ -239,3 +241,12 @@ export const draftDocumentSchema = z.object({
     context: text(2000).default(''),
 });
 export type DraftDocument = z.infer<typeof draftDocumentSchema>;
+
+/** A private daily check-in: how the day felt, and one line. One per day, keyed by local date. */
+export const checkInSchema = z.object({
+    date: isoDate,
+    mood: z.number().int().min(1).max(5),
+    note: text(280).default(''),
+    at: isoDateTime,
+});
+export type CheckIn = z.infer<typeof checkInSchema>;

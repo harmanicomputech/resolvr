@@ -618,6 +618,28 @@ function ImpactSection({
             {!statements.length && groups.every(([, r]) => !r.length) && (
                 <Text style={s.muted}>No impact has been recorded for these incidents.</Text>
             )}
+            {data.wellbeing && (
+                <View wrap={false} style={{ marginTop: 10 }}>
+                    <Text style={s.h3}>Daily check-ins</Text>
+                    <Text style={{ marginBottom: 4 }}>
+                        {data.wellbeing.days} private check-ins between {dt(data.wellbeing.from)} and{' '}
+                        {dt(data.wellbeing.to)}, each rating the day from 1 (very low) to 5 (very good).{' '}
+                        {data.wellbeing.lowDays} {data.wellbeing.lowDays === 1 ? 'day was' : 'days were'} rated low or
+                        very low.
+                    </Text>
+                    {data.wellbeing.byMonth.map((m) => (
+                        <Bar
+                            key={m.month}
+                            label={`${new Date(`${m.month}-01T00:00:00`).toLocaleDateString('en-GB', { month: 'long', year: 'numeric' })} (${m.days} days)`}
+                            value={Number(m.average.toFixed(1))}
+                            max={5}
+                            color={fill.bar}
+                            track={fill.track}
+                            c={c}
+                        />
+                    ))}
+                </View>
+            )}
         </View>
     );
 }

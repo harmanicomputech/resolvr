@@ -120,6 +120,22 @@ export default function Dossier() {
                             </span>
                         </span>
                     </label>
+                    {options.includeImpact && (
+                        <label className="flex items-start gap-2 text-sm">
+                            <input
+                                type="checkbox"
+                                className="mt-0.5 size-4 accent-[var(--accent)]"
+                                checked={options.includeWellbeing ?? false}
+                                onChange={(e) => set('includeWellbeing', e.target.checked)}
+                            />
+                            <span>
+                                <span className="text-fg">Include wellbeing check-ins</span>
+                                <span className="block text-xs text-fg-muted">
+                                    Monthly averages from your daily check-ins. Your notes stay private.
+                                </span>
+                            </span>
+                        </label>
+                    )}
                     <label className="flex items-start gap-2 text-sm">
                         <input
                             type="checkbox"

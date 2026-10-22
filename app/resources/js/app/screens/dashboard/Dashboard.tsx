@@ -29,6 +29,7 @@ import { useTilt } from '../../hooks/use-tilt';
 import { useSession } from '../../session';
 import { CoverageChips, PatternList, RecentList, StatTiles } from './Cards';
 import { DashCard, type DragHandleProps } from './DashCard';
+import { TodayCard } from '../wellbeing/Wellbeing';
 import { DeadlineTracker } from './Deadlines';
 import { FirstRun } from './FirstRun';
 import { Heatmap } from './Heatmap';
@@ -84,7 +85,13 @@ export default function Dashboard() {
 
     if (!data && loading) return <DashboardSkeleton />;
     if (!data) return null;
-    if (!data.incidents.length) return <FirstRun name={firstName(data.profile.fullName)} />;
+    if (!data.incidents.length)
+        return (
+            <div className="space-y-4">
+                {data.checkInToday === null && <TodayCard compact />}
+                <FirstRun name={firstName(data.profile.fullName)} />
+            </div>
+        );
 
     return (
         <div className="space-y-4">
@@ -107,6 +114,7 @@ export default function Dashboard() {
                     <Plus aria-hidden /> Log incident
                 </Button>
             </motion.section>
+            {data.checkInToday === null && <TodayCard compact />}
 
             <ReadinessPath readiness={data.readiness} />
             <StatTiles stats={data.stats} />

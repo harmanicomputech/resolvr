@@ -4,7 +4,9 @@ import { detectPatterns } from '@/lib/patterns/detect';
 import { caseReadiness } from '@/lib/scoring/readiness';
 import { scoreParts } from '@/lib/scoring/score';
 import { caseSummary, dailyHeat, monthlyCounts, severityCounts } from '@/lib/scoring/series';
+import type { CheckIn } from '@/lib/model/schema';
 import { caseStats } from '@/lib/scoring/stats';
+import { localDate } from '@/lib/wellbeing/checkins';
 
 import { useData } from '../../hooks/use-data';
 
@@ -18,6 +20,9 @@ export function useCaseData() {
             repos.singletons.profile(),
             repos.singletons.settings(),
         ]);
+        const checkInToday = settings.wellbeing.checkIn
+            ? ((await repos.vault.get<CheckIn>('checkin', localDate())) ?? null)
+            : undefined;
         const peopleById = new Map(people.map((p) => [p.id, p]));
         const now = new Date();
         const stats = caseStats(incidents, peopleById, now);
@@ -36,6 +41,7 @@ export function useCaseData() {
             }),
             coverage: legalCoverage([...new Set(incidents.flatMap((i) => i.content.types))], pack),
             pack,
+            checkInToday,
             deadlines: filingDeadlines(incidents, pack, now),
             months: monthlyCounts(incidents, 6, now),
             severity: severityCounts(incidents),

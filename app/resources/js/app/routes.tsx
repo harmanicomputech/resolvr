@@ -23,6 +23,7 @@ const Studio = lazy(() => import('./screens/documents/Studio'));
 const Dossier = page(() => import('./screens/documents/Dossier'));
 const Share = page(() => import('./screens/documents/Share'));
 const Verify = page(() => import('./screens/verify/Verify'));
+const Wellbeing = page(() => import('./screens/wellbeing/Wellbeing'));
 const Settings = page(() => import('./screens/settings/Settings'));
 const IncidentDetail = lazy(() => import('./screens/incidents/IncidentDetail'));
 
@@ -44,6 +45,7 @@ const routes: { path: string; component: ComponentType<any> | LazyExoticComponen
     { path: '/documents/share', component: Share },
     { path: '/verify', component: Verify },
     { path: '/documents/:id', component: Studio },
+    { path: '/wellbeing', component: Wellbeing },
     { path: '/settings', component: Settings },
 ];
 
