@@ -46,6 +46,9 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('shares', fn (Request $request) => Limit::perHour(30)->by('shares:'.$request->ip()));
         RateLimiter::for('share-views', fn (Request $request) => Limit::perMinute(20)->by('share-views:'.$request->ip()));
 
+        RateLimiter::for('install', fn (Request $request) => Limit::perMinute(10)->by('install:'.$request->ip()));
+        RateLimiter::for('webcron', fn (Request $request) => Limit::perMinute(6)->by('webcron:'.$request->ip()));
+
         RateLimiter::for('reminders', fn (Request $request) => Limit::perMinute(10)->by('reminders:'.$request->ip()));
     }
 }

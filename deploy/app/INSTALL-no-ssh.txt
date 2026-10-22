@@ -1,25 +1,54 @@
-Resolvr app: installing on DirectAdmin without SSH
-==================================================
+Resolvr app: installing on cPanel or DirectAdmin with no command line
+====================================================================
 
-Full guide: docs/DEPLOY.md in the repository. In short:
+Everything below is done in the hosting control panel and a web browser.
+No SSH and no PHP commands are needed. YOUR-TOKENS.txt (in this zip) holds
+your setup token and cron address: keep it private.
 
-1. DirectAdmin > Domain Setup: create app.resolvrapp.com with PHP 8.3
-   (bcmath, ctype, fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml,
-   gd or imagick, sodium) and issue a Let's Encrypt certificate.
-2. DirectAdmin > MySQL Management: create a database and a user.
-3. File Manager, in /home/USER/domains/app.resolvrapp.com/:
-   - upload resolvr-app/ next to public_html (NOT inside it);
-   - upload the contents of public_html/ into public_html/.
-4. In resolvr-app/, copy .env.example to .env and fill in APP_KEY, APP_URL,
-   DB_*, MAIL_*, CORS_ALLOWED_ORIGINS=https://resolvrapp.com and, optionally,
-   ANTHROPIC_API_KEY and the VAPID keys. APP_ENV=production, APP_DEBUG=false.
-   (APP_KEY: any "base64:" + 32 random bytes in base64; keep it forever.)
-5. Run the database migrations once with a temporary cron job
-   (DirectAdmin > Cron Jobs, every minute), then delete it:
-     cd /home/USER/domains/app.resolvrapp.com/resolvr-app && php artisan migrate --force && php artisan optimize
-6. Add the permanent cron job, every minute:
-     cd /home/USER/domains/app.resolvrapp.com/resolvr-app && php artisan schedule:run >> /dev/null 2>&1
-7. Open https://app.resolvrapp.com/up: it should say the app is up.
+1. Create the site
+   - Add the subdomain app.resolvrapp.com with PHP 8.3.
+     DirectAdmin: Domain Setup. Its folder is /home/USER/domains/app.resolvrapp.com/
+     cPanel: Domains > Create a New Domain. Set its Document Root to
+     app.resolvrapp.com/public_html (NOT inside the main public_html),
+     so the app folder can sit beside it, out of reach of the web.
+   - PHP extensions (PHP Selector / Select PHP Version): bcmath, ctype,
+     fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml, sodium, gd.
+     Set post_max_size and upload_max_filesize to at least 8M.
+   - Issue a free SSL certificate (Let's Encrypt / AutoSSL) for the subdomain.
 
-Updating later: upload the new resolvr-app/ over the old one (keep .env and
-storage/), replace public_html/ (keep index.php), and run step 5 again.
+2. Create a MySQL database and a user with all privileges on it.
+
+3. Upload (File Manager), into the subdomain's folder:
+   - resolvr-app/       next to public_html, NOT inside it
+   - public_html/       its contents go into the subdomain's public_html
+   Upload the zip and use File Manager's "Extract" if that is easier.
+
+4. Edit resolvr-app/.env (File Manager > Edit):
+   - DB_DATABASE, DB_USERNAME, DB_PASSWORD: the database from step 2
+   - MAIL_*: your mailbox's SMTP settings (for waitlist emails)
+   - optional: ANTHROPIC_API_KEY for AI drafting
+   APP_KEY, the tokens and production settings are already filled in.
+   Never change APP_KEY after people start using the app.
+
+5. Open https://app.resolvrapp.com/install, enter the setup token from
+   YOUR-TOKENS.txt, and press "Set up or update the database".
+   Every check should then say Ready (the optional ones may say Optional).
+   For reminders, press "Make reminder keys" and paste the two lines it
+   shows into .env.
+
+6. Scheduled jobs (waitlist emails, reminders, tidying expired shares):
+   have the cron address from YOUR-TOKENS.txt opened every minute.
+   - In the panel's Cron Jobs, add a job for every minute with the command
+       curl -fsS https://app.resolvrapp.com/cron/YOUR_CRON_TOKEN
+     (or: wget -q -O /dev/null https://app.resolvrapp.com/cron/YOUR_CRON_TOKEN)
+   - If the panel will not run curl or wget either, create a free job at
+     cron-job.org (or similar) that opens the same address every minute.
+   The /install page shows "Scheduled jobs running" once it works.
+
+7. When everything is Ready, edit .env and empty the line INSTALL_TOKEN=
+   to switch the setup page off. Put it back whenever you need it again.
+
+Updating later
+   Upload the new resolvr-app/ over the old one but KEEP resolvr-app/.env
+   and resolvr-app/storage/; replace public_html/ (keep its index.php); then
+   open /install and press "Set up or update the database".

@@ -187,9 +187,15 @@ ssh USER@HOST 'bash /home/USER/domains/app.resolvrapp.com/deploy/release.sh /hom
 
 **Rollback**: `bash deploy/rollback.sh /home/USER/domains/app.resolvrapp.com` points `current` at the previous release and rebuilds its caches. Resolvr's migrations only add tables and columns, so the older release keeps working against the newer schema.
 
-### Without SSH (File Manager only)
+### No command line (cPanel or DirectAdmin without SSH)
 
-`deploy/app/package-zip.sh dist/resolvr-app-<sha>.tar.gz` turns a release into a zip with `resolvr-app/` (upload next to `public_html`, never inside it), `public_html/` (with an `index.php` that loads `../resolvr-app`) and `INSTALL.txt`. Migrations run through a one-off cron job (`php artisan migrate --force && php artisan optimize`), removed after it has run once. CI attaches the tarball to every main-branch run, so the zip can be made from it.
+Many shared plans allow no SSH and no PHP commands. The app supports that fully:
+
+- **Package**: `deploy/app/package-zip.sh dist/resolvr-app-<sha>.tar.gz` (CI attaches the tarball to every main-branch run) makes a zip with `resolvr-app/` (uploaded next to `public_html`, never inside it; it also carries a `Require all denied` `.htaccess`), `public_html/` (with an `index.php` that loads `../resolvr-app`), `INSTALL.txt` and `YOUR-TOKENS.txt`. Its `resolvr-app/.env` is ready: production settings, a fresh `APP_KEY`, an `INSTALL_TOKEN` and a `CRON_TOKEN`. Only the database and email details are filled in by hand in File Manager.
+- **Setup and updates in the browser**: `https://app.resolvrapp.com/install` (off unless `INSTALL_TOKEN` is set) checks PHP, extensions, storage, database, email and the scheduler, runs the database migrations, clears cached settings and makes the reminder (VAPID) keys. Empty `INSTALL_TOKEN` when finished.
+- **Scheduled jobs without `artisan`**: `https://app.resolvrapp.com/cron/<CRON_TOKEN>` runs the same jobs as `schedule:run` (queue, reminders, share and upload tidying) inside the web request, within about 20 seconds. Point the panel's Cron Jobs at it with `curl -fsS URL` or `wget -q -O /dev/null URL` every minute, or, if the panel only allows PHP, use an external pinger such as cron-job.org.
+
+Step-by-step instructions for the person installing are in `deploy/app/INSTALL-no-ssh.txt` (shipped as `INSTALL.txt` in the zip).
 
 ### What the app's `.htaccess` handles (`app/public/.htaccess`)
 

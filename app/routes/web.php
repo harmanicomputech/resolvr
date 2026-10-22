@@ -1,10 +1,14 @@
 <?php
 
 use App\Http\Controllers\AiDocumentController;
+use App\Http\Controllers\InstallController;
 use App\Http\Controllers\ShareController;
 use App\Http\Controllers\WaitlistController;
+use App\Http\Controllers\WebCronController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
+use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Support\Facades\Route;
+use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Inertia\Inertia;
 
 // Signed links from the waitlist confirmation email.
@@ -35,8 +39,17 @@ Route::post('/share-target', fn () => redirect('/vault?shared=unavailable', 303)
 // Read-only attorney share viewer (P3.2): a minimal page that decrypts in the browser.
 Route::get('/s/{id}', [ShareController::class, 'page'])->where('id', '[0-9a-f]{32}')->name('share');
 
+// Hosting without a command line: browser-based setup and a cron URL (off unless their tokens are set).
+Route::middleware('throttle:install')->group(function () {
+    Route::get('/install', [InstallController::class, 'show']);
+    Route::post('/install', [InstallController::class, 'run']);
+});
+Route::get('/cron/{token}', WebCronController::class)
+    ->middleware('throttle:webcron')
+    ->withoutMiddleware([StartSession::class, ShareErrorsFromSession::class, ValidateCsrfToken::class]);
+
 // The app: one shell for every path. Screens are routed on the device so the
 // app works offline; the server never sees which screen is open.
 Route::get('/{path?}', fn () => Inertia::render('app'))
-    ->where('path', '^(?!api/|ai/|waitlist/|build/|icons/|ocr/|storage/|s/|up$|design$).*$')
+    ->where('path', '^(?!api/|ai/|waitlist/|build/|icons/|ocr/|storage/|s/|install$|cron/|up$|design$).*$')
     ->name('app');
