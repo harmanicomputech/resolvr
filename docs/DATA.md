@@ -108,6 +108,12 @@ hash = SHA-256( prevHash + canonicalJson({ seq, body }) )
 
 PDFs (single incidents, drafted letters, and the HR and Legal dossiers) are generated **in the browser** with `@react-pdf/renderer`, and Word files with `docx`, from decrypted data held in memory. Nothing is uploaded to make them. (The prompt pack suggested dompdf and PHPWord on the server; that would send letters and records to the server in plain text, so exports are made on the device instead.)
 
+### Case file and verification (P2.11)
+
+- The dossier (`app/resources/js/app/pdf/dossier/`) is rendered twice: the first pass is read with `pdf-lib` for the page each section's named destination landed on, the second prints those numbers in the contents. "Page n of N" is stamped afterwards (`pdf/postprocess.ts`) because react-pdf's `render` callbacks produce no text in the version we ship.
+- The verification appendix lists the ledger head, every included record's latest hash and each evidence file's SHA-256, plus an **export fingerprint**: SHA-256 over the ledger head prefix, the included incident IDs and the file hashes (`lib/integrity/fingerprint.ts`).
+- The QR code and printed link point to `/verify#v1.<fingerprint>.<head16>.<ids>`. Everything is in the URL fragment, so it never reaches the server. Opening it in Resolvr on the author's device recomputes the fingerprint from the local ledger and says whether the document still matches. A third party without the vault can only compare the printed hashes; the page says so plainly.
+
 ## AI drafting (P2.10)
 
 The only time incident text leaves the device is when the person asks for a draft:

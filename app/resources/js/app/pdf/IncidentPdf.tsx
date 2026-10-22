@@ -126,7 +126,7 @@ export function Footer({ s, left }: { s: PdfStyles; left: string }) {
     return (
         <View style={s.footer} fixed>
             <Text>{left}</Text>
-            <Text render={({ pageNumber, totalPages }) => `Page ${pageNumber} of ${totalPages}`} />
+            {/* "Page n of N" is stamped on afterwards (see pdf/postprocess.ts). */}
         </View>
     );
 }

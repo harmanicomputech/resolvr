@@ -1,7 +1,9 @@
 import { Font, StyleSheet } from '@react-pdf/renderer';
+import { Buffer } from 'buffer';
 
-import geistMono from '../../../fonts/geist-mono-latin-400-normal.woff2?url';
-import poppins600 from '../../../fonts/poppins-latin-600-normal.woff2?url';
+// WOFF (not WOFF2): the PDF engine's font subsetter cannot handle WOFF2's transformed glyph tables.
+import geistMono from '../../../fonts/geist-mono-latin-400-normal.woff?url';
+import poppins600 from '../../../fonts/poppins-latin-600-normal.woff?url';
 
 /**
  * PDF palette. PDFs cannot read CSS variables, so these mirror the light
@@ -34,6 +36,8 @@ export type PdfPalette = (typeof pdfColors)[keyof typeof pdfColors];
 let registered = false;
 /** Poppins for headings, Geist Mono for IDs and hashes; body text uses the built-in Helvetica. */
 export function registerFonts(): void {
+    // react-pdf decodes data-URL images (QR code, thumbnails) with Node's Buffer.
+    (globalThis as { Buffer?: typeof Buffer }).Buffer ??= Buffer;
     if (registered) return;
     registered = true;
     Font.register({ family: 'Poppins', src: poppins600, fontWeight: 600 });

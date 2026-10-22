@@ -7,8 +7,10 @@ import type { ReactElement } from 'react';
 export async function downloadPdf(build: () => Promise<ReactElement> | ReactElement, filename: string): Promise<void> {
     const [{ pdf }, { registerFonts }] = await Promise.all([import('@react-pdf/renderer'), import('./theme')]);
     registerFonts();
-    const blob = await pdf((await build()) as Parameters<typeof pdf>[0]).toBlob();
-    saveBlob(blob, filename);
+    const rendered = await pdf((await build()) as Parameters<typeof pdf>[0]).toBlob();
+    const { stampPageNumbers } = await import('./postprocess');
+    const stamped = await stampPageNumbers(await rendered.arrayBuffer());
+    saveBlob(new Blob([stamped as Uint8Array<ArrayBuffer>], { type: 'application/pdf' }), filename);
 }
 
 export function saveBlob(blob: Blob, filename: string): void {
