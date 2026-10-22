@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AiDocumentController;
+use App\Http\Controllers\ShareController;
 use App\Http\Controllers\WaitlistController;
 use Illuminate\Foundation\Http\Middleware\ValidateCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -31,8 +32,11 @@ Route::post('/share-target', fn () => redirect('/vault?shared=unavailable', 303)
     ->withoutMiddleware(ValidateCsrfToken::class)
     ->name('share-target');
 
+// Read-only attorney share viewer (P3.2): a minimal page that decrypts in the browser.
+Route::get('/s/{id}', [ShareController::class, 'page'])->where('id', '[0-9a-f]{32}')->name('share');
+
 // The app: one shell for every path. Screens are routed on the device so the
 // app works offline; the server never sees which screen is open.
 Route::get('/{path?}', fn () => Inertia::render('app'))
-    ->where('path', '^(?!api/|ai/|waitlist/|build/|icons/|ocr/|storage/|up$|design$).*$')
+    ->where('path', '^(?!api/|ai/|waitlist/|build/|icons/|ocr/|storage/|s/|up$|design$).*$')
     ->name('app');

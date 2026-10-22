@@ -87,6 +87,15 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 - **Time limits** (`lib/laws/deadlines.ts`) are counted cautiously from the *first* incident that suggests each law, giving the earliest possible date. If that date has passed, the dashboard shows the date counted from the most recent related incident and says that some limits may have passed, without alarm. Limits that run from something the record does not hold (for example the end of employment) are explained but not counted.
 - Always general information, never legal advice: every surface showing a pack says so and links to a lawyer-finding service.
 
+## Attorney share (P3.2)
+
+- **What is shared**: only the incidents the person ticks, optionally their attached files and their name, plus an optional note. The bundle (`lib/share/bundle.ts`) is a JSON manifest followed by the file bytes, encrypted with **AES-256-GCM under a fresh random 256-bit key** in the browser.
+- **The key travels only in the link's #fragment** (`/s/{id}#{key}`). Browsers never send the fragment to a server, so the server stores ciphertext it cannot open. The viewer page sends `Referrer-Policy: no-referrer`, `X-Robots-Tag: noindex` and `Cache-Control: no-store`.
+- **Server side** (`ShareController`): a random 128-bit id and an owner token (only its SHA-256 is kept), the ciphertext in `storage/app/shares` (outside the web root), an expiry of 24 hours or 7 days, and a view log of time plus a coarse description such as "Chrome on Windows" (no IP addresses). The owner can see views and turn the link off, which deletes the file at once. `shares:prune` (hourly) deletes expired files and forgets shares 30 days after they end.
+- **The viewer** (`resources/views/share.blade.php` + `resources/js/share-viewer.ts`) is a minimal page outside the app and its service worker. It decrypts in the reader's browser and inserts all shared text with `textContent`, never as HTML. Each incident shows the hash recorded when it was logged and each file its SHA-256.
+- **On the device**, each share (id, owner token, key, what was included, expiry) is stored encrypted as a `share` record, so the link can be copied again or turned off later.
+- Limits: anyone who has the full link can read it until it expires or is turned off; the reader could save a copy while it is open.
+
 ## Storage layout (IndexedDB via Dexie, database `resolvr`)
 
 | Table | Contents |

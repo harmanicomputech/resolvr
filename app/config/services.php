@@ -51,6 +51,12 @@ return [
         'chunk_bytes' => (int) env('BACKUP_CHUNK_BYTES', 4 * 1024 * 1024),
     ],
 
+    // Read-only attorney shares (P3.2): ciphertext only, deleted when they expire.
+    'shares' => [
+        'path' => env('SHARE_PATH', storage_path('app/shares')),
+        'max_bytes' => (int) env('SHARE_MAX_BYTES', 100 * 1024 * 1024),
+    ],
+
     // Web push reminders (P2.12). Generate keys with `php artisan resolvr:vapid-keys`.
     'webpush' => [
         'public_key' => env('VAPID_PUBLIC_KEY'),

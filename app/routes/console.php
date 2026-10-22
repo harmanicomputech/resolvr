@@ -19,3 +19,4 @@ Schedule::command('queue:work --stop-when-empty --tries=3 --max-time=50')
 // Web push reminders (no payload; see App\Push) and tidying of unfinished backup uploads.
 Schedule::command('reminders:send')->everyMinute()->withoutOverlapping();
 Schedule::call(fn () => BackupStore::fromConfig()->pruneUploads())->daily()->name('prune-backup-uploads');
+Schedule::command('shares:prune')->hourly();

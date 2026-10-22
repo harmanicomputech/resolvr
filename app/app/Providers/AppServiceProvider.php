@@ -43,6 +43,9 @@ class AppServiceProvider extends ServiceProvider
             Limit::perDay(3000)->by('backups-day:'.$request->ip()),
         ]);
 
+        RateLimiter::for('shares', fn (Request $request) => Limit::perHour(30)->by('shares:'.$request->ip()));
+        RateLimiter::for('share-views', fn (Request $request) => Limit::perMinute(20)->by('share-views:'.$request->ip()));
+
         RateLimiter::for('reminders', fn (Request $request) => Limit::perMinute(10)->by('reminders:'.$request->ip()));
     }
 }

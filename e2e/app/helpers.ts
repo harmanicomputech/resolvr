@@ -182,6 +182,8 @@ export async function importSample(page: Page) {
 export async function unlock(page: Page, pin = '1357') {
     await expect(page.getByRole('heading', { name: 'Enter your PIN' })).toBeVisible();
     await typePin(page, pin);
+    // Argon2id is slow on purpose, and slower still when tests run in parallel.
+    await expect(page.getByRole('heading', { name: 'Enter your PIN' })).toHaveCount(0, { timeout: 45_000 });
 }
 
 /** Navigate inside the app through the command palette (a reload would lock it). */

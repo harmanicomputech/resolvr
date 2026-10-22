@@ -8,10 +8,11 @@ use Illuminate\Support\Str;
 use RuntimeException;
 
 /**
- * Encrypted backup files on disk. Uploads arrive in numbered chunks into a
- * staging folder; the stored file is only replaced once every chunk is in
- * and the whole file matches the size and SHA-256 the device announced.
- * Nothing here can read the files: they are encrypted on the device.
+ * Encrypted files on disk (backups and attorney shares). Uploads arrive in
+ * numbered chunks into a staging folder; the stored file is only replaced
+ * once every chunk is in and the whole file matches the size and SHA-256 the
+ * device announced. Nothing here can read the files: they are encrypted on
+ * the device.
  */
 class BackupStore
 {
@@ -20,6 +21,11 @@ class BackupStore
     public static function fromConfig(): self
     {
         return new self(config('services.backups.path'));
+    }
+
+    public static function forShares(): self
+    {
+        return new self(config('services.shares.path'));
     }
 
     public function path(string $id): string
@@ -32,7 +38,7 @@ class BackupStore
         return $this->root.'/uploads/'.$upload;
     }
 
-    /** @return array{backup: string, size: int, sha256: string, chunks: int}|null */
+    /** @return array{backup: string, size: int, sha256: string, chunks: int}|null  `backup` is the owning file's id */
     public function upload(string $upload): ?array
     {
         $meta = $this->uploadDir($upload).'/meta.json';
@@ -40,13 +46,14 @@ class BackupStore
         return File::exists($meta) ? json_decode(File::get($meta), true) : null;
     }
 
-    public function begin(Backup $backup, int $size, string $sha256, int $chunkBytes): string
+    public function begin(Backup|string $owner, int $size, string $sha256, int $chunkBytes): string
     {
+        $id = $owner instanceof Backup ? $owner->id : $owner;
         $upload = (string) Str::uuid();
         File::ensureDirectoryExists($this->uploadDir($upload), 0700);
         $this->protect();
         File::put($this->uploadDir($upload).'/meta.json', json_encode([
-            'backup' => $backup->id,
+            'backup' => $id,
             'size' => $size,
             'sha256' => $sha256,
             'chunks' => max(1, (int) ceil($size / $chunkBytes)),
@@ -62,6 +69,15 @@ class BackupStore
 
     /** Join the chunks, check them, and swap the new file in. */
     public function complete(Backup $backup, string $upload): void
+    {
+        $meta = $this->finish($backup->id, $upload);
+        $backup->forceFill(['size' => $meta['size'], 'sha256' => $meta['sha256']])->save();
+    }
+
+    /**
+     * @return array{backup: string, size: int, sha256: string, chunks: int}
+     */
+    public function finish(string $id, string $upload): array
     {
         $meta = $this->upload($upload) ?? throw new RuntimeException('Unknown upload');
         $tmp = $this->uploadDir($upload).'/joined.bin';
@@ -83,9 +99,10 @@ class BackupStore
         if (filesize($tmp) !== $meta['size'] || ! hash_equals($meta['sha256'], hash_file('sha256', $tmp))) {
             throw new IncompleteUpload('The upload did not arrive intact.');
         }
-        rename($tmp, $this->path($backup->id));
+        rename($tmp, $this->path($id));
         $this->discard($upload);
-        $backup->forceFill(['size' => $meta['size'], 'sha256' => $meta['sha256']])->save();
+
+        return $meta;
     }
 
     public function discard(string $upload): void
@@ -95,8 +112,13 @@ class BackupStore
 
     public function delete(Backup $backup): void
     {
-        File::delete($this->path($backup->id));
+        $this->deleteFile($backup->id);
         $backup->delete();
+    }
+
+    public function deleteFile(string $id): void
+    {
+        File::delete($this->path($id));
     }
 
     /** Remove uploads that were started but never finished. */

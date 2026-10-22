@@ -51,7 +51,7 @@ async function shell({ request }: { request: Request }): Promise<Response> {
 registerRoute(
     new NavigationRoute(shell, {
         // Server-handled pages that are not the app.
-        denylist: [/^\/api\//, /^\/waitlist\//, /^\/up$/, /^\/design$/, /^\/share-target$/],
+        denylist: [/^\/api\//, /^\/s\//, /^\/waitlist\//, /^\/up$/, /^\/design$/, /^\/share-target$/],
     }),
 );
 

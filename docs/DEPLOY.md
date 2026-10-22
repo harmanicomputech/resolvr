@@ -123,7 +123,7 @@ Minimum the waitlist needs in the meantime:
    VAPID_PRIVATE_KEY=...
    ```
 
-   Encrypted backups are stored under `storage/app/backups` (outside `public_html`; a `Require all denied` `.htaccess` is written there too). Set `BACKUP_MAX_BYTES` / `BACKUP_TOTAL_BYTES` to fit the hosting plan's disk. Chunks are 4 MB, so PHP's `post_max_size` must be at least 5M (the DirectAdmin default of 8M is fine).
+   Encrypted backups are stored under `storage/app/backups` and attorney shares under `storage/app/shares` (`SHARE_MAX_BYTES`, default 100 MB) (outside `public_html`; a `Require all denied` `.htaccess` is written there too). Set `BACKUP_MAX_BYTES` / `BACKUP_TOTAL_BYTES` to fit the hosting plan's disk. Chunks are 4 MB, so PHP's `post_max_size` must be at least 5M (the DirectAdmin default of 8M is fine).
 
 4. `php artisan migrate --force`, then `config:cache` and `route:cache`.
 5. Cron (DirectAdmin → Cron Jobs), every minute:
@@ -132,6 +132,6 @@ Minimum the waitlist needs in the meantime:
    * * * * * cd /home/USER/domains/app.resolvrapp.com/current && php artisan schedule:run >> /dev/null 2>&1
    ```
 
-   The scheduler runs `queue:work --stop-when-empty` each minute (waitlist confirmation emails), `reminders:send` each minute (web push reminders, when VAPID keys are set) and tidies unfinished backup uploads daily.
+   The scheduler runs `queue:work --stop-when-empty` each minute (waitlist confirmation emails), `reminders:send` each minute (web push reminders, when VAPID keys are set) and tidies unfinished backup uploads daily, and `shares:prune` hourly (expired attorney shares).
 
 6. If the server sits behind a proxy or CDN, configure trusted proxies so rate limiting sees real client IPs.

@@ -882,4 +882,9 @@
     svg.lucide {
         stroke-width: 1.5;
     }
+
+    /* Fieldsets default to min-content width, which lets long content push a page wider than the phone. */
+    fieldset {
+        min-inline-size: 0;
+    }
 }

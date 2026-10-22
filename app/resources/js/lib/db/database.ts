@@ -40,6 +40,7 @@ export const recordKinds = [
     'draft',
     'view',
     'document',
+    'share',
 ] as const;
 export type RecordKind = (typeof recordKinds)[number];
 

@@ -1,6 +1,7 @@
 import {
     FileText,
     FolderArchive,
+    Link2,
     MessageSquareQuote,
     Mail,
     ScrollText,
@@ -72,6 +73,22 @@ export default function Documents() {
                                 <span className="block font-medium text-fg">Case file</span>
                                 <span className="block text-sm text-fg-muted">
                                     Your whole record as an HR or legal PDF, made on this device.
+                                </span>
+                            </span>
+                        </NavLink>
+                    </li>
+                    <li>
+                        <NavLink
+                            href="/documents/share"
+                            className="card flex h-full gap-3 p-4 transition-colors hover:bg-raised focus-visible:shadow-[var(--focus-ring)] focus-visible:outline-none"
+                        >
+                            <span className="icon-badge" aria-hidden>
+                                <Link2 className="size-4" />
+                            </span>
+                            <span>
+                                <span className="block font-medium text-fg">Share with a lawyer</span>
+                                <span className="block text-sm text-fg-muted">
+                                    A private, read-only link that expires. Encrypted before it leaves this device.
                                 </span>
                             </span>
                         </NavLink>

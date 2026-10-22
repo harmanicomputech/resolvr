@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BackupController;
 use App\Http\Controllers\ReminderController;
+use App\Http\Controllers\ShareController;
 use App\Http\Controllers\WaitlistController;
 use Illuminate\Support\Facades\Route;
 
@@ -26,3 +27,15 @@ Route::middleware('throttle:reminders')->where(['id' => '[0-9a-f]{32}'])->group(
     Route::put('/reminders/{id}', [ReminderController::class, 'upsert']);
     Route::delete('/reminders/{id}', [ReminderController::class, 'destroy']);
 });
+
+// Read-only attorney shares (P3.2): ciphertext only; the key lives in the link's #fragment.
+Route::post('/shares', [ShareController::class, 'create'])->middleware('throttle:shares');
+Route::middleware('throttle:backups')->prefix('shares/{id}')->where(['id' => '[0-9a-f]{32}'])->group(function () {
+    Route::get('/', [ShareController::class, 'show']);
+    Route::delete('/', [ShareController::class, 'revoke']);
+    Route::put('/uploads/{upload}/{index}', [ShareController::class, 'chunk'])->whereNumber('index');
+    Route::post('/uploads/{upload}/complete', [ShareController::class, 'complete']);
+});
+Route::get('/shares/{id}/content', [ShareController::class, 'content'])
+    ->where('id', '[0-9a-f]{32}')
+    ->middleware('throttle:share-views');

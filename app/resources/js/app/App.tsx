@@ -70,7 +70,7 @@ function Gate() {
     return (
         <MotionConfig reducedMotion={display.reducedMotion === 'reduce' ? 'always' : 'user'}>
             {/* Screens stack in one grid cell so the old one can fade out over the new (popLayout would inject a <style>, which the CSP blocks). */}
-            <div className="grid">
+            <div className="grid grid-cols-[minmax(0,1fr)]">
                 <AnimatePresence initial={false}>
                     <Transition key={screen} kind={screen}>
                         {screen === 'splash' && <Splash />}
