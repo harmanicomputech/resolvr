@@ -22,6 +22,8 @@
                         <li><a href="#collect">What we collect</a></li>
                         <li><a href="#ai">AI drafting</a></li>
                         <li><a href="#backup">Encrypted backup</a></li>
+                        <li><a href="#share">Sharing with a lawyer</a></li>
+                        <li><a href="#reminders">Reminders</a></li>
                         <li><a href="#analytics">Analytics and cookies</a></li>
                         <li><a href="#sharing">Who we share with</a></li>
                         <li><a href="#retention">How long we keep data</a></li>
@@ -37,7 +39,7 @@
                     <h2 id="summary">The short version</h2>
                     <ul>
                         <li>Your incidents, notes and evidence are encrypted and stored on your device. We cannot read them.</li>
-                        <li>We only hold your email address if you give it to us (waitlist or account), and encrypted backups if you turn backup on.</li>
+                        <li>We only hold your email address if you give it to us (waitlist), encrypted backups if you make one, and encrypted share links if you create them. There are no accounts.</li>
                         <li>If you choose to draft a document with AI, only the fields you select are sent, to create that draft.</li>
                         <li>No ads, no third-party trackers, no selling or renting data. Ever.</li>
                     </ul>
@@ -51,10 +53,11 @@
 
                     <h2 id="on-device">Your record stays on your device</h2>
                     <p>
-                        The incidents you log, the people you name, your notes, impact statements and the files in your evidence vault are
-                        stored in your browser's storage on your device. Before anything is stored, it is encrypted with AES-256-GCM using
-                        a key derived from your PIN. The key is kept in memory only while the app is unlocked. We never receive your PIN,
-                        your key or the unencrypted contents of your record.
+                        The incidents you log, the people you name, your notes, impact statements, wellbeing check-ins and the files in
+                        your evidence vault are stored in your browser's storage on your device. Before anything is stored, it is
+                        encrypted with AES-256-GCM using a random key, which is itself locked with your passcode (and, if you add them,
+                        your passkey or recovery phrase). The key is kept in memory only while the app is unlocked. We never receive your
+                        passcode, your recovery phrase, your key or the unencrypted contents of your record.
                     </p>
                     <p>
                         Because we cannot read your record, we cannot recover it if you forget your PIN and have no backup, and we cannot
@@ -67,9 +70,11 @@
                             <tr><th>Data</th><th>When</th><th>Why</th></tr>
                         </thead>
                         <tbody>
-                            <tr><td>Email address</td><td>You join the waitlist or create an account</td><td>To confirm your sign-up, send launch news or account messages, and let you sign in</td></tr>
+                            <tr><td>Email address</td><td>You join the waitlist</td><td>To confirm your sign-up and send launch news</td></tr>
                             <tr><td>Page you signed up from</td><td>Waitlist sign-up</td><td>To understand which pages are useful</td></tr>
-                            <tr><td>Encrypted backup files</td><td>You turn on backup</td><td>To let you restore your record on another device</td></tr>
+                            <tr><td>Encrypted backup files</td><td>You back up</td><td>To let you restore your record on another device</td></tr>
+                            <tr><td>Encrypted share bundles, and when each link was opened (time and a general description such as "Chrome on Windows")</td><td>You share with a lawyer</td><td>To deliver the read-only copy you chose, and show you when it was viewed</td></tr>
+                            <tr><td>A push address and the time and days you chose</td><td>You turn on reminders</td><td>To send the reminder at that time</td></tr>
                             <tr><td>Selected incident text</td><td>You ask for an AI draft</td><td>To produce the draft you asked for</td></tr>
                             <tr><td>Server logs (IP address, time, request)</td><td>Any visit</td><td>Security and abuse prevention; kept briefly</td></tr>
                             <tr><td>Anonymous page-view counts</td><td>Visits to resolvrapp.com</td><td>To see which pages are read, without identifying you</td></tr>
@@ -90,20 +95,39 @@
                     <p>
                         Backup is off by default. When you turn it on, your record is encrypted on your device and only the encrypted file
                         is uploaded. It is protected by a recovery phrase that only you hold. We can see that a backup exists, its size and
-                        when it was made; we cannot see what is inside. Deleting your account deletes your backups.
+                        when it was made; we cannot see what is inside. Backups are identified by a code derived from your phrase, not by
+                        your name or email. You can delete the online copy at any time in Settings.
+                    </p>
+
+                    <h2 id="share">Sharing with a lawyer</h2>
+                    <p>
+                        If you create a share link, the incidents and files you choose are encrypted on your device with a new random key
+                        before upload. The key is only in the link itself, after the # sign, which browsers never send to us, so we cannot
+                        open the copy. Links expire after 24 hours or 7 days, and you can turn one off at any time, which deletes the copy
+                        at once. Each time a link is opened we record the time and a general description of the browser (no IP address),
+                        so you can see when it was used. Expired copies are deleted, and the record of the link is removed 30 days later.
+                    </p>
+
+                    <h2 id="reminders">Reminders</h2>
+                    <p>
+                        Reminders are off by default. If you turn them on, your browser gives us a push address, and we store it with the
+                        time and days you chose. Reminders contain no text from us: your device decides what the notification says, and
+                        can disguise it. Your browser's push service (for example Google, Apple or Mozilla) delivers it and can see that a
+                        reminder was sent, but not your record. Turning reminders off deletes the push address.
                     </p>
 
                     <h2 id="analytics">Analytics and cookies</h2>
                     <p>
                         This website uses Plausible Analytics, which counts page views without cookies and without collecting personal
                         data. The web app does not use advertising or tracking cookies. It uses essential storage on your device to hold
-                        your encrypted record and settings, and a session cookie if you sign in.
+                        your encrypted record and settings, and a security cookie that protects forms from forgery.
                     </p>
 
                     <h2 id="sharing">Who we share with</h2>
                     <p>We do not sell, rent or trade personal data. We use a small number of service providers to run Resolvr:</p>
                     <ul>
-                        <li>[HOSTING PROVIDER], to host the website, app and encrypted backups ([LOCATION]).</li>
+                        <li>[HOSTING PROVIDER], to host the website, app, encrypted backups and share links ([LOCATION]).</li>
+                        <li>Your browser's push service (Google, Apple or Mozilla), only if you turn on reminders.</li>
                         <li>[EMAIL PROVIDER], to send waitlist and account emails.</li>
                         <li>[AI PROVIDER], only when you ask for an AI draft.</li>
                         <li>Plausible Analytics, for anonymous page-view counts.</li>
@@ -116,7 +140,9 @@
                     <h2 id="retention">How long we keep data</h2>
                     <ul>
                         <li>Waitlist emails: until launch plus [N] months, or until you unsubscribe.</li>
-                        <li>Account data and backups: while your account is open; deleted within [30] days of account deletion.</li>
+                        <li>Encrypted backups: until you delete the online copy, or [N] months after the last backup.</li>
+                        <li>Share links: the encrypted copy until the link expires or you turn it off; the link's record and view times 30 days after that.</li>
+                        <li>Reminders: until you turn them off, or your browser withdraws the push address.</li>
                         <li>Server logs: up to [30] days.</li>
                     </ul>
 
