@@ -1,5 +1,3 @@
-import { argon2id } from 'hash-wasm';
-
 import { fromBase64, randomBytes, toBase64, utf8 } from './encoding';
 
 /**
@@ -39,6 +37,7 @@ export async function deriveKey(pin: string, params: KdfParams): Promise<CryptoK
     let raw: Uint8Array<ArrayBuffer>;
 
     if (params.algo === 'argon2id') {
+        const { argon2id } = await import('hash-wasm');
         const out = await argon2id({
             password: pin,
             salt,
@@ -72,6 +71,7 @@ let argon2Ok: boolean | null = null;
 async function argon2Available(): Promise<boolean> {
     if (argon2Ok !== null) return argon2Ok;
     try {
+        const { argon2id } = await import('hash-wasm');
         await argon2id({
             password: 'x',
             salt: new Uint8Array(16),

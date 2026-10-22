@@ -2,8 +2,6 @@ import { createContext, useCallback, useContext, useEffect, useMemo, useRef, use
 
 import Dexie from 'dexie';
 
-import { createBackup, restoreBackup } from '@/lib/backup/format';
-import { deriveRecovery } from '@/lib/backup/recovery';
 import { repositories, ResolvrDatabase, Vault, WrongPinError, type Repositories } from '@/lib/db';
 import type { Settings } from '@/lib/model/schema';
 
@@ -298,6 +296,7 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
         async (pin: string, phrase: string) => {
             const vault = vaultRef.current;
             if (!vault || !repos) throw new Error('The vault is locked');
+            const { deriveRecovery } = await import('@/lib/backup/recovery');
             const keys = await deriveRecovery(phrase);
             await vault.addUnlocker('recovery', pin, keys.wrappingKey);
             const backup = (await repos.singletons.settings()).backup;
@@ -313,6 +312,7 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
 
     const recoverPin = useCallback(
         async (phrase: string, newPin: string, format: PinFormat) => {
+            const { deriveRecovery } = await import('@/lib/backup/recovery');
             const keys = await deriveRecovery(phrase);
             const vault = await Vault.resetPinWithRecovery(keys.wrappingKey, newPin, { db });
             await db.meta.put({ key: 'pinFormat', value: format });
@@ -325,9 +325,11 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
 
     const restore = useCallback(
         async (file: Blob, phrase: string, newPin: string, format: PinFormat, onProgress?: (f: number) => void) => {
+            const { deriveRecovery } = await import('@/lib/backup/recovery');
             const keys = await deriveRecovery(phrase);
             let vault: Vault;
             try {
+                const { restoreBackup } = await import('@/lib/backup/format');
                 vault = await restoreBackup(file, keys.wrappingKey, newPin, { db, onProgress });
             } catch (error) {
                 if (!db.isOpen()) await db.open(); // a failed restore deletes what it wrote
@@ -348,6 +350,7 @@ export function SessionProvider({ children, db: injectedDb }: { children: ReactN
     const backupFile = useCallback(async () => {
         const vault = vaultRef.current;
         if (!vault) throw new Error('The vault is locked');
+        const { createBackup } = await import('@/lib/backup/format');
         return createBackup(vault);
     }, []);
 

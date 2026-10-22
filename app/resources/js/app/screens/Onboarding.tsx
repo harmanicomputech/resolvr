@@ -12,7 +12,7 @@ import {
     Smartphone,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import { useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 
 import { Button } from '@/components/ui/button';
 import type { Jurisdiction } from '@/lib/model/catalog';
@@ -21,11 +21,13 @@ import { cn } from '@/lib/utils';
 import { JurisdictionPicker } from '../components/jurisdiction-picker';
 import { Wordmark } from '../components/wordmark';
 import { Footer, Hero, Passcode, Row } from './onboarding-parts';
-import { Restore } from './Restore';
 import { haptic } from '../lib/haptics';
 import { passkeySupported } from '../lock/passkey';
 import { useSession } from '../session';
 import { useToast } from '../components/toaster';
+
+// The restore flow (and its word list) loads only when someone chooses it.
+const Restore = lazy(() => import('./Restore').then((m) => ({ default: m.Restore })));
 
 type Step = 'welcome' | 'privacy' | 'passcode' | 'finish' | 'restore';
 const STEPS: Step[] = ['welcome', 'privacy', 'passcode', 'finish'];
@@ -94,7 +96,11 @@ export function Onboarding({ startAt = 'welcome' }: { startAt?: Step }) {
                         aria-labelledby={`onb-${step}`}
                     >
                         {step === 'welcome' && <Welcome onNext={() => go('privacy')} onRestore={() => go('restore')} />}
-                        {step === 'restore' && <Restore onBack={() => go('welcome')} />}
+                        {step === 'restore' && (
+                            <Suspense fallback={null}>
+                                <Restore onBack={() => go('welcome')} />
+                            </Suspense>
+                        )}
                         {step === 'privacy' && <Privacy onBack={() => go('welcome')} onNext={() => go('passcode')} />}
                         {step === 'passcode' && (
                             <Passcode

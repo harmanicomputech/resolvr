@@ -1,5 +1,3 @@
-import { createSHA256 } from 'hash-wasm';
-
 /**
  * Talks to the Laravel backup API (`/api/backups`). Only ciphertext is sent:
  * the file from createBackup(), in chunks small enough for shared hosting.
@@ -65,6 +63,7 @@ async function messageFor(response: Response): Promise<string> {
 }
 
 export async function sha256OfBlob(blob: Blob, onProgress?: (f: number) => void): Promise<string> {
+    const { createSHA256 } = await import('hash-wasm');
     const hasher = await createSHA256();
     hasher.init();
     const step = 4 * 1024 * 1024;

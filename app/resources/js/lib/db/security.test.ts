@@ -71,7 +71,10 @@ describe('the hash chain detects tampering', () => {
         const first = ledger[0]!;
         const forged: LedgerEntry = {
             ...first,
-            body: { ...first.body, content: { ...first.body.content, title: 'Rewritten' } },
+            body: {
+                ...first.body,
+                snapshot: { ...first.body.snapshot, content: { ...first.body.snapshot.content, title: 'Rewritten' } },
+            },
         };
         await vault.put('ledger', String(first.seq).padStart(9, '0'), forged);
 

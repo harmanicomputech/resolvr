@@ -142,9 +142,12 @@ export function StatuteChips({ coverage }: { coverage: Coverage }) {
                                 'chip gap-1.5',
                                 active ? 'border-accent bg-accent-tint text-accent-text' : 'text-fg-subtle',
                             )}
-                            aria-label={`${statute.name}: ${active ? 'may be relevant' : 'not indicated by your entries'}`}
                         >
                             {statute.short}
+                            <span className="sr-only">
+                                {statute.short !== statute.name ? `: ${statute.name}` : ''}
+                                {active ? ', may be relevant' : ', not indicated by your entries'}
+                            </span>
                         </button>
                     </li>
                 ))}

@@ -1,3 +1,4 @@
+import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
 
 import { go, importSample, onboard } from './helpers';
@@ -31,6 +32,8 @@ test('share incidents with a lawyer: encrypted link, read-only viewer, view log,
     await expect(lawyer.getByText('Ahead of our call on Friday.')).toBeVisible();
     await expect(lawyer.getByText(/Not legal advice/).first()).toBeVisible();
     expect(errors).toEqual([]);
+    const axe = await new AxeBuilder({ page: lawyer }).withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa']).analyze();
+    expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
 
     // Without the key, nothing can be read.
     await lawyer.goto(link.split('#')[0]!);
