@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // Not served over HTTP: nothing in Resolvr reads or writes this disk from a URL.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
