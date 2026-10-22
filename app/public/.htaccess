@@ -5,6 +5,14 @@
 
     RewriteEngine On
 
+    # Force HTTPS (also behind a proxy that sets X-Forwarded-Proto).
+    RewriteCond %{HTTPS} !=on
+    RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+    # Never serve dotfiles (except Let's Encrypt challenges).
+    RewriteRule (^|/)\.(?!well-known/) - [F]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
@@ -17,6 +25,9 @@
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_URI} (.+)/$
     RewriteRule ^ %1 [L,R=301]
+
+    # LiteSpeed: keep the AI stream open while it drafts (ignored by Apache).
+    RewriteRule ^ai/ - [E=noabort:1,E=noconntimeout:1]
 
     # Send Requests To Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -37,4 +48,23 @@
     <If "%{REQUEST_URI} =~ m#^/build/assets/#">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </If>
+</IfModule>
+
+# Compression for everything except the AI drafting stream: compressing or
+# buffering a server-sent event stream holds the text back until the end.
+<IfModule mod_setenvif.c>
+    SetEnvIf Request_URI "^/ai/" no-gzip=1 dont-vary=1 no-brotli=1
+</IfModule>
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain application/javascript application/json application/manifest+json image/svg+xml
+</IfModule>
+<IfModule mod_headers.c>
+    <If "%{REQUEST_URI} =~ m#^/ai/#">
+        Header set X-Accel-Buffering "no"
+        Header set Cache-Control "no-cache, no-store"
+    </If>
+</IfModule>
+# LiteSpeed: no page cache and no buffering for the app's dynamic responses.
+<IfModule LiteSpeed>
+    CacheDisable public /
 </IfModule>

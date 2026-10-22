@@ -35,3 +35,4 @@ coverage/
 vendor/
 app/.phpunit.cache/
 .shot*.mjs
+dist/

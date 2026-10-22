@@ -86,28 +86,41 @@ Every successful build is kept as the `landing-dist` workflow artifact for 7 day
 
 ---
 
-## App → app.resolvrapp.com (waitlist API now, full app in Phase 2)
+## App → app.resolvrapp.com
 
-The landing site's waitlist form posts to `https://app.resolvrapp.com/api/waitlist`, so **the app must be deployed for the waitlist to work**. The full release process (release folders, shared `.env` and `storage`, `current` symlink, migrations, caches, rollback) is prompt **D1** and will be added to this file and to the workflow as the `deploy-app` job.
+The app is Laravel 12 + a built front end. Nothing Node-based runs on the server: CI (or your machine) builds everything, the server only runs PHP and cron. The landing site's waitlist form posts to `https://app.resolvrapp.com/api/waitlist`, so **the app must be up for the waitlist to work**.
 
-Minimum the waitlist needs in the meantime:
+### One-time server setup (DirectAdmin)
 
-1. Subdomain `app.resolvrapp.com` with PHP 8.3 (bcmath, ctype, fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml, sodium) and Let's Encrypt SSL.
-2. MySQL database and user (DirectAdmin → MySQL Management).
-3. `.env` (outside `public_html`):
+1. **Domain Setup**: add `app.resolvrapp.com`. **PHP 8.3** with `bcmath, ctype, fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml, gd` (or `imagick`) and `sodium`. `post_max_size` and `upload_max_filesize` at least 5M (backups and shares upload in 4 MB chunks).
+2. **SSL**: issue Let's Encrypt certificates for both `resolvrapp.com` and `app.resolvrapp.com`.
+3. **MySQL Management**: create a database and a user with all privileges on it.
+4. **SSH** (recommended): enable SSH for the user and add the deploy public key to `~/.ssh/authorized_keys`. Without SSH, use the zip route below.
+5. Create the shared folder and settings, once:
+
+   ```bash
+   cd /home/USER/domains/app.resolvrapp.com
+   mkdir -p shared && nano shared/.env      # values below
+   chmod 600 shared/.env
+   ```
 
    ```dotenv
+   APP_NAME=Resolvr
    APP_ENV=production
    APP_DEBUG=false
+   APP_KEY=base64:...            # php -r 'echo "base64:".base64_encode(random_bytes(32)), PHP_EOL;'  (never change it)
    APP_URL=https://app.resolvrapp.com
+   LOG_CHANNEL=daily
+   LOG_LEVEL=warning
    DB_CONNECTION=mysql
    DB_HOST=localhost
+   DB_PORT=3306
    DB_DATABASE=...
    DB_USERNAME=...
    DB_PASSWORD=...
-   QUEUE_CONNECTION=database
-   CACHE_STORE=file
    SESSION_DRIVER=file
+   CACHE_STORE=file
+   QUEUE_CONNECTION=database
    MAIL_MAILER=smtp
    MAIL_SCHEME=smtps
    MAIL_HOST=mail.resolvrapp.com
@@ -123,15 +136,75 @@ Minimum the waitlist needs in the meantime:
    VAPID_PRIVATE_KEY=...
    ```
 
-   Encrypted backups are stored under `storage/app/backups` and attorney shares under `storage/app/shares` (`SHARE_MAX_BYTES`, default 100 MB) (outside `public_html`; a `Require all denied` `.htaccess` is written there too). Set `BACKUP_MAX_BYTES` / `BACKUP_TOTAL_BYTES` to fit the hosting plan's disk. Chunks are 4 MB, so PHP's `post_max_size` must be at least 5M (the DirectAdmin default of 8M is fine).
-
-4. `php artisan migrate --force`, then `config:cache` and `route:cache`.
-5. Cron (DirectAdmin → Cron Jobs), every minute:
+6. **Cron Jobs**, every minute (`* * * * *`):
 
    ```
-   * * * * * cd /home/USER/domains/app.resolvrapp.com/current && php artisan schedule:run >> /dev/null 2>&1
+   cd /home/USER/domains/app.resolvrapp.com/current && php artisan schedule:run >> /dev/null 2>&1
    ```
 
-   The scheduler runs `queue:work --stop-when-empty` each minute (waitlist confirmation emails), `reminders:send` each minute (web push reminders, when VAPID keys are set) and tidies unfinished backup uploads daily, and `shares:prune` hourly (expired attorney shares).
+   The scheduler runs `queue:work --stop-when-empty` (waitlist emails), `reminders:send` (web push, when VAPID keys are set), `shares:prune` hourly and tidies unfinished backup uploads daily. If `php` is not 8.3 on the command line, use the full path DirectAdmin shows (for example `/usr/local/php83/bin/php`).
 
-6. If the server sits behind a proxy or CDN, configure trusted proxies so rate limiting sees real client IPs.
+### Server layout
+
+```
+/home/USER/domains/app.resolvrapp.com/
+├── releases/20261022094209/   one folder per release; the last 3 are kept
+├── shared/.env                production settings (created once, above)
+├── shared/storage/            logs, sessions, encrypted backups (app/backups) and shares (app/shares)
+├── current -> releases/20261022094209
+├── public_html -> current/public          default ("symlink" mode)
+└── deploy/                    release scripts, uploaded by CI
+```
+
+If the host does not allow `public_html` to be a symlink, set `APP_PUBLIC_MODE=shim`: `public_html/` stays a real folder, each release copies the public assets into it, and `public_html/index.php` (from `deploy/app/public_html-shim/`) boots the app from `../current`.
+
+Encrypted backups and attorney shares are stored under `shared/storage/app/{backups,shares}`, outside the web root; a `Require all denied` `.htaccess` is written there as a second guard. Size limits: `BACKUP_MAX_BYTES` (250 MB), `BACKUP_TOTAL_BYTES` (20 GB) and `SHARE_MAX_BYTES` (100 MB); lower them to fit the plan's disk.
+
+### What the pipeline does (`.github/workflows/ci-deploy.yml`)
+
+Path filters decide what runs: a change under `landing/` (or the shared tokens and fonts) builds and deploys only the landing site; a change under `app/` or `deploy/app/` builds and deploys only the app.
+
+1. **app**: Pint, Larastan, ESLint, TypeScript, Vitest, a production build and Pest.
+2. **e2e**: Playwright against both sites.
+3. **package-app** (main only): `deploy/app/package.sh` builds the front end and installs Composer packages with `--no-dev --optimize-autoloader` into a clean copy, producing `resolvr-app-<sha>.tar.gz` (no `.env`, no `storage`, no tests or `node_modules`).
+4. **deploy-app**: uploads the tarball and `deploy/app/` over SSH, then runs `release.sh`, which:
+   - unpacks into `releases/<timestamp>`, links `shared/.env` and `shared/storage`;
+   - runs `php artisan migrate --force`, `storage:link` and `optimize` (config, route, view and event caches);
+   - **only then** switches `current` atomically, points `public_html` at it (or copies assets in shim mode), runs `queue:restart` and keeps the last 3 releases.
+
+   If a migration fails, the switch never happens and the previous release keeps serving.
+5. **Smoke test**: `/up`, the home page, the manifest's content type, `sw.js` not cached, the CSP header and the waitlist CORS preflight.
+
+GitHub secrets (environment `production`): `SSH_HOST`, `SSH_USER`, `SSH_KEY`, optional `SSH_PORT`, `APP_PATH` (for example `/home/USER/domains/app.resolvrapp.com`), optional `APP_PHP` (PHP binary) and `APP_PUBLIC_MODE` (`symlink` or `shim`). The landing job's `LANDING_PATH` and FTP fallback are described above.
+
+### Deploying by hand
+
+```bash
+deploy/app/package.sh dist                      # builds dist/resolvr-app-<sha>.tar.gz
+scp -r deploy/app dist/resolvr-app-*.tar.gz USER@HOST:/home/USER/domains/app.resolvrapp.com/deploy/
+ssh USER@HOST 'bash /home/USER/domains/app.resolvrapp.com/deploy/release.sh /home/USER/domains/app.resolvrapp.com /home/USER/domains/app.resolvrapp.com/deploy/resolvr-app-<sha>.tar.gz'
+```
+
+**Rollback**: `bash deploy/rollback.sh /home/USER/domains/app.resolvrapp.com` points `current` at the previous release and rebuilds its caches. Resolvr's migrations only add tables and columns, so the older release keeps working against the newer schema.
+
+### Without SSH (File Manager only)
+
+`deploy/app/package-zip.sh dist/resolvr-app-<sha>.tar.gz` turns a release into a zip with `resolvr-app/` (upload next to `public_html`, never inside it), `public_html/` (with an `index.php` that loads `../resolvr-app`) and `INSTALL.txt`. Migrations run through a one-off cron job (`php artisan migrate --force && php artisan optimize`), removed after it has run once. CI attaches the tarball to every main-branch run, so the zip can be made from it.
+
+### What the app's `.htaccess` handles (`app/public/.htaccess`)
+
+- HTTPS redirect, no directory listings, no dotfiles (except `.well-known`), Laravel's front controller and the `Authorization` header pass-through used by the backup, share and reminder APIs.
+- `sw.js` and the manifests are never cached (`no-cache, no-store`) and served with `Service-Worker-Allowed: /`; `.webmanifest` gets `application/manifest+json`; hashed `/build/assets/*` are cached for a year, immutable.
+- Compression for text responses **except** `/ai/*`: the drafting stream (server-sent events) must not be compressed or buffered, so it also sends `X-Accel-Buffering: no`, and LiteSpeed is told not to abort or time out the connection. LiteSpeed's page cache is disabled for the app.
+
+### Smoke-test checklist (after the first deploy)
+
+- [ ] `https://resolvrapp.com` and `https://app.resolvrapp.com` load over HTTPS; `http://` redirects.
+- [ ] `https://app.resolvrapp.com/up` returns 200.
+- [ ] The waitlist form on the landing site succeeds, and the confirmation email arrives (cron is running the queue).
+- [ ] The app installs as a PWA from `app.resolvrapp.com` (Chrome: install icon; iPhone: Share > Add to Home Screen), opens offline after the first visit, and DevTools > Application shows the service worker at scope `/`.
+- [ ] AI drafting streams text word by word (if `ANTHROPIC_API_KEY` is set). If text only appears at the end, the host is buffering: check the `/ai/` rules above with the host.
+- [ ] Settings > Backup > Back up now succeeds, and `shared/storage/app/backups/` holds a `.bin` file.
+- [ ] Documents > Share with a lawyer makes a link that opens in a private window.
+- [ ] Cron is firing: `storage/logs` shows no scheduler errors, and DirectAdmin's cron log shows runs every minute.
+- [ ] Reminders (if VAPID keys are set): turn one on for a minute from now and wait for it.

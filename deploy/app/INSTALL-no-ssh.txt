@@ -1,0 +1,25 @@
+Resolvr app: installing on DirectAdmin without SSH
+==================================================
+
+Full guide: docs/DEPLOY.md in the repository. In short:
+
+1. DirectAdmin > Domain Setup: create app.resolvrapp.com with PHP 8.3
+   (bcmath, ctype, fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml,
+   gd or imagick, sodium) and issue a Let's Encrypt certificate.
+2. DirectAdmin > MySQL Management: create a database and a user.
+3. File Manager, in /home/USER/domains/app.resolvrapp.com/:
+   - upload resolvr-app/ next to public_html (NOT inside it);
+   - upload the contents of public_html/ into public_html/.
+4. In resolvr-app/, copy .env.example to .env and fill in APP_KEY, APP_URL,
+   DB_*, MAIL_*, CORS_ALLOWED_ORIGINS=https://resolvrapp.com and, optionally,
+   ANTHROPIC_API_KEY and the VAPID keys. APP_ENV=production, APP_DEBUG=false.
+   (APP_KEY: any "base64:" + 32 random bytes in base64; keep it forever.)
+5. Run the database migrations once with a temporary cron job
+   (DirectAdmin > Cron Jobs, every minute), then delete it:
+     cd /home/USER/domains/app.resolvrapp.com/resolvr-app && php artisan migrate --force && php artisan optimize
+6. Add the permanent cron job, every minute:
+     cd /home/USER/domains/app.resolvrapp.com/resolvr-app && php artisan schedule:run >> /dev/null 2>&1
+7. Open https://app.resolvrapp.com/up: it should say the app is up.
+
+Updating later: upload the new resolvr-app/ over the old one (keep .env and
+storage/), replace public_html/ (keep index.php), and run step 5 again.

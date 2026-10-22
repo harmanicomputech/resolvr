@@ -40,6 +40,7 @@ jobs:
               - 'app/resources/js/lib/design/**'
             app:
               - 'app/**'
+              - 'deploy/app/**'
 
   landing:
     needs: changes
@@ -179,5 +180,78 @@ jobs:
           curl -fsS -o /dev/null -w '%{http_code} /privacy\n' https://resolvrapp.com/privacy
           curl -fsSI https://resolvrapp.com/ | grep -i '^content-security-policy'
 
-  # deploy-app: added with D1 in Phase 2 (release folders, shared .env/storage,
-  # migrate, caches, symlink swap). See docs/DEPLOY.md.
+  package-app:
+    needs: [app, e2e]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && needs.app.result == 'success' && needs.e2e.result != 'failure'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: bcmath, ctype, fileinfo, mbstring, openssl, pdo_mysql, tokenizer, xml, sodium
+          coverage: none
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: deploy/app/package.sh dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: app-release
+          path: dist/*.tar.gz
+          retention-days: 14
+
+  deploy-app:
+    needs: package-app
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      USE_SSH: ${{ secrets.SSH_HOST != '' && secrets.APP_PATH != '' }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: deploy
+      - uses: actions/download-artifact@v4
+        with:
+          name: app-release
+          path: dist
+
+      - name: Explain how to deploy without SSH
+        if: env.USE_SSH != 'true'
+        run: |
+          echo "::warning::App deploys need SSH (SSH_HOST, SSH_USER, SSH_KEY, APP_PATH). The release tarball is attached to this run; see docs/DEPLOY.md for the manual (no-SSH) route."
+
+      - name: Upload and release over SSH
+        if: env.USE_SSH == 'true'
+        env:
+          SSH_KEY: ${{ secrets.SSH_KEY }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PORT: ${{ secrets.SSH_PORT || '22' }}
+          APP_PATH: ${{ secrets.APP_PATH }}
+          APP_PHP: ${{ secrets.APP_PHP || 'php' }}
+          APP_PUBLIC_MODE: ${{ secrets.APP_PUBLIC_MODE || 'symlink' }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null
+          SSH="ssh -i ~/.ssh/id_deploy -p $SSH_PORT $SSH_USER@$SSH_HOST"
+          TARBALL="$(ls dist/*.tar.gz)"
+          $SSH "mkdir -p '$APP_PATH/deploy'"
+          scp -i ~/.ssh/id_deploy -P "$SSH_PORT" -r deploy/app/. "$SSH_USER@$SSH_HOST:$APP_PATH/deploy/"
+          scp -i ~/.ssh/id_deploy -P "$SSH_PORT" "$TARBALL" "$SSH_USER@$SSH_HOST:$APP_PATH/deploy/"
+          $SSH "PHP='$APP_PHP' PUBLIC_MODE='$APP_PUBLIC_MODE' bash '$APP_PATH/deploy/release.sh' '$APP_PATH' '$APP_PATH/deploy/$(basename "$TARBALL")' && rm -f '$APP_PATH/deploy/'*.tar.gz"
+
+      - name: Smoke test
+        if: env.USE_SSH == 'true'
+        run: |
+          curl -fsS -o /dev/null -w '%{http_code} /up\n' https://app.resolvrapp.com/up
+          curl -fsS -o /dev/null -w '%{http_code} /\n' https://app.resolvrapp.com/
+          curl -fsSI https://app.resolvrapp.com/manifest.webmanifest | grep -i '^content-type: application/manifest+json'
+          curl -fsSI https://app.resolvrapp.com/sw.js | grep -i '^cache-control: no-cache'
+          curl -fsSI https://app.resolvrapp.com/ | grep -i '^content-security-policy'
+          # The waitlist API answers the landing site's CORS preflight.
+          curl -fsS -o /dev/null -w '%{http_code} CORS\n' -X OPTIONS https://app.resolvrapp.com/api/waitlist \
+            -H 'Origin: https://resolvrapp.com' -H 'Access-Control-Request-Method: POST'
