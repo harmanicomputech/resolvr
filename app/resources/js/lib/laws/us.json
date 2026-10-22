@@ -1,54 +1,206 @@
 {
   "id": "us",
-  "version": "2026.1",
+  "version": "2026.2",
   "name": "United States (federal)",
   "reviewedBy": null,
-  "disclaimer": "General information about US federal law to help you organise your record. It is not legal advice and may not apply to your situation. State and local laws may also apply.",
+  "disclaimer": "General information about US federal law to help you organise your record. It is not legal advice and may not apply to your situation. State and local laws may also apply, sometimes with different time limits.",
+  "lawyerHelp": {
+    "label": "Find legal help (American Bar Association)",
+    "url": "https://www.americanbar.org/groups/legal_services/flh-home/"
+  },
   "statutes": [
     {
       "id": "title-vii",
       "short": "Title VII",
       "name": "Civil Rights Act of 1964, Title VII",
+      "summary": "Protects against discrimination and harassment because of race, colour, religion, sex (including pregnancy, sexual orientation and gender identity) or national origin, and against retaliation for complaining. Applies to employers with 15 or more employees.",
       "triggers": [
         "Harassment",
         "Discrimination",
         "Sexual",
         "Racial",
+        "Race",
+        "Ethnic",
+        "Ethnicity",
         "Gender",
-        "Religion",
+        "Sex",
         "Religious",
+        "Religion",
         "National Origin",
         "Hostile Work",
-        "Retaliation"
-      ]
+        "Retaliation",
+        "Pregnancy",
+        "Pregnancy-Related",
+        "Sexual Orientation",
+        "Offensive Language",
+        "Unwanted Physical Contact",
+        "Offensive Materials"
+      ],
+      "agency": {
+        "name": "Equal Employment Opportunity Commission (EEOC)",
+        "url": "https://www.eeoc.gov/filing-charge-discrimination"
+      },
+      "limitation": {
+        "days": 180,
+        "from": "incident",
+        "label": "File a charge with the EEOC",
+        "note": "Usually 180 days from the incident, or 300 days where a state or local agency also enforces a similar law. For ongoing harassment the period can run from the most recent incident."
+      }
     },
-    { "id": "ada", "short": "ADA", "name": "Americans with Disabilities Act", "triggers": ["Disability"] },
-    { "id": "adea", "short": "ADEA", "name": "Age Discrimination in Employment Act", "triggers": ["Age"] },
+    {
+      "id": "ada",
+      "short": "ADA",
+      "name": "Americans with Disabilities Act",
+      "summary": "Protects people with disabilities from discrimination and harassment, and requires reasonable accommodations unless they cause undue hardship. Applies to employers with 15 or more employees.",
+      "triggers": ["Disability", "Disability-Related", "Accommodate Disability"],
+      "agency": {
+        "name": "Equal Employment Opportunity Commission (EEOC)",
+        "url": "https://www.eeoc.gov/filing-charge-discrimination"
+      },
+      "limitation": {
+        "days": 180,
+        "from": "incident",
+        "label": "File a charge with the EEOC",
+        "note": "Usually 180 days from the incident, or 300 days where a state or local agency also enforces a similar law. For ongoing harassment the period can run from the most recent incident."
+      }
+    },
+    {
+      "id": "adea",
+      "short": "ADEA",
+      "name": "Age Discrimination in Employment Act",
+      "summary": "Protects people aged 40 and over from age discrimination and harassment. Applies to employers with 20 or more employees.",
+      "triggers": ["Age", "Age-Based"],
+      "agency": {
+        "name": "Equal Employment Opportunity Commission (EEOC)",
+        "url": "https://www.eeoc.gov/filing-charge-discrimination"
+      },
+      "limitation": {
+        "days": 180,
+        "from": "incident",
+        "label": "File a charge with the EEOC",
+        "note": "Usually 180 days from the incident, or 300 days where a state or local agency also enforces a similar law. For ongoing harassment the period can run from the most recent incident."
+      }
+    },
     {
       "id": "fmla",
       "short": "FMLA",
       "name": "Family and Medical Leave Act",
-      "triggers": ["FMLA", "Medical Leave", "Maternity", "Paternity"]
+      "summary": "Gives eligible employees up to 12 weeks of unpaid, job-protected leave for serious health conditions, a new child or caring for family, and protects against interference or retaliation.",
+      "triggers": ["FMLA", "Medical Leave", "Maternity", "Paternity"],
+      "agency": {
+        "name": "US Department of Labor, Wage and Hour Division",
+        "url": "https://www.dol.gov/agencies/whd/contact/complaints"
+      },
+      "limitation": {
+        "days": 730,
+        "from": "incident",
+        "label": "Bring an FMLA claim",
+        "note": "Generally two years from the last violation, or three years if it was wilful."
+      }
     },
-    { "id": "flsa", "short": "FLSA", "name": "Fair Labor Standards Act", "triggers": ["Wage", "Hour"] },
+    {
+      "id": "flsa",
+      "short": "FLSA",
+      "name": "Fair Labor Standards Act",
+      "summary": "Sets the federal minimum wage, overtime pay and record-keeping rules, and protects employees who complain about pay from retaliation.",
+      "triggers": ["Wage", "Hour", "Hours Reduction"],
+      "agency": {
+        "name": "US Department of Labor, Wage and Hour Division",
+        "url": "https://www.dol.gov/agencies/whd/contact/complaints"
+      },
+      "limitation": {
+        "days": 730,
+        "from": "incident",
+        "label": "Bring a wage claim",
+        "note": "Generally two years from each underpayment, or three years if it was wilful."
+      }
+    },
     {
       "id": "osha",
       "short": "OSHA",
       "name": "Occupational Safety and Health Act",
-      "triggers": ["Unsafe", "Safety", "OSHA", "Whistleblower"]
+      "summary": "Requires a workplace free from serious recognised hazards, and protects employees who raise safety concerns from retaliation.",
+      "triggers": ["Unsafe", "Safety", "OSHA", "Whistleblower"],
+      "agency": {
+        "name": "Occupational Safety and Health Administration (OSHA)",
+        "url": "https://www.whistleblowers.gov/complaint_page"
+      },
+      "limitation": {
+        "days": 30,
+        "from": "incident",
+        "label": "Report safety retaliation to OSHA",
+        "note": "Retaliation for raising a safety concern must usually be reported within 30 days. Other whistleblower laws enforced by OSHA allow longer."
+      }
     },
     {
       "id": "epa",
       "short": "EPA",
       "name": "Equal Pay Act",
-      "triggers": ["Equal Pay", "Pay / Compensation", "Compensation"]
+      "summary": "Requires equal pay for men and women doing substantially equal work in the same workplace.",
+      "triggers": ["Equal Pay", "Pay / Compensation", "Compensation"],
+      "agency": {
+        "name": "Equal Employment Opportunity Commission (EEOC)",
+        "url": "https://www.eeoc.gov/filing-charge-discrimination"
+      },
+      "limitation": {
+        "days": 730,
+        "from": "incident",
+        "label": "Bring an Equal Pay Act claim",
+        "note": "Generally two years from the unequal paycheque, or three years if wilful. No EEOC charge is needed first, though Title VII claims about pay do need one."
+      }
     },
-    { "id": "gina", "short": "GINA", "name": "Genetic Information Nondiscrimination Act", "triggers": ["Genetic"] },
+    {
+      "id": "gina",
+      "short": "GINA",
+      "name": "Genetic Information Nondiscrimination Act",
+      "summary": "Prohibits using genetic information, including family medical history, in employment decisions.",
+      "triggers": ["Genetic"],
+      "agency": {
+        "name": "Equal Employment Opportunity Commission (EEOC)",
+        "url": "https://www.eeoc.gov/filing-charge-discrimination"
+      },
+      "limitation": {
+        "days": 180,
+        "from": "incident",
+        "label": "File a charge with the EEOC",
+        "note": "Usually 180 days from the incident, or 300 days where a state or local agency also enforces a similar law. For ongoing harassment the period can run from the most recent incident."
+      }
+    },
     {
       "id": "title-ix",
       "short": "Title IX",
       "name": "Education Amendments of 1972, Title IX",
-      "triggers": ["Education", "Title IX"]
+      "summary": "Prohibits sex discrimination, including sexual harassment, in education programmes that receive federal funding, including for employees of schools and universities.",
+      "triggers": ["Education", "Title IX"],
+      "agency": {
+        "name": "US Department of Education, Office for Civil Rights",
+        "url": "https://ocrcas.ed.gov/"
+      },
+      "limitation": {
+        "days": 180,
+        "from": "incident",
+        "label": "File a complaint with the Office for Civil Rights",
+        "note": "Usually within 180 days of the incident."
+      }
+    }
+  ],
+  "support": [
+    {
+      "name": "988 Suicide & Crisis Lifeline",
+      "description": "Free, confidential support any time. Call or text 988.",
+      "url": "https://988lifeline.org/",
+      "contact": "Call or text 988"
+    },
+    {
+      "name": "NAMI HelpLine",
+      "description": "Information and support for mental health, weekdays.",
+      "url": "https://www.nami.org/help",
+      "contact": "1-800-950-6264"
+    },
+    {
+      "name": "EEOC",
+      "description": "How to file a workplace discrimination charge.",
+      "url": "https://www.eeoc.gov/"
     }
   ]
 }

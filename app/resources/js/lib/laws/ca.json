@@ -1,0 +1,152 @@
+{
+  "id": "ca",
+  "version": "2026.2",
+  "name": "Canada",
+  "reviewedBy": null,
+  "disclaimer": "General information to help you organise your record. It is not legal advice. Most workplaces are covered by provincial or territorial law; federal law covers banks, airlines, telecoms, federal government and some others. Time limits differ by province.",
+  "lawyerHelp": {
+    "label": "Find a lawyer through your provincial law society",
+    "url": "https://flsc.ca/law-societies/"
+  },
+  "statutes": [
+    {
+      "id": "provincial-human-rights",
+      "short": "Provincial human rights code",
+      "name": "Provincial and territorial human rights laws (for example the Ontario Human Rights Code)",
+      "summary": "Protect against discrimination and harassment at work on grounds such as race, sex, sexual orientation, gender identity, disability, age, religion and family status, and against reprisal for complaining.",
+      "triggers": [
+        "Harassment",
+        "Discrimination",
+        "Sexual",
+        "Racial",
+        "Race",
+        "Ethnic",
+        "Ethnicity",
+        "Gender",
+        "Sex",
+        "Religious",
+        "Religion",
+        "National Origin",
+        "Hostile Work",
+        "Retaliation",
+        "Pregnancy",
+        "Pregnancy-Related",
+        "Sexual Orientation",
+        "Offensive Language",
+        "Unwanted Physical Contact",
+        "Offensive Materials",
+        "Age",
+        "Age-Based",
+        "Disability",
+        "Disability-Related",
+        "Accommodate"
+      ],
+      "agency": {
+        "name": "Your provincial or territorial human rights tribunal or commission",
+        "url": "https://www.chrc-ccdp.gc.ca/en/about-human-rights/provincial-and-territorial-human-rights-agencies"
+      },
+      "limitation": {
+        "days": 365,
+        "from": "incident",
+        "label": "Apply to your human rights tribunal",
+        "note": "In most provinces, one year from the incident or the last of a series of incidents. Check your province: some differ."
+      }
+    },
+    {
+      "id": "chra",
+      "short": "CHRA",
+      "name": "Canadian Human Rights Act (federally regulated workplaces)",
+      "summary": "Protects employees of federally regulated employers from discrimination and harassment on prohibited grounds.",
+      "triggers": [
+        "Harassment",
+        "Discrimination",
+        "Sexual",
+        "Racial",
+        "Race",
+        "Ethnic",
+        "Ethnicity",
+        "Gender",
+        "Sex",
+        "Religious",
+        "Religion",
+        "National Origin",
+        "Hostile Work",
+        "Retaliation",
+        "Pregnancy",
+        "Pregnancy-Related",
+        "Sexual Orientation",
+        "Offensive Language",
+        "Unwanted Physical Contact",
+        "Offensive Materials",
+        "Age",
+        "Age-Based",
+        "Disability",
+        "Disability-Related",
+        "Accommodate",
+        "Genetic"
+      ],
+      "agency": {
+        "name": "Canadian Human Rights Commission",
+        "url": "https://www.chrc-ccdp.gc.ca/"
+      },
+      "limitation": {
+        "days": 365,
+        "from": "incident",
+        "label": "Complain to the Canadian Human Rights Commission",
+        "note": "Within one year of the last incident. The Commission can sometimes accept a later complaint."
+      }
+    },
+    {
+      "id": "clc-unjust-dismissal",
+      "short": "Unjust dismissal (Canada Labour Code)",
+      "name": "Canada Labour Code Part III (federally regulated workplaces)",
+      "summary": "Non-managerial employees with 12 months' service can complain about unjust dismissal. Part III also covers wages, hours and leave.",
+      "triggers": ["Termination", "Constructive Dismissal", "Wrongful Termination", "Wage", "Hour", "Leave"],
+      "agency": {
+        "name": "Labour Program, Employment and Social Development Canada",
+        "url": "https://www.canada.ca/en/employment-social-development/services/labour-standards/reports/unjust-dismissal.html"
+      },
+      "limitation": {
+        "days": 90,
+        "from": "incident",
+        "label": "Make an unjust dismissal complaint",
+        "note": "Within 90 days of being dismissed. Wage and other Part III complaints generally allow six months."
+      }
+    },
+    {
+      "id": "ohs-reprisal",
+      "short": "Health and safety reprisal",
+      "name": "Occupational health and safety laws (Canada Labour Code Part II and provincial acts)",
+      "summary": "Employers must keep workplaces safe and prevent harassment and violence. Workers who raise safety concerns or refuse unsafe work are protected from reprisal.",
+      "triggers": ["Unsafe", "Safety", "Whistleblower", "Intimidation", "Unwanted Physical Contact"],
+      "agency": {
+        "name": "Your provincial health and safety regulator, or the federal Labour Program",
+        "url": "https://www.canada.ca/en/employment-social-development/services/health-safety.html"
+      },
+      "limitation": {
+        "days": 90,
+        "from": "incident",
+        "label": "Make a reprisal complaint",
+        "note": "For federally regulated workplaces, within 90 days. Provincial limits vary."
+      }
+    }
+  ],
+  "support": [
+    {
+      "name": "9-8-8 Suicide Crisis Helpline",
+      "description": "Free support any time, in English or French.",
+      "url": "https://988.ca/",
+      "contact": "Call or text 988"
+    },
+    {
+      "name": "Canadian Mental Health Association",
+      "description": "Local mental health services and information.",
+      "url": "https://cmha.ca/"
+    },
+    {
+      "name": "Canadian Human Rights Commission",
+      "description": "Information about human rights complaints.",
+      "url": "https://www.chrc-ccdp.gc.ca/"
+    }
+  ]
+}

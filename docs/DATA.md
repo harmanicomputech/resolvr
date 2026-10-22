@@ -80,6 +80,13 @@ vault.lock(); // forgets the key; register cache clean-up with vault.onLock()
 - The **service worker** words the notification: "A quiet moment to note anything from today…" or, when disguised (a setting, or always in stealth mode), "Reminder: Time to jot down today’s notes" with the calculator icon. It reads one plaintext flag, `meta.reminderStyle`, because it runs while the vault is locked. Nothing about incidents is ever sent or shown.
 - Push services (Google, Apple, Mozilla) see that this site sent a push, not its contents. Expired subscriptions (404/410) are deleted; ten failures in a row also remove one.
 
+## Jurisdiction packs and time limits (P3.1)
+
+- Legal content lives in versioned JSON packs, `app/resources/js/lib/laws/{us,uk,ng,ca}.json`: for each statute a plain-language `summary`, the incident-type `triggers` (whole-word matches), where to go (`agency`), and a typical `limitation` (days, what starts the clock, a label and a note). Packs also carry `lawyerHelp` and `support` links.
+- `reviewedBy` is `null` in every pack until a qualified lawyer for that jurisdiction reviews it; the app and the case file then say "Not yet reviewed by a lawyer". Bump `version` with every content change. Packs are bundled with the app, so they work offline and nothing about the record is sent anywhere to use them.
+- **Time limits** (`lib/laws/deadlines.ts`) are counted cautiously from the *first* incident that suggests each law, giving the earliest possible date. If that date has passed, the dashboard shows the date counted from the most recent related incident and says that some limits may have passed, without alarm. Limits that run from something the record does not hold (for example the end of employment) are explained but not counted.
+- Always general information, never legal advice: every surface showing a pack says so and links to a lawyer-finding service.
+
 ## Storage layout (IndexedDB via Dexie, database `resolvr`)
 
 | Table | Contents |

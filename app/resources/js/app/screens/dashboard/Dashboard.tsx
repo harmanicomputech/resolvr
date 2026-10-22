@@ -15,7 +15,7 @@ import {
     useSortable,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { CalendarDays, ChartArea, ChartPie, Gauge, ListChecks, Plus, Scale, Sparkles } from 'lucide-react';
+import { CalendarDays, ChartArea, ChartPie, Gauge, Hourglass, ListChecks, Plus, Scale, Sparkles } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { useRef, useState, type ReactNode } from 'react';
 
@@ -29,6 +29,7 @@ import { useTilt } from '../../hooks/use-tilt';
 import { useSession } from '../../session';
 import { CoverageChips, PatternList, RecentList, StatTiles } from './Cards';
 import { DashCard, type DragHandleProps } from './DashCard';
+import { DeadlineTracker } from './Deadlines';
 import { FirstRun } from './FirstRun';
 import { Heatmap } from './Heatmap';
 import { ReadinessPath } from './ReadinessPath';
@@ -37,8 +38,17 @@ import { SeverityDonut } from './SeverityDonut';
 import { TrendChart } from './TrendChart';
 import { useCaseData, type CaseData } from './use-case-data';
 
-type CardId = 'score' | 'trend' | 'severity' | 'heatmap' | 'patterns' | 'coverage' | 'recent';
-const DEFAULT_ORDER: CardId[] = ['score', 'trend', 'severity', 'heatmap', 'patterns', 'coverage', 'recent'];
+type CardId = 'score' | 'trend' | 'deadlines' | 'coverage' | 'severity' | 'heatmap' | 'patterns' | 'recent';
+const DEFAULT_ORDER: CardId[] = [
+    'score',
+    'trend',
+    'deadlines',
+    'coverage',
+    'severity',
+    'heatmap',
+    'patterns',
+    'recent',
+];
 const ORDER_KEY = 'resolvr:dashboard-order';
 
 /** Column span on the 6-column desktop grid. */
@@ -47,8 +57,9 @@ const span: Record<CardId, string> = {
     trend: 'lg:col-span-4',
     severity: 'lg:col-span-2',
     heatmap: 'lg:col-span-4',
-    patterns: 'lg:col-span-3',
+    deadlines: 'lg:col-span-3',
     coverage: 'lg:col-span-3',
+    patterns: 'lg:col-span-6',
     recent: 'lg:col-span-6',
 };
 
@@ -56,7 +67,10 @@ function loadOrder(): CardId[] {
     try {
         const saved = JSON.parse(localStorage.getItem(ORDER_KEY) ?? '[]') as CardId[];
         const valid = saved.filter((id) => DEFAULT_ORDER.includes(id));
-        return valid.length === DEFAULT_ORDER.length ? valid : DEFAULT_ORDER;
+        // Keep the user's order; cards added in later versions join at their default place.
+        const missing = DEFAULT_ORDER.filter((id) => !valid.includes(id));
+        for (const id of missing) valid.splice(Math.min(DEFAULT_ORDER.indexOf(id), valid.length), 0, id);
+        return valid;
     } catch {
         return DEFAULT_ORDER;
     }
@@ -161,7 +175,13 @@ function Bento({ data }: { data: CaseData }) {
             case 'coverage':
                 return (
                     <DashCard title="Laws that may apply" icon={<Scale className="size-4" />} handle={handle}>
-                        <CoverageChips coverage={data.coverage} ready={data.jurisdictionReady} />
+                        <CoverageChips coverage={data.coverage} />
+                    </DashCard>
+                );
+            case 'deadlines':
+                return (
+                    <DashCard title="Time limits" icon={<Hourglass className="size-4" />} handle={handle}>
+                        <DeadlineTracker summary={data.deadlines} pack={data.pack} />
                     </DashCard>
                 );
             case 'recent':

@@ -1,0 +1,112 @@
+{
+  "id": "ng",
+  "version": "2026.2",
+  "name": "Nigeria",
+  "reviewedBy": null,
+  "disclaimer": "General information to help you organise your record. It is not legal advice. Some laws apply only in states that have adopted them. If your employer is a government body, a short time limit may apply, so get advice quickly.",
+  "lawyerHelp": {
+    "label": "Free legal help (Legal Aid Council of Nigeria)",
+    "url": "https://legalaidcouncil.gov.ng/"
+  },
+  "statutes": [
+    {
+      "id": "constitution-s42",
+      "short": "Constitution, s.42",
+      "name": "Constitution of the Federal Republic of Nigeria 1999, section 42",
+      "summary": "Guarantees freedom from discrimination because of community, ethnic group, place of origin, sex, religion or political opinion. Fundamental rights claims are not subject to ordinary limitation periods.",
+      "triggers": [
+        "Discrimination",
+        "Racial",
+        "Ethnic",
+        "Ethnicity",
+        "Religious",
+        "Religion",
+        "Sex",
+        "Gender",
+        "National Origin"
+      ],
+      "agency": {
+        "name": "National Industrial Court of Nigeria",
+        "url": "https://nicn.gov.ng/"
+      }
+    },
+    {
+      "id": "nicn-harassment",
+      "short": "Workplace sexual harassment",
+      "name": "Constitution (Third Alteration) Act 2010, s.254C",
+      "summary": "Gives the National Industrial Court power over cases of sexual harassment at work, workplace discrimination and unfair labour practice.",
+      "triggers": ["Sexual", "Harassment", "Hostile Work", "Unwanted Physical Contact", "Offensive"],
+      "agency": {
+        "name": "National Industrial Court of Nigeria",
+        "url": "https://nicn.gov.ng/"
+      },
+      "limitation": {
+        "days": 90,
+        "from": "incident",
+        "label": "If your employer is a public body",
+        "note": "Claims against government employers and public officers generally must be brought within three months (Public Officers Protection Act). Private employers usually have longer."
+      }
+    },
+    {
+      "id": "labour-act",
+      "short": "Labour Act",
+      "name": "Labour Act (Cap L1, LFN 2004)",
+      "summary": "Sets rules on wages, working hours, contracts and leave for workers, and lets you complain to a labour officer.",
+      "triggers": ["Wage", "Hour", "Leave", "Maternity", "Breach of Employment Contract", "Pay Cut"],
+      "agency": {
+        "name": "Federal Ministry of Labour and Employment",
+        "url": "https://labour.gov.ng/"
+      }
+    },
+    {
+      "id": "disability-act",
+      "short": "Disability Act 2018",
+      "name": "Discrimination Against Persons with Disabilities (Prohibition) Act 2018",
+      "summary": "Prohibits discrimination against people with disabilities, including at work, and requires reasonable accommodation.",
+      "triggers": ["Disability", "Disability-Related", "Accommodate Disability"],
+      "agency": {
+        "name": "National Commission for Persons with Disabilities",
+        "url": "https://ncpwd.gov.ng/"
+      }
+    },
+    {
+      "id": "vapp",
+      "short": "VAPP Act 2015",
+      "name": "Violence Against Persons (Prohibition) Act 2015",
+      "summary": "Criminalises many forms of violence, including physical, sexual and psychological abuse, intimidation and harassment. Applies in the FCT and in states that have adopted it.",
+      "triggers": ["Unwanted Physical Contact", "Intimidation", "Threat", "Sexual Harassment", "Psychological"],
+      "agency": {
+        "name": "The police, or the National Human Rights Commission",
+        "url": "https://www.nhrc.gov.ng/"
+      }
+    },
+    {
+      "id": "employees-compensation",
+      "short": "Employee's Compensation Act",
+      "name": "Employee's Compensation Act 2010",
+      "summary": "Provides compensation for work-related injury, illness or disability, including mental stress arising from work.",
+      "triggers": ["Unsafe", "Safety"],
+      "agency": {
+        "name": "Nigeria Social Insurance Trust Fund (NSITF)",
+        "url": "https://nsitf.gov.ng/"
+      }
+    }
+  ],
+  "support": [
+    {
+      "name": "National emergency number",
+      "description": "Police, fire and ambulance.",
+      "contact": "112"
+    },
+    {
+      "name": "Mentally Aware Nigeria Initiative",
+      "description": "Mental health information and support.",
+      "url": "https://mentallyaware.org/"
+    },
+    {
+      "name": "National Human Rights Commission",
+      "description": "Complaints about human rights abuses, free of charge.",
+      "url": "https://www.nhrc.gov.ng/"
+    }
+  ]
+}

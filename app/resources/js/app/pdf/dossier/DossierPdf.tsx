@@ -164,16 +164,36 @@ export function DossierPdf({ data, pages }: { data: DossierData; pages: Partial<
                 </Text>
                 {data.coverage.statutes
                     .filter((x) => x.active)
-                    .map(({ statute }) => (
-                        <View key={statute.id} style={s.tr} wrap={false}>
-                            <Text style={{ width: 90, fontFamily: 'Helvetica-Bold' }}>{statute.short}</Text>
-                            <Text style={{ flex: 1 }}>{statute.name}</Text>
-                        </View>
-                    ))}
+                    .map(({ statute }) => {
+                        const deadline = data.deadlines.deadlines.find((d) => d.statute.id === statute.id);
+                        return (
+                            <View key={statute.id} style={[s.tr, { flexDirection: 'column', gap: 3 }]} wrap={false}>
+                                <Text>
+                                    <Text style={{ fontFamily: 'Helvetica-Bold' }}>{statute.short}</Text>
+                                    {statute.short !== statute.name ? `  ${statute.name}` : ''}
+                                </Text>
+                                <Text style={s.muted}>{statute.summary}</Text>
+                                {statute.limitation && (
+                                    <Text style={s.subtle}>
+                                        Time limit: {statute.limitation.label}. {statute.limitation.note}
+                                        {deadline
+                                            ? ` Counted from the first related entry (${dt(deadline.firstIncidentAt)}), the earliest date would be ${dt(deadline.earliest.toISOString())}.`
+                                            : ''}
+                                    </Text>
+                                )}
+                                {statute.agency && <Text style={s.subtle}>Where to go: {statute.agency.name}</Text>}
+                            </View>
+                        );
+                    })}
                 {!data.coverage.statutes.some((x) => x.active) && (
                     <Text style={s.muted}>No specific laws are indicated by the types of treatment recorded.</Text>
                 )}
-                <Text style={[s.subtle, { marginTop: 6 }]}>{data.coverage.pack.disclaimer}</Text>
+                <Text style={[s.subtle, { marginTop: 6 }]}>
+                    {data.coverage.pack.disclaimer} Pack version {data.coverage.pack.version}.{' '}
+                    {data.coverage.pack.reviewedBy
+                        ? `Reviewed by ${data.coverage.pack.reviewedBy}.`
+                        : 'Not yet reviewed by a lawyer.'}
+                </Text>
                 <Footer s={s} left={footer} />
             </Page>
 

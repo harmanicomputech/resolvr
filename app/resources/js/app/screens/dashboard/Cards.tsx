@@ -1,4 +1,4 @@
-import { AlertCircle, ArrowRight, Check, Info, Lightbulb, TriangleAlert } from 'lucide-react';
+import { AlertCircle, ArrowRight, Info, Lightbulb, TriangleAlert } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 import { SeverityPill } from '@/components/ui/severity-pill';
@@ -6,10 +6,10 @@ import type { Coverage } from '@/lib/laws/coverage';
 import type { Incident } from '@/lib/model/schema';
 import type { Pattern, PatternTone } from '@/lib/patterns/detect';
 import type { CaseStats } from '@/lib/scoring/stats';
-import { cn } from '@/lib/utils';
 
 import { CountUp } from '../../components/count-up';
 import { NavLink } from '../../shell/NavLink';
+import { StatuteChips } from './Deadlines';
 
 /** Four headline numbers. */
 export function StatTiles({ stats }: { stats: CaseStats }) {
@@ -92,32 +92,13 @@ export function PatternList({ patterns }: { patterns: Pattern[] }) {
     );
 }
 
-export function CoverageChips({ coverage, ready }: { coverage: Coverage; ready: boolean }) {
+export function CoverageChips({ coverage }: { coverage: Coverage }) {
     return (
         <div>
-            <ul className="flex flex-wrap gap-2">
-                {coverage.statutes.map(({ statute, active }) => (
-                    <li
-                        key={statute.id}
-                        className={cn(
-                            'chip gap-1.5',
-                            active ? 'border-accent bg-accent-tint text-accent-text' : 'text-fg-subtle',
-                        )}
-                        title={statute.name}
-                    >
-                        {active && <Check className="size-3.5" aria-hidden />}
-                        {statute.short}
-                        <span className="sr-only">
-                            {active ? ': may be relevant' : ': not indicated by your entries'}
-                        </span>
-                    </li>
-                ))}
-            </ul>
+            <StatuteChips coverage={coverage} />
             <p className="mt-4 text-xs text-fg-subtle">
-                {ready
-                    ? 'Laws that may relate to the types of treatment you have logged. '
-                    : 'Showing US federal laws until your jurisdiction’s guide is ready. '}
-                General information, not legal advice.
+                Laws that may relate to what you have logged. Tap one for a plain explanation. General information, not
+                legal advice.
             </p>
         </div>
     );

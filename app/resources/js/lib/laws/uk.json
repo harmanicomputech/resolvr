@@ -1,0 +1,178 @@
+{
+  "id": "uk",
+  "version": "2026.2",
+  "name": "United Kingdom (England, Wales and Scotland)",
+  "reviewedBy": null,
+  "disclaimer": "General information about employment law in Great Britain to help you organise your record. It is not legal advice. Northern Ireland has separate laws and bodies. Time limits are strict, so get advice early.",
+  "lawyerHelp": {
+    "label": "Find a solicitor (Law Society) or free advice (Citizens Advice)",
+    "url": "https://www.citizensadvice.org.uk/work/"
+  },
+  "statutes": [
+    {
+      "id": "equality-act",
+      "short": "Equality Act 2010",
+      "name": "Equality Act 2010",
+      "summary": "Protects against discrimination, harassment and victimisation because of age, disability, gender reassignment, marriage or civil partnership, pregnancy and maternity, race, religion or belief, sex and sexual orientation.",
+      "triggers": [
+        "Harassment",
+        "Discrimination",
+        "Sexual",
+        "Racial",
+        "Race",
+        "Ethnic",
+        "Ethnicity",
+        "Gender",
+        "Sex",
+        "Religious",
+        "Religion",
+        "National Origin",
+        "Hostile Work",
+        "Retaliation",
+        "Pregnancy",
+        "Pregnancy-Related",
+        "Sexual Orientation",
+        "Offensive Language",
+        "Unwanted Physical Contact",
+        "Offensive Materials",
+        "Age",
+        "Age-Based",
+        "Disability",
+        "Disability-Related",
+        "Accommodate",
+        "Victimisation"
+      ],
+      "agency": {
+        "name": "Acas early conciliation, then an employment tribunal",
+        "url": "https://www.acas.org.uk/early-conciliation"
+      },
+      "limitation": {
+        "days": 91,
+        "from": "incident",
+        "label": "Start Acas early conciliation",
+        "note": "Three months less one day from the incident, or from the last of a series of related acts. You must contact Acas before making a tribunal claim; doing so pauses the clock."
+      }
+    },
+    {
+      "id": "era-whistleblowing",
+      "short": "Whistleblowing (ERA 1996)",
+      "name": "Employment Rights Act 1996 (Public Interest Disclosure Act 1998)",
+      "summary": "Protects workers from being treated badly or dismissed for reporting wrongdoing in the public interest, such as danger to health and safety or breaking the law.",
+      "triggers": ["Whistleblower"],
+      "agency": {
+        "name": "Acas early conciliation, then an employment tribunal",
+        "url": "https://www.acas.org.uk/early-conciliation"
+      },
+      "limitation": {
+        "days": 91,
+        "from": "incident",
+        "label": "Start Acas early conciliation",
+        "note": "Three months less one day from the incident, or from the last of a series of related acts. You must contact Acas before making a tribunal claim; doing so pauses the clock."
+      }
+    },
+    {
+      "id": "era-dismissal",
+      "short": "Unfair dismissal (ERA 1996)",
+      "name": "Employment Rights Act 1996, unfair dismissal",
+      "summary": "Protects employees from dismissal without a fair reason and process. Usually needs two years' service, but not for dismissals linked to whistleblowing, health and safety or pregnancy.",
+      "triggers": ["Termination", "Constructive Dismissal", "Wrongful Termination"],
+      "agency": {
+        "name": "Acas early conciliation, then an employment tribunal",
+        "url": "https://www.acas.org.uk/early-conciliation"
+      },
+      "limitation": {
+        "days": 91,
+        "from": "incident",
+        "label": "Start Acas early conciliation",
+        "note": "Three months less one day from the incident, or from the last of a series of related acts. You must contact Acas before making a tribunal claim; doing so pauses the clock."
+      }
+    },
+    {
+      "id": "wages",
+      "short": "Wages (ERA 1996)",
+      "name": "Employment Rights Act 1996 Part II and National Minimum Wage Act 1998",
+      "summary": "Protects against unlawful deductions from wages and pay below the national minimum wage.",
+      "triggers": ["Wage", "Pay Cut", "Hours Reduction"],
+      "agency": {
+        "name": "Acas early conciliation, then an employment tribunal",
+        "url": "https://www.acas.org.uk/early-conciliation"
+      },
+      "limitation": {
+        "days": 91,
+        "from": "incident",
+        "label": "Start Acas early conciliation",
+        "note": "Three months less one day from the deduction, or the last in a series of deductions."
+      }
+    },
+    {
+      "id": "pha",
+      "short": "Protection from Harassment Act 1997",
+      "name": "Protection from Harassment Act 1997",
+      "summary": "A course of conduct that causes alarm or distress can be a civil wrong and a crime, and employers can be responsible for harassment by employees.",
+      "triggers": ["Harassment", "Intimidation", "Bullying", "Threat"],
+      "agency": {
+        "name": "The civil courts, or the police",
+        "url": "https://www.gov.uk/harassment-protection"
+      },
+      "limitation": {
+        "days": 2190,
+        "from": "incident",
+        "label": "Bring a civil claim",
+        "note": "Generally six years in England and Wales (Scotland differs)."
+      }
+    },
+    {
+      "id": "hswa",
+      "short": "Health and safety",
+      "name": "Health and Safety at Work etc. Act 1974 and ERA 1996 s.44",
+      "summary": "Employers must keep workplaces safe. Employees who raise safety concerns are protected from detriment and dismissal.",
+      "triggers": ["Unsafe", "Safety"],
+      "agency": {
+        "name": "Health and Safety Executive (HSE)",
+        "url": "https://www.hse.gov.uk/contact/"
+      },
+      "limitation": {
+        "days": 91,
+        "from": "incident",
+        "label": "Start Acas early conciliation",
+        "note": "Three months less one day from the incident, or from the last of a series of related acts. You must contact Acas before making a tribunal claim; doing so pauses the clock."
+      }
+    },
+    {
+      "id": "equal-pay",
+      "short": "Equal pay",
+      "name": "Equality Act 2010, equality of terms",
+      "summary": "Women and men are entitled to equal pay for equal work.",
+      "triggers": ["Equal Pay", "Pay / Compensation", "Compensation"],
+      "agency": {
+        "name": "Acas early conciliation, then an employment tribunal",
+        "url": "https://www.acas.org.uk/early-conciliation"
+      },
+      "limitation": {
+        "days": 183,
+        "from": "employment-end",
+        "label": "Make an equal pay claim",
+        "note": "Six months from the end of employment (or the end of the contract), not from each payslip."
+      }
+    }
+  ],
+  "support": [
+    {
+      "name": "Samaritans",
+      "description": "Someone to talk to, day or night, free.",
+      "url": "https://www.samaritans.org/",
+      "contact": "116 123"
+    },
+    {
+      "name": "Acas helpline",
+      "description": "Free, impartial advice on workplace rights.",
+      "url": "https://www.acas.org.uk/contact",
+      "contact": "0300 123 1100"
+    },
+    {
+      "name": "Mind",
+      "description": "Mental health information and support.",
+      "url": "https://www.mind.org.uk/"
+    }
+  ]
+}

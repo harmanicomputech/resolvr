@@ -2,7 +2,8 @@ import QRCode from 'qrcode';
 
 import type { Repositories } from '@/lib/db';
 import { exportFingerprint, verificationUrl } from '@/lib/integrity';
-import { lawPacks, legalCoverage, type Coverage } from '@/lib/laws/coverage';
+import { lawPackFor, legalCoverage, type Coverage } from '@/lib/laws/coverage';
+import { filingDeadlines, type DeadlineSummary } from '@/lib/laws/deadlines';
 import { detectPatterns, type Pattern } from '@/lib/patterns/detect';
 import { caseReadiness, type Readiness } from '@/lib/scoring/readiness';
 import { scoreLabel, scoreParts, type ScoreParts } from '@/lib/scoring/score';
@@ -37,6 +38,7 @@ export interface DossierData {
     readiness: Readiness;
     patterns: Pattern[];
     coverage: Coverage;
+    deadlines: DeadlineSummary;
     months: MonthCount[];
     severity: Record<Severity, number>;
     byPerson: { name: string; count: number }[];
@@ -99,7 +101,7 @@ export async function gatherDossier(
     const now = new Date();
     const stats = caseStats(incidents, people, now);
     const score = scoreParts(incidents, files.length);
-    const pack = lawPacks[settings.jurisdiction] ?? lawPacks.us!;
+    const pack = lawPackFor(settings.jurisdiction);
 
     const thumbs = new Map<string, string>();
     if (options.includeThumbnails) {
@@ -154,6 +156,7 @@ export async function gatherDossier(
         readiness: caseReadiness(incidents, score.total, files.length),
         patterns: detectPatterns(incidents, people, { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone }),
         coverage: legalCoverage([...new Set(incidents.flatMap((i) => i.content.types))], pack),
+        deadlines: filingDeadlines(incidents, pack, now),
         months: monthlyCounts(incidents, span, now),
         severity: severityCounts(incidents),
         byPerson: [...counts]

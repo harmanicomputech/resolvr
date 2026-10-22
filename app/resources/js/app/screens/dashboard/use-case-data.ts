@@ -1,4 +1,5 @@
-import { legalCoverage, lawPacks } from '@/lib/laws/coverage';
+import { lawPackFor, legalCoverage } from '@/lib/laws/coverage';
+import { filingDeadlines } from '@/lib/laws/deadlines';
 import { detectPatterns } from '@/lib/patterns/detect';
 import { caseReadiness } from '@/lib/scoring/readiness';
 import { scoreParts } from '@/lib/scoring/score';
@@ -21,7 +22,7 @@ export function useCaseData() {
         const now = new Date();
         const stats = caseStats(incidents, peopleById, now);
         const score = scoreParts(incidents, files.length);
-        const pack = lawPacks[settings.jurisdiction] ?? lawPacks.us!;
+        const pack = lawPackFor(settings.jurisdiction);
         return {
             incidents,
             peopleById,
@@ -34,7 +35,8 @@ export function useCaseData() {
                 timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             }),
             coverage: legalCoverage([...new Set(incidents.flatMap((i) => i.content.types))], pack),
-            jurisdictionReady: Boolean(lawPacks[settings.jurisdiction]),
+            pack,
+            deadlines: filingDeadlines(incidents, pack, now),
             months: monthlyCounts(incidents, 6, now),
             severity: severityCounts(incidents),
             heat: dailyHeat(incidents, 16, now),
